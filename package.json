@@ -2,16 +2,24 @@
   "name": "astro",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "cd src && node server.js",
+    "build:css": "postcss src/resources/css/tailwind.css -o public/assets/output.css"
   },
-  "author": "",
+  "author": "P2",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.1",
     "ejs": "^3.1.6",
     "express": "^4.17.3",
-    "mongoose": "^6.2.5"
+    "express-ejs-layouts": "^2.5.1",
+    "mongoose": "^6.2.5",
+    "postcss-cli": "^9.1.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.2",
+    "postcss": "^8.4.8",
+    "tailwindcss": "^3.0.23"
   }
 }
