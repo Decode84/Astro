@@ -1,9 +1,24 @@
 # Astro (Something)
  
-
-## Overview
-
 This repository has been developed as a group project at Aalborg University by Software Engineering students as their P2 project.
+
+
+## Structure
+
+App
+- HTTP (Controllers)
+- Models 
+
+Database
+- MongoDB connection
+
+Resources
+- css (Styling)
+- views (Alt layout - HTML)
+
+Routes
+- Auth
+- User
 
 ## Technologies
 - NodeJS (Express)
