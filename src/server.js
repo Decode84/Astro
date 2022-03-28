@@ -16,10 +16,13 @@ app.use('/api/', require('./routes/home'));
 app.use('/api/users', require('./routes/user'));
 app.use('/api/auth', require('./routes/auth'));
 
-
 // Database
-// require('./database/mongo');
+require('./database/mongo');
 
 // Server app
-const PORT = 4000;
-app.listen(PORT, console.log(`Server started on ${PORT}`));
+app.listen(process.env.SERVER_PORT || 3000, (err) => {
+    console.log(`Server is running on port ${process.env.SERVER_PORT || 3000}`);
+    if (err) {
+        console.log(err);
+    }
+});
