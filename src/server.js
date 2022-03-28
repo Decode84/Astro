@@ -19,7 +19,6 @@ app.use('/api/auth', require('./routes/auth'));
 
 // Database
 // require('./database/mongo');
-require('./database/mongo');
 
 // Server app
 const PORT = 4000;

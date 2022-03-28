@@ -5,12 +5,16 @@
   "main": "src/server.js",
   "scripts": {
     "start": "cd src && node server.js",
-    "build:css": "postcss src/resources/css/tailwind.css -o public/assets/output.css"
+    "build:css": "postcss src/resources/css/tailwind.css -o public/assets/output.css",
+    "test": "jest"
   },
   "author": "P2",
   "license": "ISC",
   "dependencies": {
+    "@tailwindcss/forms": "^0.5.0",
+    "@tailwindcss/typography": "^0.5.2",
     "bcrypt": "^5.0.1",
+    "dotenv": "^16.0.0",
     "ejs": "^3.1.6",
     "express": "^4.17.3",
     "express-ejs-layouts": "^2.5.1",
@@ -19,6 +23,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.2",
+    "jest": "^27.5.1",
     "postcss": "^8.4.8",
     "tailwindcss": "^3.0.23"
   }
