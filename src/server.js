@@ -17,6 +17,9 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use('/api/', require('./routes/home'));
 app.use('/api/users', require('./routes/user'));
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/', express.static('public'), require('./routes/home'));
+app.use('/api/users', express.static('public'), require('./routes/user'));
+app.use('/api/auth', express.static('public'), require('./routes/auth'));
 
 // Database
 require('./database/mongo');
