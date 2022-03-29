@@ -1,22 +1,16 @@
-const User = require('../Models/User');
-const bcrypt = require('bcrypt');
+const User = require("../Models/User");
+const bcrypt = require("bcrypt");
 
 exports.login = (req, res) => {
-    res.render('auth/login');
-}
+  res.render("auth/login");
+};
 
 exports.register = (req, res) => {
-    res.render('auth/register');
-}
+  res.render("auth/register");
+};
 
-exports.authenticate = (req, res) => {
+exports.authenticate = (req, res) => {};
 
-}
+exports.store = (req, res) => {};
 
-exports.store = (req, res) => {
-    
-}
-
-exports.logout = (req, res) => {
-
-}
+exports.logout = (req, res) => {};
