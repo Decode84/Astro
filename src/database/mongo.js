@@ -1,9 +1,15 @@
+const { ServerApiVersion } = require("mongodb");
 const mongo = require("mongoose");
 const path = require("path");
 
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
-mongo.connect("mongodb://" + process.env.DB_HOST + ":" + process.env.DB_PORT + "/" + process.env.DB_NAME);
+const credentials = path.join(__dirname, process.env.CERTIFICATE_PATH);
+mongo.connect(process.env.CLUSTER_URI, {
+  sslKey: credentials,
+  sslCert: credentials,
+  serverApi: ServerApiVersion.v1,
+});
 
 const db = mongo.connection;
 
