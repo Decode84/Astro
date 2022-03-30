@@ -19,14 +19,16 @@ function generateProjectId() {
 
 
 function newProject(projectName) {
-    // This function will not respond to the client yet since a UI has not been created yet.
     // This function will also not provide authentication. Therefore, a function should handle that before this function is called.
     // TODO: Create a UI for the user to create a new project.
+    // TODO: Save the project id to a user database.
+
 
     const project = new projectModel( { title: projectName } );
     // Generate a new project ID.
     project.Id = generateProjectId();
- 
+
+    // Save the project to the database.
     project.save();
 }
 
