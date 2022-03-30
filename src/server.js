@@ -13,9 +13,9 @@ app.use(expressEjsLayout);
 app.use(express.static(path.join(__dirname, "../public")));
 
 // Routes path
-app.use("/", require("./routes/home"));
-app.use("/auth", require("./routes/auth"));
-app.use("/api/users", require("./routes/user"));
+app.use("/", express.static('public'), require("./routes/home"));
+app.use("/auth", express.static('public'), require("./routes/auth"));
+app.use("/api/users", express.static('public'), require("./routes/user"));
 
 // Database
 require("./database/mongo");
