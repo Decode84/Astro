@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
-    "start": "cd src && node server.js",
+    "start": "nodemon ./src/server.js",
     "build:css": "postcss src/resources/css/tailwind.css -o public/assets/output.css",
     "test": "jest"
   },
@@ -24,6 +24,7 @@
   "devDependencies": {
     "autoprefixer": "^10.4.2",
     "jest": "^27.5.1",
+    "nodemon": "^2.0.15",
     "postcss": "^8.4.8",
     "tailwindcss": "^3.0.23"
   }
