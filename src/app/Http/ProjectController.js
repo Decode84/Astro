@@ -25,6 +25,9 @@ function newProject(projectName, UserID) {
     // Generate a new project ID.
     project.Id = generateProjectId();
 
+    // Add initial user to the service.
+    project.members.push(UserID);
+
     // Save the project to the database.
     project.save();
 }
