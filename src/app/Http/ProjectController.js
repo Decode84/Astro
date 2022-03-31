@@ -11,7 +11,6 @@ function generateProjectId() {
     // Generate a random project id.
     let projectId = '';
     projectId = uid.sync(18);
-    console.log(projectId.length);
     return projectId;
 }
 
