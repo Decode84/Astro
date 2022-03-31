@@ -2,4 +2,4 @@ public/assets
 /node_modules
 .env
 package-lock.json
-*.pem
+instructions-database.txt
