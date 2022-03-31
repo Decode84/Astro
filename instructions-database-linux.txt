@@ -27,10 +27,10 @@ db.dropDatabase();
 ******************************************************************************
 
 # Export JSON local database:
-sudo mongoexport -db <db> -c <collection> --out ./database_exports/ldb/$(date '+%F_%H:%M:%S').json
+sudo mongoexport -db <db> -c <collection> --out ./database_exports/ldb/$(date '+%F_%H.%M.%S').json
 
 # Export JSON cloud database
-sudo mongoexport --uri mongodb+srv://<username>:<password>@cluster0.apnvx.mongodb.net/<db> --collection <collection> --forceTableScan --out ./database_exports/cdb/$(date '+%F_%H:%M:%S').json
+sudo mongoexport --uri mongodb+srv://<username>:<password>@cluster0.apnvx.mongodb.net/<db> --collection <collection> --forceTableScan --out ./database_exports/cdb/$(date '+%F_%H.%M.%S').json
 
 # Import JSON to local database
 sudo mongoimport --db <db> --collection <collection> --file <file>
