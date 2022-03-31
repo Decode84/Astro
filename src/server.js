@@ -2,13 +2,8 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const expressEjsLayout = require("express-ejs-layouts");
-const path = require('path');
-const expressEjsLayout = require('express-ejs-layouts');
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 const sessions = require("express-session");
-const dotenv = require('dotenv');
-
-//read .env
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 // Template Engine
 app.set("views", path.join(__dirname, "../src/resources/views"));
