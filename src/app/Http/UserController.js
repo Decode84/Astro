@@ -29,11 +29,6 @@ async function getUser(userName) {
     return userData;
 }
 
-let userName = 'testUser';
-
-newUser(userName, 'test@test.test', 'testPassword');
-
-
 
 module.exports = {
     index,
