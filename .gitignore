@@ -1,5 +1,4 @@
 public/assets
 /node_modules
-.env
 package-lock.json
-.env.example
+instructions-database.txt
