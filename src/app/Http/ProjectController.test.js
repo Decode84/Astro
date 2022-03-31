@@ -1,5 +1,5 @@
-const generateProjectId = require('./ProjectController');
+const projectController = require('./ProjectController');
 
 test('recieves a 24 lenght id string', () => {
-    expect(generateProjectId().length).toBe(24);
+    expect(projectController.generateProjectId().length).toBe(24);
 });

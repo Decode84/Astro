@@ -4,7 +4,7 @@ const Schema = mongo.Schema;
 
 projectSchema = new Schema({
     Id: String,
-    title: String,
+    name: String,
     categories: [
         {
             messaging: {

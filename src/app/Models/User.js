@@ -7,6 +7,14 @@ const UserSchema = new Schema({
         type: String,
         required: true,
     },
+    HashedPassword: String,
+    email: String,
+    projects: [
+        {
+            id: String,
+            name: String,
+        },
+    ],
 });
 
 const User = mongo.model('User', UserSchema);
