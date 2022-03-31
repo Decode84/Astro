@@ -1,5 +1,0 @@
-public/assets
-/node_modules
-.env
-package-lock.json
-notes.txt
