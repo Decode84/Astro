@@ -3,8 +3,29 @@ const Project = require('../Models/Project');
 const uid = require('uid-safe');
 
 function project(req, res) {
-    //res.render('project');
+
 }
+
+// Async function to get a project by id
+async function getProjectById(id) {
+    try {
+        const project = await Project.findById(id);
+        return project;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+// Async function to get all projects
+async function getAllProjects() {
+    try {
+        const projects = await Project.find();
+        return projects;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 
 function generateProjectId() {
     // TODO: Check if the project id is already in the database.
@@ -36,4 +57,6 @@ function newProject(projectName, UserID) {
 module.exports = {
     project,
     generateProjectId,
+    getAllProjects,
+    getProjectById
 };
