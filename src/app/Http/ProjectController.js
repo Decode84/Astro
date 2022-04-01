@@ -58,5 +58,6 @@ module.exports = {
     project,
     generateProjectId,
     getAllProjects,
-    getProjectById
+    getProjectById,
+    newProject
 };
