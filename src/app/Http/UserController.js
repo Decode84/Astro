@@ -5,6 +5,7 @@ function index(req, res) {
     res.render('users/index');
 }
 
+// ! Deprecated. The user is registered by the authentication controller.
 async function newUser(userName, email, hashedPassword) {
 
     // Check if the user already exists.

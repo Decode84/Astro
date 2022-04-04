@@ -20,15 +20,13 @@ function generateProjectId() {
 }
 
 
-function newProject(projectName, UserID) {
+async function newProject(projectName, UserID) {
     // This function will also not provide authentication. Therefore, a function should handle that before this function is called.
     // TODO: Create a UI for the user to create a new project.
     // TODO: Save the project id to a user database.
 
-
-    const project = new projectModel( { name: projectName } );
-    // Generate a new project ID.
-    project.Id = generateProjectId();
+    // Generate a new project id and save it to the database.
+    const project = new projectModel( { Id: generateProjectId(), name: projectName } );
 
     // Add initial user to the service.
     project.members.push(UserID);
@@ -41,9 +39,10 @@ function newProject(projectName, UserID) {
 
 
     // Save the project to the database.
-    project.save();
+    await project.save();
 }
 
+newProject("testProject", "test");
 
 
 // Modules to export for testing purposes.
