@@ -30,6 +30,14 @@ async function getUser(UserID) {
     return userData;
 }
 
+async function getUserID(userName) {
+    // Find the user in the database
+
+    const userData = await User.findOne({ name: userName }).exec();
+
+    return userData._id;
+}
+
 
 module.exports = {
     index,
