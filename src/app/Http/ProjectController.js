@@ -57,4 +57,6 @@ function newProject(projectName, UserID) {
 module.exports = {
     project,
     generateProjectId,
+    getProjectById,
+    getAllProjects
 };
