@@ -1,5 +1,5 @@
-const User = require("../Models/User");
-const bcrypt = require('bcrypt');
+const User = require('../Models/User')
+const bcrypt = require('bcrypt')
 // On any request req, req.session.user is now available where the userSession can be accesed
 //  by User = require("../Models/User"); and then User.findOne to fetch the user from the database
 
@@ -16,6 +16,8 @@ exports.login = (req, res) => {
     }
 };
 
+
+
 /**
  * Show the register page and check if the user is already logged in
  * @param {*} req
@@ -29,6 +31,7 @@ exports.register = (req, res) => {
     }
 };
 
+
 /**
  * Show the forgot password page
  * @param {*} req
@@ -41,6 +44,7 @@ exports.forgot = (req, res) => {
         res.render("auth/forgot");
     }
 };
+
 
 /**
  * Authenticate the user and redirect to the dashboard
