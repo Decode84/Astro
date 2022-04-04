@@ -5,7 +5,7 @@ test('creation of a new user and finding it', () => {
     let email = 'test@test.test';
     let hashedPassword = 'testPassword';
     userController.newUser(userName, email, hashedPassword);
-    let user = userController.getUser(userName);
+    let user = userController.getUser(userController.getUserID(userName));
     user.then(user => {
         expect(user.userName).toBe(userName);
         expect(user.email).toBe(email);

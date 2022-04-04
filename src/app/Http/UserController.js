@@ -1,10 +1,11 @@
-const User = require("../Models/User");
-const bcrypt = require("bcrypt");
+const User = require('../Models/User')
+const bcrypt = require('bcrypt')
 
 function index(req, res) {
     res.render('users/index');
 }
 
+// ! Deprecated. The user is registered by the authentication controller.
 async function newUser(userName, email, hashedPassword) {
 
     // Check if the user already exists.
@@ -20,13 +21,21 @@ async function newUser(userName, email, hashedPassword) {
 
 }
 
-async function getUser(userName) {
+async function getUser(UserID) {
+    // Find the user in the database
+
+    const userData = await User.findById(UserID).exec();
+
+
+    return userData;
+}
+
+async function getUserID(userName) {
     // Find the user in the database
 
     const userData = await User.findOne({ name: userName }).exec();
 
-
-    return userData;
+    return userData._id;
 }
 
 

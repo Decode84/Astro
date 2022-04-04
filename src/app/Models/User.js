@@ -1,5 +1,4 @@
 const mongo = require('mongoose');
-
 const Schema = mongo.Schema;
 
 const UserSchema = new Schema({
@@ -7,7 +6,13 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
+    username: {
+        index: { unique: true },
+        type: String,
+        required: true
+    },
     email: {
+        index: { unique: true },
         type: String,
         required: true
     },
@@ -22,12 +27,7 @@ const UserSchema = new Schema({
     HashedPassword: String,
     email: String,
     projects: [
-        {
-            id: String,
-            name: String,
-        },
     ],
 });
 
-const User = mongo.model("User", UserSchema);
-module.exports = User;
+module.exports = mongo.model("User", UserSchema);
