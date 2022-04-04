@@ -21,6 +21,18 @@ async function getProjectById(id) {
     }
 }
 
+
+
+// Async function to get a project by id
+async function getProjectById(id) {
+    try {
+        const project = await Project.findById(id);
+        return project;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 // Async function to get all projects
 async function getAllProjects() {
     try {
@@ -30,7 +42,6 @@ async function getAllProjects() {
         console.log(error);
     }
 }
-
 
 function generateProjectId() {
     // TODO: Check if the project id is already in the database.
@@ -71,6 +82,7 @@ async function newProject(projectName, UserID) {
 module.exports = {
     project,
     generateProjectId,
-    getAllProjects,
-    getProjectById
+    getProjectById,
+    getAllProjects
 };
+
