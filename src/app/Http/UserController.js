@@ -1,5 +1,5 @@
-const User = require("../Models/User");
-const bcrypt = require("bcrypt");
+const User = require('../Models/User')
+const bcrypt = require('bcrypt')
 
 function index(req, res) {
     res.render('users/index');
