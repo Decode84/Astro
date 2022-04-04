@@ -26,14 +26,15 @@ async function newProject(projectName, UserID) {
     // TODO: Save the project id to a user database.
 
     // Generate a new project id and save it to the database.
-    const project = new projectModel( { Id: generateProjectId(), name: projectName } );
+    const project = new projectModel( { name: projectName } );
+    
 
     // Add initial user to the service.
     project.members.push(UserID);
 
     // Add the project to the user's project list.
     userController.getUser(UserID).then(user => {
-        user.projects.push(project.Id);
+        user.projects.push(project._id);
         user.save();
     });
 
@@ -41,8 +42,6 @@ async function newProject(projectName, UserID) {
     // Save the project to the database.
     await project.save();
 }
-
-newProject("testProject", "test");
 
 
 // Modules to export for testing purposes.

@@ -22,10 +22,6 @@ const UserSchema = new Schema({
     HashedPassword: String,
     email: String,
     projects: [
-        {
-            id: String,
-            name: String,
-        },
     ],
 });
 

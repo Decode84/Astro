@@ -21,10 +21,10 @@ async function newUser(userName, email, hashedPassword) {
 
 }
 
-async function getUser(userName) {
+async function getUser(UserID) {
     // Find the user in the database
 
-    const userData = await User.findOne({ name: userName }).exec();
+    const userData = await User.findById(UserID).exec();
 
 
     return userData;
