@@ -21,18 +21,6 @@ async function getProjectById(id) {
     }
 }
 
-
-
-// Async function to get a project by id
-async function getProjectById(id) {
-    try {
-        const project = await Project.findById(id);
-        return project;
-    } catch (error) {
-        console.log(error);
-    }
-}
-
 // Async function to get all projects
 async function getAllProjects() {
     try {
@@ -58,15 +46,15 @@ async function newProject(projectName, UserID) {
     // TODO: Save the project id to a user database.
 
     // Generate a new project id and save it to the database.
-    const project = new projectModel( { name: projectName } );
-    
+    const project = new projectModel({ name: projectName });
+
 
     // Add initial user to the service.
     project.members.push(UserID);
 
     // Add the project to the user's project list.
     userController.getUser(UserID).then(user => {
-        user.projects.push(project._id);
+        user.projectIDs.push(project._id);
         user.save();
     });
 
@@ -75,8 +63,31 @@ async function newProject(projectName, UserID) {
     await project.save();
 }
 
+/**
+ * Function: The function will remove a project from the database. It will also remove the project from the user's project list.
+ * The function runs asynchronously. There is no return value.
+ * @param {string} projectId The id of the project to be removed.
+ */
+async function delProject(projectId) {
+    // TODO: Call the remove user function. When it is made.
 
+    // Get the list of users in the project.
+    const project = await getProjectById(projectId);
+    const users = project.members;
 
+    // Remove the project from the user's project list.
+    for (let i = 0; i < users.length; i++) {
+        userController.getUser(users[i]).then(user => {
+            user.projectIDs.pull(projectId);
+            user.save();
+        });
+    }
+
+    // Remove the project from the database.
+    await Project.deleteOne({ _id: projectId });
+}
+
+delProject('624bebbc81301c42e3ec20d3');
 
 // Modules to export for testing purposes.
 module.exports = {

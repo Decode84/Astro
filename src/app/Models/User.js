@@ -25,7 +25,7 @@ const UserSchema = new Schema({
         default: Date.now
     },
     HashedPassword: String,
-    projects: [
+    projectIDs: [
     ],
 });
 
