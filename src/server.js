@@ -29,6 +29,8 @@ app.use(express.static(path.join(__dirname, '../public')))
 app.use('/', express.static('public'), require('./routes/home'))
 app.use('/auth', express.static('public'), require('./routes/auth'))
 app.use('/api/users', express.static('public'), require('./routes/user'))
+app.use('/project', express.static('public'), require('./routes/project'))
+
 
 // Database
 require("./database/mongo");
