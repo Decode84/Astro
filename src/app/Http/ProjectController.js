@@ -40,6 +40,12 @@ function generateProjectId() {
 }
 
 
+/**
+ * @function Creates a new project in the database and adds it to the user's project list.
+ * @param {String} projectName The name of the project.
+ * @param {String} UserID The id of the user who created the project.
+ * @returns {Promise<projectId>} The id of the project.
+ */
 async function newProject(projectName, UserID) {
     // This function will also not provide authentication. Therefore, a function should handle that before this function is called.
     // TODO: Create a UI for the user to create a new project.
@@ -61,10 +67,11 @@ async function newProject(projectName, UserID) {
 
     // Save the project to the database.
     await project.save();
+    return project._id;
 }
 
 /**
- * Function: The function will remove a project from the database. It will also remove the project from the user's project list.
+ * @function The function will remove a project from the database. It will also remove the project from the user's project list.
  * The function runs asynchronously. There is no return value.
  * @param {string} projectId The id of the project to be removed.
  */
@@ -78,7 +85,7 @@ async function delProject(projectId) {
     // Remove the project from the user's project list.
     for (let i = 0; i < users.length; i++) {
         userController.getUser(users[i]).then(user => {
-            user.projectIDs.pull(projectId);
+            user.projectIDs.splice(user.projectIDs.indexOf(projectId), 1);
             user.save();
         });
     }
@@ -86,8 +93,6 @@ async function delProject(projectId) {
     // Remove the project from the database.
     await Project.deleteOne({ _id: projectId });
 }
-
-delProject('624bebbc81301c42e3ec20d3');
 
 // Modules to export for testing purposes.
 module.exports = {
