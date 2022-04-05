@@ -11,7 +11,11 @@ function project(req, res) {
 
 }
 
-// Async function to get a project by id
+/**
+ * @function Gets a project by id from the database.
+ * @param {String} id The id of the project to return. The id must be a string of 24 characters hexadecimal.
+ * @returns {Promise<Project>} The project with the given id.
+ */
 async function getProjectById(id) {
     try {
         const project = await Project.findById(id);
@@ -21,7 +25,11 @@ async function getProjectById(id) {
     }
 }
 
-// Async function to get all projects
+/**
+ * @function Gets all projects from the database.
+ * 
+ * @returns {Promise<Project[]>} An array of all projects in the database.
+ */
 async function getAllProjects() {
     try {
         const projects = await Project.find();
