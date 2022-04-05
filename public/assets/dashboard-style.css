@@ -51,8 +51,11 @@ h2{
   display: grid;
   height: 100vh;
   width: 100%;
+  grid-template-areas: 
+    "logo header account"
+    "service-nav dynamic-widgets static-widgets";
   grid-template-columns: 20% auto 25%;
-  grid-template-rows: 12% auto;
+  grid-template-rows: 11% auto;
   padding: 0px;
 }
 
@@ -65,27 +68,27 @@ h2{
 }
 
 .logo {
-  grid-row: 1 / 2;
+  grid-area: logo;
   background-color: white;
 }
 
 .header {
-  grid-column: 2 / 3;
+  grid-area: header;
 }
 
 .account {
-  grid-column: 3 / 4;
+  grid-area: account;
 }
 
 .service-nav {
-  grid-row: 2 / 4;
+  grid-area: service-nav;
   background-color: white;
 }
 
 .dynamic-widgets {
-  grid-row: 2 / 4;
+  grid-area: dynamic-widgets;
 }
 
 .static-widgets {
-  grid-row: 2 / 4;
+  grid-area: static-widgets;
 }
