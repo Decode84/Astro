@@ -70,6 +70,8 @@ async function newProject(projectName, UserID) {
     return project._id;
 }
 
+//newProject('Test Project3', '624aace6e20f9986b02cc288');
+
 /**
  * @function The function will remove a project from the database. It will also remove the project from the user's project list.
  * The function runs asynchronously. There is no return value.
@@ -94,11 +96,45 @@ async function delProject(projectId) {
     await Project.deleteOne({ _id: projectId });
 }
 
+async function addUserToProject(projectId, UserId) {
+    // Get the project
+    const project = await getProjectById(projectId);
+
+    // Add the user to the project
+    console.log(project.members.length);
+    
+    for (i = 0; i < project.members.length; i++) {
+        if (project.members[i] != UserId) {
+            console.log('User ' + UserId + ' is not a member of this project.');
+            console.log('adding user ' + UserId + ' to project ' + projectId);
+            // Add user
+            project.members.push(UserId);
+
+            console.log('adding project ' + projectId + ' to user ' + UserId);
+            // Add the project to the user's project list
+            userController.getUser(UserId).then(user => {
+                console.log('User projects: ' + user.projects);
+                user.projectIDs.push(project._id);
+                user.save();
+            });
+
+            // Save the project
+            await project.save();
+
+        } else {
+            console.log('User is already a member of this project.');
+        }
+    }
+
+}
+
+
 // Modules to export for testing purposes.
 module.exports = {
     project,
     generateProjectId,
     getProjectById,
-    getAllProjects
+    getAllProjects,
+    addUserToProject
 };
 
