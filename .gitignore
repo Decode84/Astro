@@ -1,4 +1,4 @@
-public/assets
+
 /node_modules
 package-lock.json
 instructions-database.txt
