@@ -105,15 +105,11 @@ async function addUserToProject(projectId, UserId) {
     
     for (i = 0; i < project.members.length; i++) {
         if (project.members[i] != UserId) {
-            console.log('User ' + UserId + ' is not a member of this project.');
-            console.log('adding user ' + UserId + ' to project ' + projectId);
             // Add user
             project.members.push(UserId);
 
-            console.log('adding project ' + projectId + ' to user ' + UserId);
             // Add the project to the user's project list
             userController.getUser(UserId).then(user => {
-                console.log('User projects: ' + user.projects);
                 user.projectIDs.push(project._id);
                 user.save();
             });
@@ -126,6 +122,34 @@ async function addUserToProject(projectId, UserId) {
         }
     }
 
+}
+
+
+async function removeUserFromProject(projectId, UserId) {
+    // Get the project
+    const project = await getProjectById(projectId);
+
+    for (i = 0; i < project.members.length; i++) {
+        if (project.members[i] == UserId) {
+            // Remove user
+            project.members.splice(i, 1);
+
+            // Remove the project from the user's project list
+            userController.getUser(UserId).then(user => {
+                user.projectIDs.splice(user.projectIDs.indexOf(projectId), 1);
+                user.save();
+            });
+            console.log('user removed');
+            // Save the project
+            await project.save();
+
+        } else {
+            console.log('User is not a member of this project.');
+        }
+    }
+    
+    // Save the project
+    await project.save();
 }
 
 
