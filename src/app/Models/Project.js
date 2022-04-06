@@ -83,6 +83,6 @@ projectSchema = new Schema({
     ],
 });
 
-const projectModel = mongo.model('projectModel', projectSchema);
+const projectModel = mongo.model('project', projectSchema);
 
 module.exports = projectModel;
