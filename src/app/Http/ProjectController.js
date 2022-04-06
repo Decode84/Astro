@@ -11,7 +11,11 @@ function project(req, res) {
 
 }
 
-// Async function to get a project by id
+/**
+ * @function Gets a project by id.
+ * @param {String} id 
+ * @returns {Promise<Project>} The project.
+ */
 async function getProjectById(id) {
     try {
         const project = await Project.findById(id);
@@ -21,7 +25,10 @@ async function getProjectById(id) {
     }
 }
 
-// Async function to get all projects
+/**
+ * @function Gets a list of all projects.
+ * @returns {Promise<Array<Project>>} An array of projects.
+ */
 async function getAllProjects() {
     try {
         const projects = await Project.find();
@@ -96,6 +103,11 @@ async function delProject(projectId) {
     await Project.deleteOne({ _id: projectId });
 }
 
+/**
+ * @function Adds a user to a project.
+ * @param {String} projectId 
+ * @param {String} UserId 
+ */
 async function addUserToProject(projectId, UserId) {
     // Get the project
     const project = await getProjectById(projectId);
@@ -116,6 +128,7 @@ async function addUserToProject(projectId, UserId) {
 
             // Save the project
             await project.save();
+            console.log('User added to project');
 
         } else {
             console.log('User is already a member of this project.');
@@ -124,7 +137,11 @@ async function addUserToProject(projectId, UserId) {
 
 }
 
-
+/**
+ * @function Removes a user from a project.
+ * @param {String} projectId 
+ * @param {String} UserId 
+ */
 async function removeUserFromProject(projectId, UserId) {
     // Get the project
     const project = await getProjectById(projectId);
@@ -139,9 +156,10 @@ async function removeUserFromProject(projectId, UserId) {
                 user.projectIDs.splice(user.projectIDs.indexOf(projectId), 1);
                 user.save();
             });
-            console.log('user removed');
+
             // Save the project
             await project.save();
+            console.log('User removed from project');
 
         } else {
             console.log('User is not a member of this project.');
@@ -159,6 +177,7 @@ module.exports = {
     generateProjectId,
     getProjectById,
     getAllProjects,
-    addUserToProject
+    addUserToProject,
+    removeUserFromProject
 };
 
