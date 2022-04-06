@@ -39,3 +39,6 @@ app.listen(PORT, (err) => {
   if (err) console.log(err)
   console.log(`Homepage hosted here: http://localhost:${PORT}/`)
 })
+
+//Run Discord bot
+require('./discord/DiscordBot')
