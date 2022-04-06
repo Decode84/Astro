@@ -12,9 +12,9 @@ function project(req, res) {
 }
 
 /**
- * @function Gets a project by id from the database.
- * @param {String} id The id of the project to return. The id must be a string of 24 characters hexadecimal.
- * @returns {Promise<Project>} The project with the given id.
+ * @function Gets a project by id.
+ * @param {String} id 
+ * @returns {Promise<Project>} The project.
  */
 async function getProjectById(id) {
     try {
@@ -26,9 +26,8 @@ async function getProjectById(id) {
 }
 
 /**
- * @function Gets all projects from the database.
- * 
- * @returns {Promise<Project[]>} An array of all projects in the database.
+ * @function Gets a list of all projects.
+ * @returns {Promise<Array<Project>>} An array of projects.
  */
 async function getAllProjects() {
     try {
@@ -69,6 +68,8 @@ async function newProject(projectName, UserID) {
     return project._id;
 }
 
+//newProject('Test Project3', '624aace6e20f9986b02cc288');
+
 /**
  * @function The function will remove a project from the database. It will also remove the project from the user's project list.
  * The function runs asynchronously. There is no return value.
@@ -93,10 +94,80 @@ async function delProject(projectId) {
     await Project.deleteOne({ _id: projectId });
 }
 
+/**
+ * @function Adds a user to a project.
+ * @param {String} projectId 
+ * @param {String} UserId 
+ */
+async function addUserToProject(projectId, UserId) {
+    // Get the project
+    const project = await getProjectById(projectId);
+
+    // Add the user to the project
+    console.log(project.members.length);
+    
+    for (i = 0; i < project.members.length; i++) {
+        if (project.members[i] != UserId) {
+            // Add user
+            project.members.push(UserId);
+
+            // Add the project to the user's project list
+            userController.getUser(UserId).then(user => {
+                user.projectIDs.push(project._id);
+                user.save();
+            });
+
+            // Save the project
+            await project.save();
+            console.log('User added to project');
+
+        } else {
+            console.log('User is already a member of this project.');
+        }
+    }
+
+}
+
+/**
+ * @function Removes a user from a project.
+ * @param {String} projectId 
+ * @param {String} UserId 
+ */
+async function removeUserFromProject(projectId, UserId) {
+    // Get the project
+    const project = await getProjectById(projectId);
+
+    for (i = 0; i < project.members.length; i++) {
+        if (project.members[i] == UserId) {
+            // Remove user
+            project.members.splice(i, 1);
+
+            // Remove the project from the user's project list
+            userController.getUser(UserId).then(user => {
+                user.projectIDs.splice(user.projectIDs.indexOf(projectId), 1);
+                user.save();
+            });
+
+            // Save the project
+            await project.save();
+            console.log('User removed from project');
+
+        } else {
+            console.log('User is not a member of this project.');
+        }
+    }
+    
+    // Save the project
+    await project.save();
+}
+
+
 // Modules to export for testing purposes.
 module.exports = {
     project,
     getProjectById,
-    getAllProjects
+    getAllProjects,
+    addUserToProject,
+    removeUserFromProject
 };
 
