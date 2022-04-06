@@ -25,6 +25,5 @@ async function getUserID(userName) {
 
 module.exports = {
     index,
-    newUser,
     getUser,
 };
