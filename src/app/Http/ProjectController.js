@@ -39,15 +39,6 @@ async function getAllProjects() {
     }
 }
 
-function generateProjectId() {
-    // TODO: Check if the project id is already in the database.
-    // Generate a random project id.
-    let projectId = '';
-    projectId = uid.sync(18);
-    return projectId;
-}
-
-
 /**
  * @function Creates a new project in the database and adds it to the user's project list.
  * @param {String} projectName The name of the project.
@@ -105,7 +96,6 @@ async function delProject(projectId) {
 // Modules to export for testing purposes.
 module.exports = {
     project,
-    generateProjectId,
     getProjectById,
     getAllProjects
 };
