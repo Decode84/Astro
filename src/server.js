@@ -13,29 +13,30 @@ app.use(expressEjsLayout)
 // Register session cookies
 app.use(sessions({
     secret: process.env.SECRET_KEY,
-    saveUninitialized:false,
-    cookie: { maxAge: 108000 }, //30 hours add ", Secure: True" and next to maxAge and app.set('trust proxy', 1)  for https
-    resave: false,
-}));
+    saveUninitialized: false,
+    cookie: { maxAge: 108000 }, // 30 hours add ", Secure: True" and next to maxAge and app.set('trust proxy', 1)  for https
+    resave: false
+}))
 
 // create req.body method
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 // Public assets
 app.use(express.static(path.join(__dirname, '../public')))
 
 // Routes path
-app.use('/', express.static('public'), require('./routes/home'))
-app.use('/auth', express.static('public'), require('./routes/auth'))
-app.use('/api/users', express.static('public'), require('./routes/user'))
+app.use('/', express.static('public'), require('./routes/web'))
 
 // Database
-require("./database/mongo");
+require('./database/mongo')
 
 // Server app
 const PORT = process.env.PRI_SERVER_PORT || process.env.SEC_SERVER_PORT
 app.listen(PORT, (err) => {
-  if (err) console.log(err)
-  console.log(`Homepage hosted here: http://localhost:${PORT}/`)
+    if (err) console.log(err)
+    console.log(`Homepage hosted here: http://localhost:${PORT}/`)
 })
+
+//Run Discord bot
+require('./discord/DiscordBot')

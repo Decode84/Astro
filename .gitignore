@@ -3,3 +3,4 @@ public/assets
 package-lock.json
 instructions-database.txt
 .env
+/docs
