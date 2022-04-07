@@ -9,6 +9,7 @@
     "start:cloud": "nodemon ./src/server.js cloud",
     "build:css": "postcss src/resources/css/tailwind.css -o public/assets/output.css",
     "generate:key": "node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\"",
+    "build:doc": "node_modules/.bin/jsdoc --configure jsdoc.json --verbose",
     "test": "jest"
   },
   "author": "P2",
@@ -17,6 +18,7 @@
     "@tailwindcss/forms": "^0.5.0",
     "@tailwindcss/typography": "^0.5.2",
     "bcrypt": "^5.0.1",
+    "clean-jsdoc-theme": "^3.3.4",
     "dotenv": "^16.0.0",
     "ejs": "^3.1.6",
     "express": "^4.17.3",
@@ -24,7 +26,11 @@
     "express-session": "^1.17.2",
     "mongoose": "^6.2.5",
     "postcss-cli": "^9.1.0",
-    "uid-safe": "^2.1.5"
+    "uid-safe": "^2.1.5",
+    "discord.js": "^13.6.0",
+    "@discordjs/rest": "^0.3.0",
+    "@discordjs/builders": "^0.12.0",
+    "discord-api-types": "^0.31.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.2",
@@ -34,6 +40,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.2.0",
     "jest": "^27.5.1",
+    "jsdoc": "^3.6.10",
     "nodemon": "^2.0.15",
     "postcss": "^8.4.8",
     "standard": "^16.0.4",
