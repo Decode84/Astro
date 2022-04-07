@@ -5,83 +5,32 @@ const Schema = mongo.Schema;
 projectSchema = new Schema({
     Id: String,
     name: String,
-    categories: [
-        {
-            messaging: {
-                services: {
-                    discord: {
-                        state: String,
-                        token: String,
-                        serverlink: String,
-                    }
-                }
-            }
+    categories:
+    {
+        messaging: {
+            services: {}
         },
-        {
-            planning: {
-                services: {
-                    trello: {
-                        state: String,
-                        token: String,
-                        servicelink: String,
-                    }
-                }
-            }
+        planning: {
+            services: {}
         },
-        {
-            development: {
-                services: {
-                    github: {
-                        state: String,
-                        token: String,
-                        servicelink: String,
-                    }
-                }
-            }
+        development: {
+            services: {}
         },
-        {
-            document: {
-                services: {
-                    overleaf: {
-                        state: String,
-                        token: String,
-                        servicelink: String,
-                    }
-                }
-            }
+        document: {
+            services: {}
         },
-        {
-            uml: {
-                services: {
-                    diagramsnet: {
-                        state: String,
-                        token: String,
-                        servicelink: String,
-                    }
-                }
-            }
+        uml: {
+            services: {}
         },
-        {
-            filesharing: {
-                services: {
-                    discord: {
-                        state: String,
-                        token: String,
-                        serverlink: String,
-                    },
-                    github: {
-                        state: String,
-                        token: String,
-                        servicelink: String,
-                    }
-                }
-            }
-        },
-    ],
+        filesharing: {
+            services: {}
+        }
+    },
+
     members: [
         String
     ],
-});
+}, { strict: false });
 
 const projectModel = mongo.model('project', projectSchema);
 
