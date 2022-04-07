@@ -166,7 +166,6 @@ async function removeUserFromProject(projectId, UserId) {
  * @param {String} projectId The id of the project.
  * @param {String} serviceCategory The category of which the service is in.
  * @param {String} serviceId The id of the service to be added.
- * @param {String} token The access to that service for the project.
  */
 async function addServiceToProject(projectId, serviceCategory, serviceId) {
     // Get the project
