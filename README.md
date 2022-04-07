@@ -2,32 +2,16 @@
 
 ![](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F54%2F18%2Ff9%2F5418f98e564a12a8f493853021c578f0.jpg&f=1&nofb=1)
 
-This repository has been developed as a group project at Aalborg University by Software Engineering students as their P2 project.
+## 📖 Overview
 
-## Structure
+The project is developed by software engineering students as their P2 project. The project tries to eliminate all "metawork" in the startup phase. Metawork is something like setting up github repository, discord server, overleaf documents and more.
 
-App
-- HTTP (Controllers)
-- Models 
 
-Database
-- MongoDB connection
+## 👌 Requirements
+- NodeJS (<a href="https://github.com/nodesource/distributions">Installation Linux</a> )
+- MongoDB server ( <a href="https://github.com/KB885/Astro/blob/dev/instructions-database-linux.txt">Installation Linux</a> )
 
-Resources
-- css (Styling)
-- views (Alt layout - HTML)
-
-Routes
-- Auth
-- User
-
-## Technologies
-- NodeJS (Express)
-- EJS Template Engine
-- MongoDB
-- TailwindCSS
-
-## Installation and usage
+## ⚡ Quick start
 
 Clone the git down to your desired folder.
 
@@ -52,10 +36,16 @@ Compile the needed frontend
 npm run build:css
 ```
 
-To run the project run the following command
+A secret key has to be generated. This key needs to be copied into the .env file under `SECRET_KEY`
 
 ```shell
-npm run start
+npm run generate:key
 ```
 
+Before the database works, some settings have to be set, e.g. whether it should run on cloud or local. This means you need to have a mongodb server running locally or on the cloud. For the installation of this referr to the documentation <a href="https://github.com/KB885/Astro/blob/dev/instructions-database-linux.txt">here (Linux)</a>
 
+## 🛠️ Configuration
+
+
+## ⚠️ License
+You can see the license <a href="https://github.com/KB885/Astro/blob/dev/LICENSE">here</a>
