@@ -105,7 +105,7 @@ async function addUserToProject(projectId, UserId) {
 
     // Add the user to the project
     console.log(project.members.length);
-    
+
     for (i = 0; i < project.members.length; i++) {
         if (project.members[i] != UserId) {
             // Add user
@@ -156,11 +156,27 @@ async function removeUserFromProject(projectId, UserId) {
             console.log('User is not a member of this project.');
         }
     }
-    
+
     // Save the project
     await project.save();
 }
 
+/**
+ * @function Adds a service to the project.
+ * @param {String} projectId The id of the project.
+ * @param {String} serviceCategory The category of which the service is in.
+ * @param {String} serviceId The id of the service to be added.
+ * @param {String} token The access to that service for the project.
+ */
+async function addServiceToProject(projectId, serviceCategory, serviceId) {
+    // Get the project
+    let project = await getProjectById(projectId);
+
+    // Create new service object
+    project.categories[serviceCategory].services = {...project.categories[serviceCategory].services, [serviceId]: {state: 'active'}};
+
+    await project.save();
+}
 
 // Modules to export for testing purposes.
 module.exports = {
