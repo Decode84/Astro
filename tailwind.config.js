@@ -1,4 +1,4 @@
-module.exports = {
+module.exports = { 
   content: [
     './src/**/*.{html,js,ejs}'
   ],

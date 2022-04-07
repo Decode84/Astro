@@ -1,10 +1,16 @@
-    <div class="bg-zinc-200 grid grid-cols-12 h-20">
+    <div class="bg-gray-200 grid grid-cols-12 h-20">
       <div class="border-black bg-white border col-start-1 col-end-3">
-        <h1 class="p-5 text-4xl text-gray-800 font-bold">ProjectHub</h1>
+        <div class="h-fit w-fit hover:cursor-pointer">
+          <h1 class="p-5 text-4xl text-gray-800 font-bold">ProjectHub</h1>
+        </div>
       </div>
       
-      <div class="border-black border col-start-3 col-end-10">
-        Progress bar
+      <div class="border-black border p-5 col-start-3 col-end-10">
+        <div class="border-0 bg-white flex items-center rounded-lg drop-shadow p-0 w-full h-full">
+          <div class="border-0 bg-green-600 rounded-lg w-2/3 h-full">
+          </div>
+          <p class="">66%</p>
+        </div>
       </div>
       
       <div class="border-black border col-start-10 col-end-13">
@@ -12,10 +18,61 @@
       </div>  
     </div>
 
-    <div class="bg-zinc-200 grid grid-cols-12 h-full">
-      <div class="border-black bg-white border p-5 pt-10 col-span-2">
-        <div class="border-neutral-500 box-border h-32 w-52 border">
-        </div>
+    <div class="bg-gray-200 grid grid-cols-12 h-full">
+      <div class="border-black bg-white border p-5 col-span-2">
+        <nav>
+          <div class="border-neutral-500 box-border h-fit w-full border flex items-center hover:bg-gray-400 hover:cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            <h1 class="text-2xl ml-1 font-medium">My Projects</h1>
+          </div>
+
+          <div class="border-neutral-500 box-border my-4 h-32 w-full border">
+          </div>
+
+          <div class="my-2 flex items-center hover:bg-gray-400 hover:cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 " fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <h2 class="text-xl ml-1">Planning</h2>
+          </div>
+
+          <div class="my-2 flex items-center hover:bg-gray-400 hover:cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+            <h2 class="text-xl ml-1">Communication</h2>
+          </div>
+
+          <div class="my-2 flex items-center hover:bg-gray-400 hover:cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+            </svg>
+            <h2 class="text-xl ml-1">Writing</h2>
+          </div>
+
+          <div class="my-2 flex items-center hover:bg-gray-400 hover:cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+            <h2 class="text-xl ml-1">Version control</h2>
+          </div>
+
+          <div class="my-2 flex items-center hover:bg-gray-400 hover:cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+            </svg>
+            <h2 class="text-xl ml-1">UML/Tools</h2>
+          </div>
+
+          <div class="my-2 flex items-center hover:bg-gray-400 hover:cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z" />
+            </svg>
+            <h2 class="text-xl ml-1">File sharing</h2>
+          </div>
+        </nav>
       </div>
       
       <div class="border-black border col-span-7">
