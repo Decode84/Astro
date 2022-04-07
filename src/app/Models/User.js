@@ -24,6 +24,9 @@ const UserSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    HashedPassword: String,
+    projectIDs: [
+    ],
 });
 
 module.exports = mongo.model("User", UserSchema);

@@ -5,6 +5,8 @@
   "main": "src/server.js",
   "scripts": {
     "start": "nodemon ./src/server.js",
+    "start:local": "nodemon ./src/server.js local",
+    "start:cloud": "nodemon ./src/server.js cloud",
     "build:css": "postcss src/resources/css/tailwind.css -o public/assets/output.css",
     "generate:key": "node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\"",
     "build:doc": "node_modules/.bin/jsdoc --configure jsdoc.json --verbose",
