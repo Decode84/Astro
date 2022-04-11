@@ -41,7 +41,7 @@ async function newOrganization(name, userId, projectId) {
 
     let service = {...project.categories.planning.services};
     service.trello.organizationId = organizationId;
-    service.update = !service.update;
+    service.update = !service.update; // This is a hack to force the update of the service.
 
     project.categories.planning.services = service;
 
