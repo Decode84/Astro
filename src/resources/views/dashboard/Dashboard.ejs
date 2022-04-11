@@ -1,26 +1,35 @@
-<header class="flex flex-row h-20" style="min-width: 700px">
+<header
+  class="flex flex-row"
+  style="min-width: var(--min-window-w); height: var(--header-h)"
+>
   <!-- ProjectHub Logo  -->
-  <div class="w-60 bg-white pl-2 flex items-center">
+  <div
+    class="pl-2 flex items-center"
+    style="width: var(--left-col-w); background-color: var(--pri-color)"
+  >
     <h1 class="text-4xl text-gray-800 font-bold hover:cursor-pointer">
       ProjectHub
     </h1>
   </div>
 
   <!-- Progress bar  -->
-  <div class="flex-1">
+  <div class="flex-1 flex flex-col" style="background-color: var(--sec-color)">
     <div class="px-5 flex items-center justify-center h-full">
-      <div class="w-full bg-gray-200 rounded-full h-5">
+      <div class="w-full rounded-full h-5 bg-white">
         <div
-          class="bg-blue-600 h-5 rounded-full drop-shadow-sm"
-          style="width: 70%"
+          class="h-5 rounded-full drop-shadow-sm"
+          style="width: 70%; background-color: var(--acc-color)"
         ></div>
       </div>
     </div>
-    <div class="mx-5 border-b border-gray-400"></div>
+    <div class="mx-5 border-t border-gray-400"></div>
   </div>
 
   <!-- Account  -->
-  <div class="w-72 flex flex-col justify-center">
+  <div
+    class="flex flex-col justify-center"
+    style="width: var(--right-col-w); background-color: var(--sec-color)"
+  >
     <div class="px-3 w-full h-full flex flex-row items-center justify-center">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -66,10 +75,13 @@
 
 <main
   class="flex flex-row"
-  style="min-width: 700px; height: calc(100vh - 5rem)"
+  style="min-width: var(--min-window-w); height: calc(100vh - var(--header-h))"
 >
   <!-- Navigation bar  -->
-  <div class="px-2 py-5 overflow-y-auto w-60 bg-white">
+  <div
+    class="px-2 py-5 overflow-y-auto"
+    style="width: var(--left-col-w); background-color: var(--pri-color)"
+  >
     <nav>
       <!-- My projects knappen  -->
       <div class="h-fit w-full flex items-center hover:cursor-pointer">
@@ -110,10 +122,11 @@
         <h2 class="text-xl ml-1 font-light">Planning</h2>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-10 w-10 ml-auto"
+          class="ml-auto"
+          style="width: var(--icon-size); height: var(--icon-size)"
           fill="none"
           viewBox="0 0 24 24"
-          stroke="#2b4dbd"
+          stroke="var(--acc-color)"
           stroke-width="1"
         >
           <path
@@ -130,10 +143,11 @@
         <h2 class="text-xl ml-1 font-light">Communication</h2>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-10 w-10 ml-auto"
+          class="ml-auto"
+          style="width: var(--icon-size); height: var(--icon-size)"
           fill="none"
           viewBox="0 0 24 24"
-          stroke="#2b4dbd"
+          stroke="var(--acc-color)"
           stroke-width="1"
         >
           <path
@@ -150,10 +164,11 @@
         <h2 class="text-xl ml-1 font-light">Writing</h2>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-10 w-10 ml-auto"
+          class="ml-auto"
+          style="width: var(--icon-size); height: var(--icon-size)"
           fill="none"
           viewBox="0 0 24 24"
-          stroke="#2b4dbd"
+          stroke="var(--acc-color)"
           stroke-width="1"
         >
           <path
@@ -170,10 +185,11 @@
         <h2 class="text-xl ml-1 font-light">Version control</h2>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-10 w-10 ml-auto"
+          class="ml-auto"
+          style="width: var(--icon-size); height: var(--icon-size)"
           fill="none"
           viewBox="0 0 24 24"
-          stroke="#2b4dbd"
+          stroke="var(--acc-color)"
           stroke-width="1"
         >
           <path
@@ -190,10 +206,11 @@
         <h2 class="text-xl ml-1 font-light">UML/Tools</h2>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-10 w-10 ml-auto"
+          class="ml-auto"
+          style="width: var(--icon-size); height: var(--icon-size)"
           fill="none"
           viewBox="0 0 24 24"
-          stroke="#2b4dbd"
+          stroke="var(--acc-color)"
           stroke-width="1"
         >
           <path
@@ -210,10 +227,11 @@
         <h2 class="text-xl ml-1 font-light">File sharing</h2>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-10 w-10 ml-auto"
+          class="ml-auto"
+          style="width: var(--icon-size); height: var(--icon-size)"
           fill="none"
           viewBox="0 0 24 24"
-          stroke="#2b4dbd"
+          stroke="var(--acc-color)"
           stroke-width="1"
         >
           <path
@@ -227,10 +245,16 @@
   </div>
 
   <!-- Dynamic widgets  -->
-  <div class="overflow-y-auto flex-1"></div>
+  <div
+    class="overflow-y-auto flex-1"
+    style="background-color: var(--sec-color)"
+  ></div>
 
   <!-- Static widgets  -->
-  <div class="flex flex-row w-72">
+  <div
+    class="flex flex-row"
+    style="width: var(--right-col-w); background-color: var(--sec-color)"
+  >
     <div class="border-l border-gray-400 my-5"></div>
     <div class="p-5 flex flex-col w-full overflow-y-auto">
       <div class="bg-white rounded-sm w-full h-1/4 drop-shadow-sm"></div>

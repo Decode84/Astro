@@ -1,18 +1,15 @@
-exports.index = (req, res) => {
-    res.render("dashboard/Dashboard");
-};
-
 const projectModel = require('../Models/Project');
 const Project = require('../Models/Project');
 const userController = require('./UserController');
 const uid = require('uid-safe');
 const User = require('../Models/User');
 
+
 // ! Included for debugging purposes.
 const authenticationController = require('./AuthenticationController');
 
 function project(req, res) {
-
+    res.render("dashboard/Dashboard");
 }
 
 /**

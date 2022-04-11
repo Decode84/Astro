@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root{
+    --min-window-w: 1000px;
+
+    --header-h: 5rem;
+    --left-col-w: 15rem;
+    --right-col-w: 18rem;
+    --icon-size: 2.5rem;
+
+    --pri-color: #fff;
+    --sec-color: #e5e5e5;
+    --acc-color: #2563EB;
+}
