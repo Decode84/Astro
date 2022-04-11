@@ -8,7 +8,6 @@ const User = require('../Models/User');
 const authenticationController = require('./AuthenticationController');
 
 function project(req, res) {
-
 }
 
 /**
@@ -172,7 +171,7 @@ async function addServiceToProject(projectId, serviceCategory, serviceId) {
     let project = await getProjectById(projectId);
 
     // Create new service object
-    project.categories[serviceCategory].services = {...project.categories[serviceCategory].services, [serviceId]: {state: 'active'}};
+    project.categories[serviceCategory].services = { ...project.categories[serviceCategory].services, [serviceId]: { state: 'active' } };
 
     await project.save();
 }
