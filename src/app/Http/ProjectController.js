@@ -1,3 +1,7 @@
+exports.index = (req, res) => {
+    res.render("dashboard/Dashboard");
+};
+
 const projectModel = require('../Models/Project');
 const Project = require('../Models/Project');
 const userController = require('./UserController');
@@ -185,4 +189,3 @@ module.exports = {
     addUserToProject,
     removeUserFromProject
 };
-
