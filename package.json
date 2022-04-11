@@ -5,6 +5,8 @@
   "main": "src/server.js",
   "scripts": {
     "start": "nodemon ./src/server.js",
+    "start:local": "nodemon ./src/server.js local",
+    "start:cloud": "nodemon ./src/server.js cloud",
     "build:css": "postcss src/resources/css/tailwind.css -o public/assets/output.css",
     "generate:key": "node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\"",
     "build:doc": "node_modules/.bin/jsdoc --configure jsdoc.json --verbose",
@@ -24,7 +26,11 @@
     "express-session": "^1.17.2",
     "mongoose": "^6.2.5",
     "postcss-cli": "^9.1.0",
-    "uid-safe": "^2.1.5"
+    "uid-safe": "^2.1.5",
+    "discord.js": "^13.6.0",
+    "@discordjs/rest": "^0.3.0",
+    "@discordjs/builders": "^0.12.0",
+    "discord-api-types": "^0.31.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.2",
