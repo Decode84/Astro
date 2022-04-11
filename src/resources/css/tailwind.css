@@ -14,3 +14,7 @@
     --sec-color: #e5e5e5;
     --acc-color: #2563EB;
 }
+
+* {
+    font-family: 'Anek Bangla', 'sans-serif';
+}
