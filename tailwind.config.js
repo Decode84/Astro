@@ -3,7 +3,10 @@ module.exports = {
     './src/**/*.{html,js,ejs}'
   ],
   theme: {
-    extend: {}
+    extend: {},
+    fontFamily:{
+      'nunito' : ['nunito', 'sans-serif']
+    }
   },
   plugins: [
     require('@tailwindcss/forms'),
