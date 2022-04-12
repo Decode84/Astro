@@ -4,6 +4,8 @@ const path = require('path')
 const expressEjsLayout = require('express-ejs-layouts')
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const sessions = require('express-session')
+const mongoStore = require('connect-mongo')
+const db = require('./database/mongo')
 
 // Template Engine
 app.set('views', path.join(__dirname, '../src/resources/views'))
@@ -13,9 +15,16 @@ app.use(expressEjsLayout)
 // Register session cookies
 app.use(sessions({
     secret: process.env.SECRET_KEY,
-    saveUninitialized: false,
-    cookie: { maxAge: 108000 }, // 30 hours add ", Secure: True" and next to maxAge and app.set('trust proxy', 1)  for https
-    resave: false
+    saveUninitialized: false, // don't create session until something stored
+    resave: false, // don't save session if unmodified
+    cookie: {
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        secure: false // true for https
+    },
+    store: mongoStore.create({
+        mongoUrl: db._connectionString,
+        autoRemove: 'native' // Default
+    })
 }))
 
 // create req.body method
@@ -38,5 +47,5 @@ app.listen(PORT, (err) => {
     console.log(`Homepage hosted here: http://localhost:${PORT}/`)
 })
 
-//Run Discord bot
+// Run Discord bot
 require('./discord/DiscordBot')
