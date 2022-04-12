@@ -4,6 +4,7 @@ const userController = require('./UserController');
 const uid = require('uid-safe');
 const User = require('../Models/User');
 
+
 // ! Included for debugging purposes.
 const authenticationController = require('./AuthenticationController');
 
@@ -182,7 +183,6 @@ async function removeUserFromProject(projectId, UserId) {
  * @param {String} projectId The id of the project.
  * @param {String} serviceCategory The category of which the service is in.
  * @param {String} serviceId The id of the service to be added.
- * @param {String} token The access to that service for the project.
  */
 async function addServiceToProject(projectId, serviceCategory, serviceId) {
     // Get the project
@@ -203,4 +203,3 @@ module.exports = {
     addUserToProject,
     removeUserFromProject
 };
-

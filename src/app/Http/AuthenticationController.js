@@ -50,8 +50,6 @@ class AuthenticationController {
     async authenticate (req, res) {
         const { username, password } = req.body
 
-        if (!username || !password) return res.status(400).send('Please fill all the fields')
-
         User.findOne({ username }).then((user) => {
             if (!user) return res.status(400).send('User does not exist')
 
@@ -79,12 +77,6 @@ class AuthenticationController {
      */
     async signup (req, res) {
         const { name, username, email, password, passwordConfirmation } = req.body
-        console.log(req.body)
-        if (!name || !username || !email || !password || !passwordConfirmation) { return res.status(400).send('Please fill all the fields') }
-
-        if (password !== passwordConfirmation) { return res.status(400).send('Passwords do not match') }
-
-        if (password.length < 8) { return res.status(400).send('Password must be at least 6 characters') }
 
         User.findOne({ username }).then((user) => {
             if (user) return res.status(400).send('User already exists')
@@ -108,7 +100,6 @@ class AuthenticationController {
      */
     async logout (req, res) {
         if (req.session) {
-            // Invalidate session
             req.session.destroy(() => {
                 res.redirect('/login')
             })
