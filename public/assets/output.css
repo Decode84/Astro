@@ -1032,7 +1032,7 @@ select {
     --icon-size: 2.5rem;
 
     --pri-color: #fff;
-    --sec-color: #e5e5e5;
+    --sec-color: #e8e8e8;
     --acc-color: #2563EB;
 }
 
@@ -1058,9 +1058,9 @@ select {
   background-color: rgb(29 78 216 / var(--tw-bg-opacity));
 }
 
-.hover\:bg-gray-400:hover {
+.hover\:bg-gray-200:hover {
   --tw-bg-opacity: 1;
-  background-color: rgb(156 163 175 / var(--tw-bg-opacity));
+  background-color: rgb(229 231 235 / var(--tw-bg-opacity));
 }
 
 .hover\:text-indigo-600:hover {
