@@ -1,0 +1,13 @@
+<section class="table w-4/5 m-auto">
+    <article class="table-row">
+        <p class="table-cell text-left">Project name</p>
+    </article>
+    <section class="table-row-group">
+        <% projects.forEach((project) => { %>
+        <article class="table-row">
+            <p class="table-cell"><%= project.name %></p>
+        </article>
+        <% }); %>
+    </article>
+</section>
+

@@ -7,7 +7,14 @@ const User = require('../Models/User');
 // ! Included for debugging purposes.
 const authenticationController = require('./AuthenticationController');
 
-function project(req, res) {
+function showProjects(req, res) {
+    console.log(req.session.user._id);
+
+    getAllProjects(req.session.user._id).then(projects => {
+
+        res.render('project-overview/overview', { projects: projects });
+
+    });
 
 }
 
@@ -26,17 +33,26 @@ async function getProjectById(id) {
 }
 
 /**
- * @function Gets a list of all projects.
+ * @function Gets a list of all user's projects.
  * @returns {Promise<Array<Project>>} An array of projects.
  */
-async function getAllProjects() {
+async function getAllProjects(UserID) {
     try {
-        const projects = await Project.find();
-        return projects;
+        const userProjects = [];
+        const user = await User.findById(UserID);
+        for (let projectID of user.projectIDs) {
+            const project = await getProjectById(projectID);
+            userProjects.push(project);
+        }
+
+        
+        return userProjects;
     } catch (error) {
         console.log(error);
     }
 }
+
+
 
 /**
  * @function Creates a new project in the database and adds it to the user's project list.
@@ -68,7 +84,7 @@ async function newProject(projectName, UserID) {
     return project._id;
 }
 
-//newProject('Test Project3', '624aace6e20f9986b02cc288');
+
 
 /**
  * @function The function will remove a project from the database. It will also remove the project from the user's project list.
@@ -180,7 +196,8 @@ async function addServiceToProject(projectId, serviceCategory, serviceId) {
 
 // Modules to export for testing purposes.
 module.exports = {
-    project,
+    showProjects,
+    newProject,
     getProjectById,
     getAllProjects,
     addUserToProject,
