@@ -31,9 +31,6 @@ app.use(sessions({
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-// Public assets
-app.use(express.static(path.join(__dirname, '../public')))
-
 // Routes path
 app.use('/', express.static('public'), require('./routes/web'))
 
