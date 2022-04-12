@@ -1,13 +1,25 @@
-<section class="table w-4/5 m-auto">
-    <article class="table-row">
-        <p class="table-cell text-left">Project name</p>
+<section class="flex justify-end w-4/5 m-auto pt-3.5">
+    <input type="button" value="Create Project" class="bg-slate-400 p-5 rounded cursor-pointer drop-shadow-md hover:bg-slate-700 hover:text-white">
+</section>
+
+<section class="table w-4/5 m-auto drop-shadow-md pt-3.5">
+    <article class="table-row bg-slate-500">
+        <p class="table-cell text-left p-5 text-white">Project name</p>
     </article>
-    <section class="table-row-group">
+    <section class="table-row-group bg-slate-200 rounded-md">
+        <% let i = 0; %>
         <% projects.forEach((project) => { %>
-        <article class="table-row">
-            <p class="table-cell"><%= project.name %></p>
-        </article>
+            <% if (i % 2 === 0) { %>
+                <article class="table-row">
+                    <p class="table-cell bg-slate-200 p-5 cursor-pointer hover:bg-slate-700 hover:text-white"><%= project.name %></p>
+                </article>
+            <% } else { %>
+                <article class="table-row">
+                    <p class="table-cell bg-slate-300 p-5 cursor-pointer hover:bg-slate-700 hover:text-white"><%= project.name %></p>
+                </article>
+            <% } %>
+            <% i++; %>
         <% }); %>
-    </article>
+    </section>
 </section>
 
