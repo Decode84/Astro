@@ -4,10 +4,12 @@ const userController = require('./UserController');
 const uid = require('uid-safe');
 const User = require('../Models/User');
 
+
 // ! Included for debugging purposes.
 const authenticationController = require('./AuthenticationController');
 
 function project(req, res) {
+    res.render("dashboard/Dashboard");
 }
 
 /**
@@ -183,4 +185,3 @@ module.exports = {
     addUserToProject,
     removeUserFromProject
 };
-

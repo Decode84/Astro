@@ -9,11 +9,6 @@ function trello(req, res) {
 }
 
 
-/*
-function authUser() {
-    fetch('https://trello.com/1/authorize?expiration=never&name=Project_Hub&scope=read&response_type=token&key=e5b8e9efa5bf84e76b15d443eb9b5afc')
-}
-*/
 /**
  * 
  * @param {String} name The name of the organization to be created.
