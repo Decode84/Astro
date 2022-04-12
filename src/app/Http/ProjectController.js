@@ -169,7 +169,6 @@ async function removeUserFromProject(projectId, UserId) {
 async function addServiceToProject(projectId, serviceCategory, serviceId) {
     // Get the project
     let project = await getProjectById(projectId);
-
     // Create new service object
     project.categories[serviceCategory].services = { ...project.categories[serviceCategory].services, [serviceId]: { state: 'active' } };
 
