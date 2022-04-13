@@ -12,6 +12,10 @@ function project(req, res) {
     res.render("project/project");
 }
 
+function projects(req, res) {
+    res.render("projects/index");
+}
+
 /**
  * @function Gets a project by id.
  * @param {String} id 
@@ -181,6 +185,7 @@ async function addServiceToProject(projectId, serviceCategory, serviceId) {
 // Modules to export for testing purposes.
 module.exports = {
     project,
+    projects,
     getProjectById,
     getAllProjects,
     addUserToProject,

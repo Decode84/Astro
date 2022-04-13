@@ -21,6 +21,9 @@ router.post('/logout', middleware.authLogin, auth.logout)
 // Project
 router.get('/project', proj.project)
 
+// Projects
+router.get('/projects', proj.projects)
+
 // Admin (TODO: check for role)
 router.get('/admin/board', middleware.authLogin, admin.showBoard)
 
