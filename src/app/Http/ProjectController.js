@@ -9,7 +9,11 @@ const User = require('../Models/User');
 const authenticationController = require('./AuthenticationController');
 
 function project(req, res) {
-    res.render("dashboard/Dashboard");
+    res.render("project/project");
+}
+
+function projects(req, res) {
+    res.render("projects/index");
 }
 
 /**
@@ -181,6 +185,7 @@ async function addServiceToProject(projectId, serviceCategory, serviceId) {
 // Modules to export for testing purposes.
 module.exports = {
     project,
+    projects,
     getProjectById,
     getAllProjects,
     addUserToProject,
