@@ -9,7 +9,7 @@ const User = require('../Models/User');
 const authenticationController = require('./AuthenticationController');
 
 function project(req, res) {
-    res.render("dashboard/Dashboard");
+    res.render("project/project");
 }
 
 /**
