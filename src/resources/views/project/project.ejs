@@ -7,28 +7,12 @@
     class="pl-2 py-4 flex flex-row items-center"
     style="width: var(--left-col-w); background-color: var(--pri-color)"
   >
-    <h1 class="text-4xl mr-0.5 text-gray-800 font-bold hover:cursor-pointer">
-      Project
-    </h1>
-    <h1
-      class="text-4xl px-1 h-full font-bold rounded text-white flex items-center hover:cursor-pointer"
-      style="background-color: var(--acc-color)"
-    >
-      Hub
-    </h1>
+    <%- include('./_partial/header/logo'); %>
   </div>
 
   <!-- Progress bar  -->
   <div class="flex-1 flex flex-col" style="background-color: var(--sec-color)">
-    <div class="px-5 flex items-center justify-center h-full">
-      <div class="w-full rounded-full h-5 bg-white">
-        <div
-          class="h-5 rounded-full drop-shadow-sm"
-          style="width: 70%; background-color: var(--acc-color)"
-        ></div>
-      </div>
-    </div>
-    <div class="mx-5 border-t border-gray-400"></div>
+    <%- include('./_partial/header/progressbar'); %>
   </div>
 
   <!-- Account  -->
@@ -36,46 +20,7 @@
     class="flex flex-col justify-center"
     style="width: var(--right-col-w); background-color: var(--sec-color)"
   >
-    <div class="px-3 w-full h-full flex flex-row items-center justify-center">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-10 w-10"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        stroke-width="1"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-        />
-      </svg>
-      <div class="m-0">
-        <p class="text-sm ml-2 font-normal">Brugernavn</p>
-        <p class="text-sm ml-2 font-light">Brugernavn@email.com</p>
-      </div>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-7 w-7 ml-auto hover:cursor-pointer"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        stroke-width="1"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-        />
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-        />
-      </svg>
-    </div>
-    <div class="mx-5 border-b border-gray-400"></div>
+    <%- include('./_partial/header/account'); %>
   </div>
 </header>
 
@@ -88,340 +33,22 @@
     class="px-2 py-5 overflow-y-auto"
     style="width: var(--left-col-w); background-color: var(--pri-color)"
   >
-    <nav>
-      <!-- My projects knappen  -->
-      <div class="h-fit w-full flex items-center hover:cursor-pointer">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6 rotate-180"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="1"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M9 5l7 7-7 7"
-          />
-        </svg>
-        <h1 class="text-base ml-1 font-normal">My Projects</h1>
-      </div>
-
-      <!-- Link liste  -->
-      <div class="pl-2 my-4 h-32 w-full">
-        <ul>
-          <li>
-            <a class="w-min hover:underline" href="">Dashboard</a>
-          </li>
-          <li><a class="w-min hover:underline" href="">Timeline</a></li>
-          <li><a class="w-min hover:underline" href="">Abscence</a></li>
-          <li><a class="w-min hover:underline" href="">Nothing</a></li>
-          <li><a class="w-min hover:underline" href="">Settings</a></li>
-        </ul>
-      </div>
-
-      <!-- Kategoriliste  -->
-      <div
-        class="my-2 flex flex-row items-center rounded hover:bg-gray-200 hover:cursor-pointer"
-      >
-        <h2 class="text-xl ml-1 font-light">Planning</h2>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="ml-auto"
-          style="width: var(--icon-size); height: var(--icon-size)"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="var(--acc-color)"
-          stroke-width="1"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-          />
-        </svg>
-      </div>
-
-      <div
-        class="my-2 flex flex-row items-center rounded hover:bg-gray-200 hover:cursor-pointer"
-      >
-        <h2 class="text-xl ml-1 font-light">Communication</h2>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="ml-auto"
-          style="width: var(--icon-size); height: var(--icon-size)"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="var(--acc-color)"
-          stroke-width="1"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-          />
-        </svg>
-      </div>
-
-      <div
-        class="my-2 flex flex-row items-center rounded hover:bg-gray-200 hover:cursor-pointer"
-      >
-        <h2 class="text-xl ml-1 font-light">Writing</h2>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="ml-auto"
-          style="width: var(--icon-size); height: var(--icon-size)"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="var(--acc-color)"
-          stroke-width="1"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-          />
-        </svg>
-      </div>
-
-      <div
-        class="my-2 flex flex-row items-center rounded hover:bg-gray-200 hover:cursor-pointer"
-      >
-        <h2 class="text-xl ml-1 font-light">Version control</h2>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="ml-auto"
-          style="width: var(--icon-size); height: var(--icon-size)"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="var(--acc-color)"
-          stroke-width="1"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-          />
-        </svg>
-      </div>
-
-      <div
-        class="my-2 flex flex-row items-center rounded hover:bg-gray-200 hover:cursor-pointer"
-      >
-        <h2 class="text-xl ml-1 font-light">UML/Tools</h2>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="ml-auto"
-          style="width: var(--icon-size); height: var(--icon-size)"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="var(--acc-color)"
-          stroke-width="1"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
-          />
-        </svg>
-      </div>
-
-      <div
-        class="my-2 flex flex-row items-center rounded hover:bg-gray-200 hover:cursor-pointer"
-      >
-        <h2 class="text-xl ml-1 font-light">File sharing</h2>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="ml-auto"
-          style="width: var(--icon-size); height: var(--icon-size)"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="var(--acc-color)"
-          stroke-width="1"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"
-          />
-        </svg>
-      </div>
-    </nav>
+    <%- include('./_partial/leftBar/navigation'); %>
   </div>
 
   <!-- Dynamic widgets  -->
   <div
     class="overflow-y-auto flex-1"
     style="background-color: var(--sec-color)"
-  ></div>
+  >
+    <%- include('./_partial/centerBar/dynamic'); %>
+  </div>
 
   <!-- Static widgets  -->
   <div
     class="flex flex-row"
     style="width: var(--right-col-w); background-color: var(--sec-color)"
   >
-    <div class="border-l border-gray-400 my-5"></div>
-    <div class="p-5 flex flex-col w-full overflow-y-auto">
-      <!-- Project members  -->
-      <div
-        class="bg-white rounded-sm px-4 pt-3 w-full h-1/4 drop-shadow-sm flex flex-col"
-      >
-        <!-- Række 1  -->
-        <h2 class="text-xl font-medium">Project members</h2>
-        <div class="flex flex-row">
-          <div
-            class="w-1/2 flex flex-row items-center rounded hover:bg-gray-200 hover:cursor-pointer"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-0.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="1"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <p>Aleksander</p>
-          </div>
-          <div
-            class="w-1/2 flex flex-row items-center rounded hover:bg-gray-200 hover:cursor-pointer"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-0.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="1"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <p>Aavild</p>
-          </div>
-        </div>
-
-        <!-- Række 2  -->
-        <div class="flex flex-row">
-          <div
-            class="w-1/2 flex flex-row items-center rounded hover:bg-gray-200 hover:cursor-pointer"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-0.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="1"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <p>Erik</p>
-          </div>
-          <div
-            class="w-1/2 flex flex-row items-center rounded hover:bg-gray-200 hover:cursor-pointer"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-0.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="1"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <p>Jakob</p>
-          </div>
-        </div>
-
-        <!-- Række 3  -->
-        <div class="flex flex-row">
-          <div
-            class="w-1/2 flex flex-row items-center rounded hover:bg-gray-200 hover:cursor-pointer"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-0.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="1"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <p>Mike</p>
-          </div>
-          <div
-            class="w-1/2 flex flex-row items-center rounded hover:bg-gray-200 hover:cursor-pointer"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-0.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="1"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <p>Rasmus</p>
-          </div>
-        </div>
-
-        <!-- Række 4  -->
-        <div class="flex flex-row">
-          <div
-            class="w-1/2 flex flex-row items-center rounded hover:bg-gray-200 hover:cursor-pointer"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-0.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="1"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <p>William</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Chat/Calender  -->
-      <div class="bg-white my-8 rounded-sm w-full h-2/4 drop-shadow-sm">
-        <div class="px-4 pt-3">Test test TEST 123 abc !"#¤%&/()=</div>
-      </div>
-    </div>
+    <%- include('./_partial/rightBar/static'); %>
   </div>
 </main>
