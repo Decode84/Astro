@@ -14,6 +14,7 @@ const { authenticateValidation, registerValidation } = require('../app/Validatio
 router.get('/login', auth.showLogin)
 router.get('/register', auth.showRegister)
 router.get('/forgot', auth.showForgot)
+router.get('/reset', auth.showReset)
 router.post('/authenticate', authenticateValidation, auth.authenticate)
 router.post('/signup', registerValidation, auth.signup)
 router.post('/logout', middleware.authLogin, auth.logout)
