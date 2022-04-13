@@ -8,14 +8,32 @@ const User = require('../Models/User');
 // ! Included for debugging purposes.
 const authenticationController = require('./AuthenticationController');
 
+/**
+ * @function Shows a list of all the users projects
+ * @param {*} req 
+ * @param {*} res 
+ */
 function showProjects(req, res) {
-    console.log(req.session.user._id);
 
     getAllProjects(req.session.user._id).then(projects => {
 
         res.render('project-overview/overview', { projects: projects });
 
     });
+
+    if (req.method == 'get') {
+        createProject(req, res);
+    }
+
+}
+
+/**
+ * @function Displays the create project page, and creates a new project if the user submits the form.
+ * @param {*} req
+ * @param {*} res
+ */
+function createProject(req, res) {
+    res.render('project-overview/createProject');
 
 }
 
@@ -197,6 +215,7 @@ async function addServiceToProject(projectId, serviceCategory, serviceId) {
 // Modules to export for testing purposes.
 module.exports = {
     showProjects,
+    createProject,
     newProject,
     getProjectById,
     getAllProjects,

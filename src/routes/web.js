@@ -20,12 +20,13 @@ router.post('/signup', registerValidation, auth.signup)
 router.post('/logout', middleware.authLogin, auth.logout)
 
 // Project
-router.get('/project', dash.project)
+//router.get('/project', dash.project)
 
 // Admin (TODO: check for role)
 router.get('/admin/board', middleware.authLogin, admin.showBoard)
 
 // Project
 router.get('/projects', project.showProjects)
+router.get('/create-project', project.createProject)
 
 module.exports = router
