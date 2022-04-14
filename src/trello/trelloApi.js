@@ -9,7 +9,7 @@ const trelloKey = 'e5b8e9efa5bf84e76b15d443eb9b5afc';
 
 async function trello(req, res) {
     let return_url = 'http://localhost:4000/trello/callback';
-    res.redirect('https://trello.com/1/authorize?return_url=' + return_url + '&callback_method=fragment&?expiration=1hour&name=Project_Hub&response_type=fragment&scope=read&key=' + trelloKey);
+    res.redirect('https://trello.com/1/authorize?return_url=' + return_url + '&callback_method=fragment&?expiration=30days&name=Project_Hub&response_type=fragment&scope=read,write,account&key=' + trelloKey);
 }
 
 async function recieveToken(req, res) {
@@ -22,20 +22,20 @@ async function recieveToken(req, res) {
     }
     else {
         token = req.query.token;
-        
+
         // Save token to database
         let user = await userController.getUser(req.session.user._id);
         user.authentications = { ...user.authentications, trello: { token: token } };
 
         user.markModified('authentications');
         await user.save();
-        
+
     }
 }
 
 async function setup_trello(name, projectId, userId) {
     await newOrganization(name, userId, projectId);
-    await newBoard(name, projectId, userId);
+    await newBoard('SCRUM', projectId, userId);
 }
 
 
@@ -75,8 +75,6 @@ async function newOrganization(name, userId, projectId) {
 
             project.categories.planning.services = service;
 
-            console.log(project.categories.planning.services);
-
             await project.save();
         }
     }
@@ -92,6 +90,7 @@ async function newOrganization(name, userId, projectId) {
  */
 async function newBoard(name, projectId, userId) {
     let project = await projectController.getProjectById(projectId);
+    let user = await userController.getUser(userId);
     let response;
     try {
         let organizationId = project.categories.planning.services.trello.organizationId;
