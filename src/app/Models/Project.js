@@ -8,22 +8,22 @@ projectSchema = new Schema({
     categories:
     {
         messaging: {
-            services: {}
+            services: Schema.Types.Mixed,
         },
         planning: {
-            services: {}
+            services: Schema.Types.Mixed,
         },
         development: {
-            services: {}
+            services: Schema.Types.Mixed,
         },
         document: {
-            services: {}
+            services: Schema.Types.Mixed,
         },
         uml: {
-            services: {}
+            services: Schema.Types.Mixed,
         },
         filesharing: {
-            services: {}
+            services: Schema.Types.Mixed,
         }
     },
 
