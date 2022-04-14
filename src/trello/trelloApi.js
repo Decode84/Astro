@@ -31,7 +31,11 @@ async function recieveToken(req, res) {
         await user.save();
         
     }
+}
 
+async function setup_trello(name, projectId, userId) {
+    await newOrganization(name, userId, projectId);
+    await newBoard(name, projectId, userId);
 }
 
 
