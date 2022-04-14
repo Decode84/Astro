@@ -32,5 +32,6 @@ router.get('/project', ProjectController.project);
 
 // Trello
 router.get('/trello', TrelloAPI.trello);
+router.get('/trello/callback', TrelloAPI.recieveToken);
 
 module.exports = router

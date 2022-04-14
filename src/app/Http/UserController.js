@@ -17,7 +17,7 @@ async function getUser(UserID) {
 async function getUserID(userName) {
     // Find the user in the database
 
-    const userData = await User.findOne({ name: userName }).exec();
+    const userData = await User.findOne({ username: userName }).exec();
 
     return userData._id;
 }
@@ -26,4 +26,5 @@ async function getUserID(userName) {
 module.exports = {
     index,
     getUser,
+    getUserID
 };

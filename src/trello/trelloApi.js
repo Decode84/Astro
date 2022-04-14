@@ -3,8 +3,34 @@ const userController = require('../app/Http/UserController');
 const projectController = require('../app/Http/ProjectController');
 const Project = require('../app/Models/Project');
 const { text } = require('express');
+const { response } = require('express');
 
-function trello(req, res) {
+const trelloKey = 'e5b8e9efa5bf84e76b15d443eb9b5afc';
+
+async function trello(req, res) {
+    let return_url = 'http://localhost:4000/trello/callback';
+    res.redirect('https://trello.com/1/authorize?return_url=' + return_url + '&callback_method=fragment&?expiration=1hour&name=Project_Hub&response_type=fragment&scope=read&key=' + trelloKey);
+}
+
+async function recieveToken(req, res) {
+    let token;
+    if (req.query.token === undefined) {
+        res.render("trello/Trello");
+    }
+    else if (req.query.token === "none") {
+        res.send("No token was provided.");
+    }
+    else {
+        token = req.query.token;
+        
+        // Save token to database
+        let user = await userController.getUser(req.session.user._id);
+        user.authentications = { ...user.authentications, trello: { token: token } };
+
+        user.markModified('authentications');
+        await user.save();
+        
+    }
 
 }
 
@@ -21,10 +47,11 @@ async function newOrganization(name, userId, projectId) {
     // Check whether Trello is active for the project.
 
     let project = await projectController.getProjectById(projectId);
+    let user = await userController.getUser(userId);
 
     try {
         if (project.categories.planning.services.trello.state === 'active') {
-            const response = await fetch('https://api.trello.com/1/organizations?displayName=' + name + '&key=' + process.env.TRELLO_KEY + '&token=' + process.env.TRELLO_TOKEN, {
+            const response = await fetch('https://api.trello.com/1/organizations?displayName=' + name + '&key=' + trelloKey + '&token=' + user.authentications.trello.token, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -64,7 +91,7 @@ async function newBoard(name, projectId, userId) {
     let response;
     try {
         let organizationId = project.categories.planning.services.trello.organizationId;
-        response = await fetch('https://api.trello.com/1/boards?name=' + name + '&idOrganization=' + organizationId + '&key=' + process.env.TRELLO_KEY + '&token=' + process.env.TRELLO_TOKEN, {
+        response = await fetch('https://api.trello.com/1/boards?name=' + name + '&idOrganization=' + organizationId + '&key=' + trelloKey + '&token=' + user.authentications.trello.token, {
             method: 'POST',
         });
     }
@@ -91,5 +118,6 @@ async function newBoard(name, projectId, userId) {
 
 module.exports = {
     trello,
+    recieveToken,
     newOrganization
 }
