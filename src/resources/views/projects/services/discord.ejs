@@ -2,8 +2,10 @@
     Hoi!
 </div>
 <a id="login" class="hidden" href="<%- AuthLink %>">Discord Auth</a>
-<a id="Create Server" href="<%- CreateServerLink %>"></a>
-<a id="Join/Open server" href=" <%- ServerInviteLink %>"></a>
+<a id="Create Server" class="" href="<%- CreateServerLink %>" target="_blank">Discord Link</a>
+<% if (ServerInviteLink) { %>
+    <a id="Join server" href="<%- ServerInviteLink %>" target="_blank">Join/Open server</a>
+<% } %>
 <div id="chat">
 
 </div>

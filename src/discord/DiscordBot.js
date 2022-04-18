@@ -1,5 +1,4 @@
-// Discord bot invite link: https://discord.com/api/oauth2/authorize?client_id=959004457205637131&permissions=2684611713&redirect_uri=http%3A%2F%2Flocalhost%3A3000&scope=bot%20applications.commands
-//https://discord.com/api/oauth2/authorize?client_id=959004457205637131&permissions=537119937&scope=bot%20applications.commands
+// Discord bot invite link: https://discord.com/api/oauth2/authorize?client_id=959004457205637131&permissions=537119937&scope=bot%20applications.commands
 const path = require('path');
 const { Client, Intents } = require('discord.js');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
