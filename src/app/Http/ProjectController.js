@@ -4,11 +4,16 @@ const userController = require('./UserController');
 const uid = require('uid-safe');
 const User = require('../Models/User');
 
+
 // ! Included for debugging purposes.
 const authenticationController = require('./AuthenticationController');
 
 function project(req, res) {
+    res.render("project/project");
+}
 
+function projects(req, res) {
+    res.render("projects/index");
 }
 
 /**
@@ -170,19 +175,20 @@ async function removeUserFromProject(projectId, UserId) {
 async function addServiceToProject(projectId, serviceCategory, serviceId) {
     // Get the project
     let project = await getProjectById(projectId);
-
     // Create new service object
-    project.categories[serviceCategory].services = {...project.categories[serviceCategory].services, [serviceId]: {state: 'active'}};
+    project.categories[serviceCategory].services = { ...project.categories[serviceCategory].services, [serviceId]: { state: 'active' } };
 
     await project.save();
 }
 
+
+
 // Modules to export for testing purposes.
 module.exports = {
     project,
+    projects,
     getProjectById,
     getAllProjects,
     addUserToProject,
     removeUserFromProject
 };
-
