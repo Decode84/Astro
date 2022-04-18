@@ -8,7 +8,6 @@ const { Routes } = require('discord-api-types/v10');
 //Discord settings -> Advanced Page -> enable developer mode. Then right-click the guild(discordServer), copy ID and
 // parse in the guildID string
 const clientID = "959004457205637131"; //bot userid to register on (always the same)
-const guildID = "677180947677970458"; //Server to register on
 const token = process.env.DISCORD_BOT_TOKEN;
 if (!token) //Should never happen
 {
@@ -29,7 +28,7 @@ const rest = new REST({ version: '10' }).setToken(token);
     try {
         console.log('Started refreshing application (/) commands.');
 
-        await rest.put(Routes.applicationGuildCommands(clientID, guildID), { body: commands });
+        await rest.put(Routes.applicationCommands(clientID), { body: commands });
 
         console.log('Successfully reloaded application (/) commands.');
     } catch (error) {
