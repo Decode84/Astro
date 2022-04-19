@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-:root{
+:root {
     --min-window-w: 1000px;
 
     --header-h: 5rem;
@@ -11,7 +11,7 @@
     --icon-size: 2.5rem;
 
     --pri-color: #fff;
-    --sec-color: #e8e8e8;
+    --sec-color: #f5f5f5;
     --acc-color: #2563EB;
 }
 

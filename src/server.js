@@ -44,7 +44,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 // Routes path
-app.use('/', express.static('public'), require('./routes/web'))
+app.use('/', express.static('public'), require('./routes'))
 
 // Server app
 const PORT = process.env.PRI_SERVER_PORT || process.env.SEC_SERVER_PORT
