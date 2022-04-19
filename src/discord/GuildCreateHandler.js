@@ -3,16 +3,12 @@ const Project = require('../app/Models/Project')
 const { MessageActionRow, MessageButton } = require('discord.js')
 // https://discord.js.org/#/docs/main/stable/class/ClientUser?scrollTo=send
 async function OnGuildCreate (guild) {
-    /* guild.fetchAuditLogs().then(audit => {
-        audit.entries.first().executor.send('Hello thanks for adding me')
-    }) */
-    const auditLogs = await guild.fetchAuditLogs()
-    const user = await auditLogs.entries.first().executor
+    // TODO: make sure that the bot has all the needed perms
+    const auditLogs = await guild.fetchAuditLogs() // auditLogs is the discord servers log for everything the admins do
+    const user = await auditLogs.entries.first().executor // We know this is the admin who added the bot
     const userInDB = await User.findOne({ discord: user.id }, 'projectIDs')
     await userInDB
-    // console.log("User in DB: " + userInDB)
     const projects = userInDB.projectIDs
-    // console.log("User is part of " + projects.length + "projects")
     if (projects.length === 0) {
         const message = `Hello thanks for adding me to ${guild.name} (id:${guild.id})\n
         Unfortunately as of right now, you're not part of any projects in ProjectHub.\n
@@ -22,23 +18,42 @@ async function OnGuildCreate (guild) {
     }
     const message = `Hello thanks for adding me to ${guild.name} (id:${guild.id})\nClick to link to project:\n`
 
+    const buttonRows = await CreateButtons(projects)
+    // Send message with string contents and button
+    const sentMessage = await user.send({ content: message, components: buttonRows })
+    await CreateCollector(guild, sentMessage) // eventListener for when the user clicks the button
+}
+/**
+ * @function Creates buttons for the message. One button for each plausible project. A collector will later make the
+ * buttons do the linking.
+ * @param {int[]} projects
+ */
+async function CreateButtons (projects) {
+    // The buttons can max have 5 rows and 5 buttons in each row for a total of 25 buttons. NO MORE
+    // buttons can be added in a single message. This restriction is made by discord
+    const buttonRows = []
     if (projects.length > 25) { console.log('Too many projects') } // TODO: handling of more than 25 projects for a user
-    const rowArray = []
     let currentRow = new MessageActionRow()
-    for (let i = 0; i < projects.length; i++) { // TODO: Error handling in case projectid is incorrect
-        // console.log("Current projectID: " + projects[i])
-        const project = await Project.findById(projects[i])
+    // Each loop adds 1 button
+    for (let i = 0; i < projects.length; i++) {
+        const project = await Project.findById(projects[i]) // TODO: Error handling in case projectid is incorrect
         await project
-        // console.log("Project found: " + project)
         currentRow.addComponents(new MessageButton().setCustomId(`${projects[i]}`).setLabel(`${project.name}`).setStyle('PRIMARY'))
         if (i % 5 === 4) {
-            rowArray.push(currentRow)
+            buttonRows.push(currentRow)
             currentRow = new MessageActionRow()
         }
     }
-    if (projects.length % 5 !== 4) { rowArray.push(currentRow) }
-
-    const sentMessage = await user.send({ content: message, components: rowArray })
+    if (projects.length % 5 !== 4) { buttonRows.push(currentRow) }
+    return buttonRows
+}
+/**
+ * @function Creates a collector for the buttons. Finds the project based on the button, Creates a webhook and invitelink
+ * and updates the project in the database with serverid, invitelink and webhook. This is what links the project and Discord
+ * @param {Message<boolean>} sentMessage
+ * @param {guild} guild
+ */
+async function CreateCollector(guild, sentMessage) {
     const collector = sentMessage.createMessageComponentCollector({
         componentType: 'BUTTON',
         maxComponents: 1
@@ -46,21 +61,30 @@ async function OnGuildCreate (guild) {
     collector.on('collect', async messageInteraction => {
         const projectID = messageInteraction.customId
         const project = await Project.findById(projectID)
+        await messageInteraction.update({
+            content: `You have linked guild ${guild.id} to: ${project.name}`,
+            components: []
+        })
+        // TODO: handle the usecase where project is already linked or make already linked projects not display
 
         const discord = { serverID: `${guild.id}`, Webhook: '', inviteLink: '' }
-
-        // project.categories.messaging.services.push('Discord Server: ' + guild.id)
         const web = await CreateWebHook(guild, discord)
         const invite = await CreateInvite(guild, discord)
-        await messageInteraction.update({ content: `You have linked guild ${guild.id} to: ${project.name}`, components: [] })
         await web;
         await invite;
+
+        //Update DB
         project.categories.messaging.services = { ...project.categories.messaging.services, discord }
-        console.log(project.categories.messaging.services)
         project.markModified('categories.messaging.services')
         project.save()
     })
 }
+/**
+ * @function Creates a discord invite
+ * @param {{Webhook: string}} discord
+ * @param {guild} guild
+ * @returns {Promise<Project>} Promise of Webhook written to discord.invitelink.
+ */
 function CreateWebHook (guild, discord) {
     return guild.channels.fetch()
         .then(channels => {
@@ -74,6 +98,12 @@ function CreateWebHook (guild, discord) {
         })
         .catch(console.error)
 }
+/**
+ * @function Creates a discord invite
+ * @param {{inviteLink: string}} discord
+ * @param {guild} guild
+ * @returns {Promise<Project>} Promise of invite written to discord.invitelink.
+ */
 function CreateInvite (guild, discord) {
     return guild.channels.fetch()
         .then(channels => {

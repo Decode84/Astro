@@ -31,11 +31,8 @@ client.on('interactionCreate', async interaction => {
         await commandHandler.Handlecommand(interaction);
     //else if(interaction.is) add other interaction than commands here
 });
-client.on("guildCreate", async guild => {
-    //whenever the bot is added to a new discord server
-    await guildCreateHandler.OnGuildCreate(guild);
-
-})
+//whenever the bot is added to a new discord server
+client.on("guildCreate",  guild => guildCreateHandler.OnGuildCreate(guild))
 
 // Login to Discord with the client's token
 client.login(token);
