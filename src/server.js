@@ -36,9 +36,6 @@ app.use(sessions({
     })
 }))
 
-// Security
-app.use(helmet())
-
 // create req.body method
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
