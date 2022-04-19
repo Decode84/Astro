@@ -27,7 +27,7 @@
     "discord-api-types": "^0.31.0",
     "discord.js": "^13.6.0",
     "dotenv": "^16.0.0",
-    "ejs": "^3.1.6",
+    "ejs": "^3.0.2",
     "express": "^4.17.3",
     "express-ejs-layouts": "^2.5.1",
     "express-rate-limit": "^6.3.0",
