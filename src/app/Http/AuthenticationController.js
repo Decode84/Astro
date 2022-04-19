@@ -9,7 +9,7 @@ class AuthenticationController {
      */
     async showLogin(req, res) {
         if (req.session.user) {
-            res.redirect('/dashboard')
+            res.redirect('/projects')
         } else {
             res.render('auth/login')
         }
@@ -22,7 +22,7 @@ class AuthenticationController {
      */
     async showRegister(req, res) {
         if (req.session.user) {
-            res.redirect('/dashboard')
+            res.redirect('/projects')
         } else {
             res.render('auth/register')
         }
@@ -35,7 +35,7 @@ class AuthenticationController {
      */
     async showForgot(req, res) {
         if (req.session.user) {
-            res.redirect('/dashboard')
+            res.redirect('/projects')
         } else {
             res.render('auth/forgot')
         }
@@ -70,7 +70,7 @@ class AuthenticationController {
                 if (isMatch) {
                     req.session.regenerate(() => {
                         req.session.user = user
-                        res.redirect('/dashboard')
+                        res.redirect('/projects')
                     })
                 } else {
                     return res.status(400).send('Incorrect password')
@@ -97,7 +97,7 @@ class AuthenticationController {
                 newUser.password = hash
                 newUser.save().then((user) => {
                     req.session.user = user
-                    res.redirect('/dashboard')
+                    res.redirect('/projects')
                 }).catch((err) => console.log(err))
             })
         })
