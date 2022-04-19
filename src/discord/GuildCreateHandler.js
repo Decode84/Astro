@@ -53,7 +53,7 @@ async function CreateButtons (projects) {
  * @param {Message<boolean>} sentMessage
  * @param {guild} guild
  */
-async function CreateCollector(guild, sentMessage) {
+async function CreateCollector (guild, sentMessage) {
     const collector = sentMessage.createMessageComponentCollector({
         componentType: 'BUTTON',
         maxComponents: 1
@@ -70,10 +70,10 @@ async function CreateCollector(guild, sentMessage) {
         const discord = { serverID: `${guild.id}`, Webhook: '', inviteLink: '' }
         const web = await CreateWebHook(guild, discord)
         const invite = await CreateInvite(guild, discord)
-        await web;
-        await invite;
+        await web
+        await invite
 
-        //Update DB
+        // Update DB
         project.categories.messaging.services = { ...project.categories.messaging.services, discord }
         project.markModified('categories.messaging.services')
         project.save()
@@ -111,9 +111,9 @@ function CreateInvite (guild, discord) {
                 maxAge: 0,
                 reason: 'Invite project members from ProjectHub'
             }).then(invite => {
-                    console.log(`Created invitelink: ${invite.url}`)
-                    discord.inviteLink = `${invite.url}`
-                })
+                console.log(`Created invitelink: ${invite.url}`)
+                discord.inviteLink = `${invite.url}`
+            })
         })
 }
 
