@@ -13,7 +13,7 @@ function project(req, res) {
 }
 
 function projects(req, res) {
-    res.render("projects/index");
+    res.render("projects/projects");
 }
 
 /**

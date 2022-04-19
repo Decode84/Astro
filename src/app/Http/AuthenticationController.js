@@ -7,7 +7,7 @@ class AuthenticationController {
      * @param {*} req
      * @param {*} res
      */
-    async showLogin (req, res) {
+    async showLogin(req, res) {
         if (req.session.user) {
             res.redirect('/projects')
         } else {
@@ -20,7 +20,7 @@ class AuthenticationController {
      * @param {*} req
      * @param {*} res
      */
-    async showRegister (req, res) {
+    async showRegister(req, res) {
         if (req.session.user) {
             res.redirect('/projects')
         } else {
@@ -33,11 +33,24 @@ class AuthenticationController {
      * @param {*} req
      * @param {*} res
      */
-    async showForgot (req, res) {
+    async showForgot(req, res) {
         if (req.session.user) {
             res.redirect('/projects')
         } else {
             res.render('auth/forgot')
+        }
+    };
+
+    /**
+     * Show the reset page if user wants to reset password
+     * @param {*} req
+     * @param {*} res
+     */
+    async showReset(req, res) {
+        if (req.session.user) {
+            res.redirect('/dashboard')
+        } else {
+            res.render('auth/reset')
         }
     };
 
@@ -47,7 +60,7 @@ class AuthenticationController {
      * @param {*} res
      * @returns
      */
-    async authenticate (req, res) {
+    async authenticate(req, res) {
         const { username, password } = req.body
 
         User.findOne({ username }).then((user) => {
@@ -72,7 +85,7 @@ class AuthenticationController {
      * @param {*} res
      * @returns
      */
-    async signup (req, res) {
+    async signup(req, res) {
         const { name, username, email, password, passwordConfirmation } = req.body
 
         User.findOne({ username }).then((user) => {
@@ -95,7 +108,7 @@ class AuthenticationController {
      * @param {*} req
      * @param {*} res
      */
-    async logout (req, res) {
+    async logout(req, res) {
         if (req.session) {
             req.session.destroy(() => {
                 res.redirect('/login')
