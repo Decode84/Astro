@@ -38,5 +38,9 @@ router.get('/project', ProjectController.project);
 // Trello
 router.get('/trello', TrelloAPI.trello);
 router.get('/trello/callback', TrelloAPI.recieveToken);
+router.get('/trello/newCard', TrelloAPI.newCard);
+
+// Trello API
+router.get('/api/trello/boards', TrelloAPI.listBoards);
 
 module.exports = router

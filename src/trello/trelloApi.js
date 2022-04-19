@@ -33,12 +33,6 @@ async function recieveToken(req, res) {
     }
 }
 
-async function setup_trello(name, projectId, userId) {
-    await newOrganization(name, userId, projectId);
-    await newBoard('SCRUM', projectId, userId);
-}
-
-
 /**
  * 
  * @param {String} name The name of the organization to be created.
@@ -88,7 +82,7 @@ async function newOrganization(name, userId, projectId) {
  * @param {String} name The name of the board to be created.
  * @param {String} projectId The id of the project that the board is being created for.
  */
-async function newBoard(name, projectId, userId) {
+async function newBoard(req, res) {
     let project = await projectController.getProjectById(projectId);
     let user = await userController.getUser(userId);
     let response;
@@ -119,8 +113,33 @@ async function newBoard(name, projectId, userId) {
     }
 }
 
+async function listBoards(req, res) {
+    let project = await projectController.getProjectById(req.query.projectId);
+
+    let boards = project.categories.planning.services.trello.boards;
+
+    // Stringify the boards array.
+    boards = JSON.stringify(boards);
+
+    res.send(boards);
+
+}
+
+async function newCard(req, res) {
+    res.render('trello/newCard');
+}
+
+async function setup_trello(name, projectId, userId) {
+    await newOrganization(name, userId, projectId);
+    await newBoard('SCRUM', projectId, userId);
+}
+
+//setup_trello('Test', '625d2ed188495243aad5692c', '625d11fc70fdf0be1e388963');
+
 module.exports = {
     trello,
+    listBoards,
+    newCard,
     recieveToken,
     newOrganization
 }

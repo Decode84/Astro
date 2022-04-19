@@ -181,7 +181,8 @@ async function addServiceToProject(projectId, serviceCategory, serviceId) {
     await project.save();
 }
 
-
+//newProject('Test Project', '625d11fc70fdf0be1e388963');
+//addServiceToProject('625d2ed188495243aad5692c', 'planning', 'trello');
 
 // Modules to export for testing purposes.
 module.exports = {
