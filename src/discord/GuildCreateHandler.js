@@ -47,18 +47,18 @@ async function OnGuildCreate (guild) {
         const projectID = messageInteraction.customId
         const project = await Project.findById(projectID)
 
-        const discord = { serverID: `${guild.id}`, Webhook: '', invteLink: '' }
+        const discord = { serverID: `${guild.id}`, Webhook: '', inviteLink: '' }
 
         // project.categories.messaging.services.push('Discord Server: ' + guild.id)
-        CreateWebHook(guild, discord) //TODO: Fix promises
-            .then(CreateInvite(guild, discord))
-            .then(() => {
-                messageInteraction.update({ content: `You have linked guild ${guild.id} to: ${project.name}`, components: [] })
-                project.categories.messaging.services = { ...project.categories.messaging.services, discord }
-                console.log(project.categories.messaging.services)
-                project.markModified('categories.messaging.services')
-                project.save()
-            })
+        const web = await CreateWebHook(guild, discord)
+        const invite = await CreateInvite(guild, discord)
+        await messageInteraction.update({ content: `You have linked guild ${guild.id} to: ${project.name}`, components: [] })
+        await web;
+        await invite;
+        project.categories.messaging.services = { ...project.categories.messaging.services, discord }
+        console.log(project.categories.messaging.services)
+        project.markModified('categories.messaging.services')
+        project.save()
     })
 }
 function CreateWebHook (guild, discord) {
@@ -80,10 +80,9 @@ function CreateInvite (guild, discord) {
             guild.invites.create(channels.first(), {
                 maxAge: 0,
                 reason: 'Invite project members from ProjectHub'
-            })
-                .then(invite => {
-                    console.log(`Created invitelink: ${invite.code}`)
-                    discord.inviteLink = `${invite.code}`
+            }).then(invite => {
+                    console.log(`Created invitelink: ${invite.url}`)
+                    discord.inviteLink = `${invite.url}`
                 })
         })
 }
