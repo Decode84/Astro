@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const User = require('../Models/User')
+const Project = require('../Models/Project');
 
 const clientID = '959004457205637131'; // bot userid to register on (always the same)
 const secret = process.env.DISCORD_APPLICATION_SECRET;
@@ -18,9 +19,13 @@ exports.discordAuth = async (req, res) => {
     if (code) {
         await handleAuth(req, code)
     }
-
+    let ServerInviteLink = ''
+    const project = await Project.findById(TEMP_currentproject)
+    await project
+    if (project.categories.messaging.services.discord)
+        ServerInviteLink = project.categories.messaging.services.discord.inviteLink;
     res.render('projects/services/discord', {
-        AuthLink: AuthLink, InviteBotLink: InviteBotLink, CreateServerLink: CreateServerLink, ServerInviteLink: '' })
+        AuthLink: AuthLink, InviteBotLink: InviteBotLink, CreateServerLink: CreateServerLink, ServerInviteLink: ServerInviteLink })
 }
 
 async function handleAuth (req, code) {
