@@ -27,6 +27,7 @@ const UserSchema = new Schema({
     HashedPassword: String,
     projectIDs: [
     ],
-});
+    authentications: Schema.Types.Mixed,
+}, { strict: false });
 
 module.exports = mongo.model("User", UserSchema);
