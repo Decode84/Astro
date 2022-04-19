@@ -1,6 +1,6 @@
 async function main() {
     let boards = await getBoards();
-    displayBoards(boards);
+    //displayBoards(boards);
 }
 
 async function getBoards() {
@@ -10,26 +10,37 @@ async function getBoards() {
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('Accept', 'application/json');
     xhr.onload = function () {
+        let boards;
         if (xhr.status === 200) {
-            let boards = JSON.parse(xhr.responseText);
-            console.log(boards);
+            console.log(xhr.responseText);
+            boards = JSON.parse(xhr.responseText);
+            return boards;
         }
+        else {
+            boards = null;
+            return boards;
+        }
+        /*
+        let json = await response.json();
+    
+        let boardArray = [];
+        for (let i = 0; i < json.length; i++) {
+            boardArray.push({
+                id: json[i].id,
+                name: json[i].name,
+            });
+        }
+        return boardArray;
+        */
     }
-    /*
-    let json = await response.json();
-
-    let boardArray = [];
-    for (let i = 0; i < json.length; i++) {
-        boardArray.push({
-            id: json[i].id,
-            name: json[i].name,
-        });
-    }
-    return boardArray;
-    */
 }
 
 async function displayBoards(boards) {
+
+    if (boards === null) {
+        let option = document.getElementById('select-option');
+        option.text = 'No Boards Found';
+    }
     // Get select element
     let select = document.getElementById('board-select');
     // Add options

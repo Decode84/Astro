@@ -4,6 +4,7 @@ const projectController = require('../app/Http/ProjectController');
 const Project = require('../app/Models/Project');
 const { text } = require('express');
 const { response } = require('express');
+const { send } = require('express/lib/response');
 
 const trelloKey = 'e5b8e9efa5bf84e76b15d443eb9b5afc';
 
@@ -29,7 +30,6 @@ async function recieveToken(req, res) {
 
         user.markModified('authentications');
         await user.save();
-
     }
 }
 
@@ -114,6 +114,10 @@ async function newBoard(req, res) {
 }
 
 async function listBoards(req, res) {
+    console.log('Im here');
+    if (req.query.projectId === undefined) {
+        res.send(null);
+    }
     let project = await projectController.getProjectById(req.query.projectId);
 
     let boards = project.categories.planning.services.trello.boards;
