@@ -1,11 +1,14 @@
 const router = require('express').Router()
 const auth = require('../app/Http/AuthenticationController')
 const admin = require('../app/Http/Admin/AdminController')
+const ProjectController = require('../app/Http/ProjectController');
+const TrelloAPI = require('../trello/trelloApi');
 const middleware = require('../app/Middleware/Authorization')
 const proj = require('../app/Http/ProjectController')
 
 const { createAccountLimit, loginLimit } = require('../app/Middleware/Rate')
 const { authenticateValidation, registerValidation } = require('../app/Validation/AuthValidation')
+
 
 /**
  * This web file is the router used to describe the correspondence
@@ -29,5 +32,12 @@ router.get('/projects', proj.projects)
 
 // Admin (TODO: check for role)
 router.get('/admin/board', middleware.authLogin, admin.showBoard)
+
+// Project
+router.get('/project', ProjectController.project);
+
+// Trello
+router.get('/trello', TrelloAPI.trello);
+router.get('/trello/callback', TrelloAPI.recieveToken);
 
 module.exports = router
