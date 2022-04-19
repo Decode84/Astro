@@ -12,7 +12,7 @@
         </label>
         <div class="mb-6 flex justify-between">
             <div class="w-10/12">
-                <input class="shadow appearance-none border border-red-500 rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="inviteInput" type="email" placeholder="bdsm69@student.aau.dk">
+                <input class="shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="inviteInput" type="email" placeholder="bdsm69@student.aau.dk">
             </div>
             <input class="bg-blue-500 hover:bg-blue-700 text-white font-bold px-3.5 cursor-pointer rounded focus:outline-none focus:shadow-outline" type="button" id="inviteMember" value="Invite">
         </div>
@@ -56,12 +56,15 @@
                 projectName: document.getElementById('projectName').value,
                 emails: emails
             })
+        }).then((res) => {
+            if (res.status === 200) {
+                window.location.href = '/projects';
+            } else {
+                alert('Something went wrong');
+            }
         });
+    };
 
-        let data = await response.json();
-
-        console.log('here is data: ', data);
-    }
 
     // add email to array and displays it in the invited members section
     document.getElementById("inviteMember").addEventListener('click', () => {
@@ -76,6 +79,7 @@
             document.getElementById("invited").appendChild(invited);
             emails.push(email);
             console.log(emails);
+            document.getElementById("inviteInput").value = "";
         }
     })
 </script>

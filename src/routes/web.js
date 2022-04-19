@@ -28,7 +28,11 @@ router.get('/admin/board', middleware.authLogin, admin.showBoard)
 // Project
 router.get('/projects', project.showProjects)
 router.get('/create-project', project.createProject)
-router.post('/create-project', project.createProject)
 router.get('/project/:id', project.showProject)
+router.get('/project/:id/edit', project.editProject)
+router.post('/create-project', project.createProject)
+router.post('/projects', project.showProjects)
+router.post('/project/:id', project.showProject)
+router.post('/project/:id/edit', project.editProject)
 
 module.exports = router

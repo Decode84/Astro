@@ -15,16 +15,29 @@ const authenticationController = require('./AuthenticationController');
  */
 function showProjects(req, res) {
 
-    getAllProjects(req.session.user._id).then(projects => {
 
-        res.render('project-overview/overview', { projects: projects });
+    if (req.method == 'POST') {
+        delProject(req.body.projectId);
 
-    });
+        res.redirect('/projects');
+    } else {
+        getAllProjects(req.session.user._id).then(projects => {
 
-    if (req.method == 'get') {
-        createProject(req, res);
+            res.render('project-overview/overview', { projects: projects });
+
+        });
     }
 
+
+}
+
+/**
+ * @function Shows a single projects page
+ * @param {*} req 
+ * @param {*} res 
+ */
+function showProject(req, res) {
+    res.render('dashboard/Dashboard', { project: req.project });
 }
 
 /**
@@ -33,8 +46,28 @@ function showProjects(req, res) {
  * @param {*} res
  */
 function createProject(req, res) {
-    res.render('project-overview/createProject');
 
+    if (req.method == 'POST') {
+        const projectName = req.body.projectName;
+        const invitedUsers = req.body.emails;
+        const UserID = req.session.user._id;
+
+        newProject(projectName, UserID).then(projectId => {
+
+            if (invitedUsers != null) {
+                // Add the project to the user's project list.
+                invitedUsers.forEach(user => {
+                    User.find({ email: user }).then(user => {
+                        addUserToProject(projectId, user[0]._id);
+                    });
+                }); 
+            }
+            
+        });            
+    
+    } else {
+        res.render('project-overview/createProject');
+    }
 }
 
 /**
@@ -215,7 +248,9 @@ async function addServiceToProject(projectId, serviceCategory, serviceId) {
 // Modules to export for testing purposes.
 module.exports = {
     showProjects,
+    showProject,
     createProject,
+    delProject,
     newProject,
     getProjectById,
     getAllProjects,

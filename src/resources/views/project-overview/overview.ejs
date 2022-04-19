@@ -1,25 +1,84 @@
 <form action="/create-project" method="get" class="flex justify-end w-4/5 m-auto pt-3.5">
     <input type="submit" value="Create Project" class="bg-slate-400 p-5 rounded cursor-pointer drop-shadow-md hover:bg-slate-700 hover:text-white">
 </form>
+<form action="/logout" method="post" class="flex justify-end w-4/5 m-auto pt-3.5">
+    <input type="submit" value="logout" class="bg-slate-400 p-5 rounded cursor-pointer drop-shadow-md hover:bg-slate-700 hover:text-white">
+</form>
 
-<section class="table w-4/5 m-auto drop-shadow-md pt-3.5">
-    <article class="table-row bg-slate-500">
-        <p class="table-cell text-left p-5 text-white">Project name</p>
-    </article>
-    <section class="table-row-group bg-slate-200 rounded-md">
+<table class="w-4/5 m-auto drop-shadow-md pt-3.5">
+    <tr class="bg-slate-500">
+        <th class="text-left p-5 text-white">Project name</th>
+        <th class="text-left p-5 text-white">Actions</th>
+    </tr>
         <% let i = 0; %>
         <% projects.forEach((project) => { %>
             <% if (i % 2 === 0) { %>
-                <article class="table-row">
-                    <p class="table-cell bg-slate-200 p-5 cursor-pointer hover:bg-slate-700 hover:text-white"><%= project.name %></p>
-                </article>
+            <tr class="bg-slate-300 rounded-md hover:bg-slate-400">
+                <td class="projectName w-full py-2 pl-2">
+                    <%= project.name %>
+                </td>
+                <td class="flex py-2">
+                    <form action="/project/:id" method="get" class="mx-2">
+                        <input type="hidden" name="projectId" value="<%= project.id %>">
+                        <input type="submit" value="View" class="bg-slate-400 p-2 rounded cursor-pointer drop-shadow-md hover:bg-slate-700 hover:text-white">
+                    </form>
+                    <form action="/editProject" method="get" class="mx-2">
+                        <input type="hidden" name="projectId" value="<%= project.id %>">
+                        <input type="submit" value="Edit" class="bg-yellow-400 p-2 rounded cursor-pointer drop-shadow-md hover:bg-yellow-700 hover:text-white">
+                    </form>
+                    <form action="/projects" method="post" class="mx-2">
+                        <input type="hidden" name="projectId" value="<%= project.id %>">
+                        <input type="submit" value="Delete" class="bg-red-400 p-2 rounded cursor-pointer drop-shadow-md hover:bg-red-700 hover:text-white">
+                    </form>
+                </td>
+            </tr>
             <% } else { %>
-                <article class="table-row">
-                    <p class="table-cell bg-slate-300 p-5 cursor-pointer hover:bg-slate-700 hover:text-white"><%= project.name %></p>
-                </article>
+            <tr class="bg-slate-200 rounded-md hover:bg-slate-400">
+                <td class="projectName w-full py-2 pl-2">
+                    <%= project.name %>
+                </td>
+                <td class="flex py-2">
+                    <form action="/project/:id" method="get" class="mx-2">
+                        <input type="hidden" name="projectId" value="<%= project.id %>">
+                        <input type="submit" value="View" class="bg-slate-400 p-2 rounded cursor-pointer drop-shadow-md hover:bg-slate-700 hover:text-white">
+                    </form>
+                    <form action="/editProject" method="get" class="mx-2">
+                        <input type="hidden" name="projectId" value="<%= project.id %>">
+                        <input type="submit" value="Edit" class="bg-yellow-400 p-2 rounded cursor-pointer drop-shadow-md hover:bg-yellow-700 hover:text-white">
+                    </form>
+                    <form action="/projects" method="post" class="mx-2">
+                        <input type="hidden" name="projectId" value="<%= project.id %>">
+                        <input type="submit" value="Delete" class="bg-red-400 p-2 rounded cursor-pointer drop-shadow-md hover:bg-red-700 hover:text-white">
+                    </form>
+                </td>
+            </tr>
             <% } %>
             <% i++; %>
         <% }); %>
-    </section>
-</section>
+</table>
 
+<script>
+    let projectNameContainer = document.querySelector('.projectNameContainer');
+    let projectName = document.querySelector('.projectName');
+    projectName.addEventListener('click', async (e) => {
+
+        let name = projectName.innerHTMLM;
+        /*
+        let response = await fetch('/project/:id', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                projectName: name
+            })
+        });
+        */
+
+        //let data = await response.json();
+
+        console.log('here is data: ', name);
+
+
+    });
+</script>
