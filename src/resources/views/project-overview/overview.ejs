@@ -18,11 +18,11 @@
                     <%= project.name %>
                 </td>
                 <td class="flex py-2">
-                    <form action="/project/:id" method="get" class="mx-2">
+                    <form action="/project" method="get" class="mx-2">
                         <input type="hidden" name="projectId" value="<%= project.id %>">
                         <input type="submit" value="View" class="bg-slate-400 p-2 rounded cursor-pointer drop-shadow-md hover:bg-slate-700 hover:text-white">
                     </form>
-                    <form action="/editProject" method="get" class="mx-2">
+                    <form action="/edit" method="get" class="mx-2 editBtn">
                         <input type="hidden" name="projectId" value="<%= project.id %>">
                         <input type="submit" value="Edit" class="bg-yellow-400 p-2 rounded cursor-pointer drop-shadow-md hover:bg-yellow-700 hover:text-white">
                     </form>
@@ -38,11 +38,11 @@
                     <%= project.name %>
                 </td>
                 <td class="flex py-2">
-                    <form action="/project/:id" method="get" class="mx-2">
+                    <form action="/project" method="get" class="mx-2">
                         <input type="hidden" name="projectId" value="<%= project.id %>">
                         <input type="submit" value="View" class="bg-slate-400 p-2 rounded cursor-pointer drop-shadow-md hover:bg-slate-700 hover:text-white">
                     </form>
-                    <form action="/editProject" method="get" class="mx-2">
+                    <form action="/edit" method="get" class="mx-2 editBtn">
                         <input type="hidden" name="projectId" value="<%= project.id %>">
                         <input type="submit" value="Edit" class="bg-yellow-400 p-2 rounded cursor-pointer drop-shadow-md hover:bg-yellow-700 hover:text-white">
                     </form>
@@ -58,27 +58,22 @@
 </table>
 
 <script>
-    let projectNameContainer = document.querySelector('.projectNameContainer');
-    let projectName = document.querySelector('.projectName');
-    projectName.addEventListener('click', async (e) => {
+    let edit = document.querySelectorAll('.editBtn');
 
-        let name = projectName.innerHTMLM;
-        /*
-        let response = await fetch('/project/:id', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                projectName: name
-            })
+    edit.forEach((btn) => {
+        btn.addEventListener('click', async (e) => {
+            let projectId = e.target.parentElement.children[0].value;
+
+            let response = await fetch('/project/' + projectId, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    projectId: projectId
+                })
+            });
         });
-        */
-
-        //let data = await response.json();
-
-        console.log('here is data: ', name);
-
-
     });
+
 </script>

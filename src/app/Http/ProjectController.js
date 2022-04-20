@@ -70,6 +70,12 @@ function createProject(req, res) {
     }
 }
 
+function editProject(req, res) {
+    console.log('inside editProject');
+    console.log(req.session.user.projectIDs);
+    res.render('project-overview/editProject', { project: req.project });
+}
+
 /**
  * @function Gets a project by id.
  * @param {String} id 
@@ -136,6 +142,12 @@ async function newProject(projectName, UserID) {
     return project._id;
 }
 
+async function updateProject(projectId) {
+    // Get the project
+    let project = await getProjectById(projectId);
+
+
+}
 
 
 /**
@@ -251,6 +263,7 @@ module.exports = {
     showProject,
     createProject,
     delProject,
+    editProject,
     newProject,
     getProjectById,
     getAllProjects,
