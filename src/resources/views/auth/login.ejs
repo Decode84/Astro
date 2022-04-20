@@ -1,4 +1,9 @@
-<section class="content-evenly h-full flex items-center justify-center">
+<header class="flex flex-row" style="min-width: var(--min-window-w); height: var(--header-h)">
+    <div class="pl-2 py-4 flex flex-row items-center" style="width: var(--left-col-w);">
+        <%- include('../project/_partial/header/_partial/logo'); %>
+    </div>
+</header>
+<main class="content-evenly flex items-center justify-center" style="height: calc(100vh - var(--header-h))">
     <div class="w-96">
         <form action="/authenticate" method="post" class="p-8 mx-auto border-t-8 shadow-md rounded-md" style="background-color: var(--pri-color);border-color: var(--acc-color)">
             <h1 class="text-2xl text-gray-800 text-center font-bold">Login to Project Hub</h1>
@@ -16,4 +21,4 @@
             </div>
         </form>
     </div>
-</section>
+</main>
