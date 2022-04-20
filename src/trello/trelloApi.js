@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const userController = require('../app/Http/UserController');
 const projectController = require('../app/Http/ProjectController');
 const Project = require('../app/Models/Project');
+const mongoose = require('mongoose');
 const { text } = require('express');
 const { response } = require('express');
 const { send } = require('express/lib/response');
@@ -34,7 +35,7 @@ async function recieveToken(req, res) {
 }
 
 /**
- * 
+ *
  * @param {String} name The name of the organization to be created.
  * @param {String} userId The id of the user who is creating the organization.
  * @param {String} projectId The id of the project that the organization is being created for.
@@ -78,11 +79,11 @@ async function newOrganization(name, userId, projectId) {
 }
 
 /**
- * 
+ *
  * @param {String} name The name of the board to be created.
  * @param {String} projectId The id of the project that the board is being created for.
  */
-async function newBoard(req, res) {
+async function newBoard(name, projectId, userId) {
     let project = await projectController.getProjectById(projectId);
     let user = await userController.getUser(userId);
     let response;
@@ -95,9 +96,10 @@ async function newBoard(req, res) {
     catch (e) {
         console.log(e);
     }
+    let json;
     try {
         const text = await response.text();
-        const json = JSON.parse(text);
+        json = JSON.parse(text);
         if (project.categories.planning.services.trello.boards == null) {
             project.categories.planning.services.trello.boards = [];
         }
@@ -111,39 +113,126 @@ async function newBoard(req, res) {
     catch (e) {
         console.log(e);
     }
+    return json.id;
+
 }
 
+async function newList(userId, boardId, name) {
+    let user = await userController.getUser(userId);
+
+    let url = 'https://api.trello.com/1/lists?name=' + name + '&idBoard=' + boardId + '&key=' + trelloKey + '&token=' + user.authentications.trello.token;
+    let response = await fetch(url, {
+        method: 'POST',
+    });
+    let text = await response.text();
+    let json = JSON.parse(text);
+    console.log(json);
+}
+
+/**
+ * @function listBoards
+ * @description Lists all the boards in the organization.
+ * @param {*} req 
+ * @param {*} res 
+ */
 async function listBoards(req, res) {
-    console.log('Im here');
     if (req.query.projectId === undefined) {
         res.send(null);
     }
-    let project = await projectController.getProjectById(req.query.projectId);
+    else {
+        let project = await projectController.getProjectById(req.query.projectId);
+        let user = await userController.getUser(req.session.user._id);
+        let organizationId = project.categories.planning.services.trello.organizationId;
 
-    let boards = project.categories.planning.services.trello.boards;
-
-    // Stringify the boards array.
-    boards = JSON.stringify(boards);
-
-    res.send(boards);
-
+        let boards;
+        try {
+            let url = 'https://api.trello.com/1/organizations/' + organizationId + '/boards?key=' + trelloKey + '&token=' + user.authentications.trello.token;
+            let response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                }
+            });
+            let text = await response.text();
+            boards = text
+        }
+        catch (e) {
+            res.send(null);
+        }
+        console.log(JSON.parse(boards));
+        res.send(boards);
+    }
+}
+// ! Should be tested before moving forward :)
+async function listLists(req, res) {
+    if (req.query.projectId === undefined) {
+        res.send(null);
+    }
+    else {
+        try {
+            // Compose the url
+            let url = 'https://api.trello.com/1/boards/' + req.query.boardId + '/lists?key=' + trelloKey + '&token=' + req.session.user.authentications.trello.token;
+            let response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                }
+            });
+            let text = await response.text();
+            res.send(text);
+        }
+        catch (e) {
+            res.send(null);
+        }
+    }
 }
 
 async function newCard(req, res) {
-    res.render('trello/newCard');
+    let user = await userController.getUser(req.session.user._id);
+    let access = false;
+    console.log(req.query.projectId + '\n\n');
+    for (let i = 0; i < user.projectIDs.length; i++) {
+        console.log(user.projectIDs[i].toString());
+        if (user.projectIDs[i]._id.toString() === req.query.projectId) {
+            access = true;
+        }
+    }
+
+    if (access) {
+        res.render('trello/newCard');
+    }
+    else {
+        res.send('You do not have access to this project.');
+    }
+
+
+}
+
+async function createCard(req, res) {
+    let user = await userController.getUser(req.session.user._id);
+    let project = await projectController.getProjectById(req.query.projectId);
+    let boardId = req.query.board;
+    let cardName = req.query.cardName;
+
+
 }
 
 async function setup_trello(name, projectId, userId) {
     await newOrganization(name, userId, projectId);
-    await newBoard('SCRUM', projectId, userId);
+    let boardId = await newBoard('SCRUM', projectId, userId);
+    /*
+    await newList(userId, boardId, 'Backlog');
+    await newList(userId, boardId, 'In Progress');
+    await newList(userId, boardId, 'Done');
+    */
 }
-
-//setup_trello('Test', '625d2ed188495243aad5692c', '625d11fc70fdf0be1e388963');
+//setup_trello('Work', '625ff3fb57b5de881281e626', '6256b0c5245953b0b9304075');
 
 module.exports = {
     trello,
     listBoards,
     newCard,
+    createCard,
     recieveToken,
     newOrganization
 }
