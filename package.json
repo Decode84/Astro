@@ -34,7 +34,9 @@
     "express-session": "^1.17.2",
     "helmet": "^5.0.2",
     "mongoose": "^6.2.5",
+    "nodemailer": "^6.7.3",
     "postcss-cli": "^9.1.0",
+    "rand-token": "^1.0.1",
     "uid-safe": "^2.1.5"
   },
   "devDependencies": {

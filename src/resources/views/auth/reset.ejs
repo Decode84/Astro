@@ -5,7 +5,8 @@
 </header>
 <main class="content-evenly flex items-center justify-center" style="height: calc(100vh - var(--header-h))">
     <div class="w-96">
-        <form action="/signup" method="post" class="p-8 mx-auto border-t-8 rounded shadow-lg" style="background-color: var(--pri-color);border-color: var(--acc-color)">
+        <form action="/updatePass" method="post" class="p-8 mx-auto border-t-8 rounded shadow-lg" style="background-color: var(--pri-color);border-color: var(--acc-color)">
+            <input type="hidden" name="token" class="form-control" value="<%= token %>">
             <h1 class="text-2xl text-center font-bold">Reset your password</h1>
 
             <label class="text text-left block mb-2 mt-4" for="password">New password</label>
