@@ -28,10 +28,10 @@ router.post('/signup', createAccountLimit, registerValidation, authCon.signup)
 router.post('/logout', middleware.authLogin, authCon.logout)
 
 // Project
-router.get('/project', projectCon.project)
+router.get('/project', middleware.authLogin, projectCon.project)
 
 // Projects
-router.get('/projects', projectCon.projects)
+router.get('/projects', middleware.authLogin, projectCon.projects)
 
 // Admin (TODO: check for role)
 router.get('/admin/board', middleware.authLogin, adminCon.showBoard)
