@@ -124,7 +124,6 @@ async function newList(userId, boardId, name) {
     });
     let text = await response.text();
     let json = JSON.parse(text);
-    console.log(json);
 }
 
 /**
@@ -160,11 +159,10 @@ async function listBoards(req, res) {
         res.send(boards);
     }
 }
-// ! Should be tested before moving forward :)
+
 async function listLists(req, res) {
-    console.log('hello');
+    
     if (req.query.projectId === undefined) {
-        console.log('hello2');
         res.send(null);
     }
     else {
@@ -179,7 +177,6 @@ async function listLists(req, res) {
                 }
             });
             let text = await response.text();
-            console.log(JSON.parse(text));
             res.send(text);
         }
         catch (e) {
@@ -191,9 +188,9 @@ async function listLists(req, res) {
 async function newCard(req, res) {
     let user = await userController.getUser(req.session.user._id);
     let access = false;
-    console.log(req.query.projectId + '\n\n');
+    
     for (let i = 0; i < user.projectIDs.length; i++) {
-        console.log(user.projectIDs[i].toString());
+        
         if (user.projectIDs[i]._id.toString() === req.query.projectId) {
             access = true;
         }
