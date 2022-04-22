@@ -1,6 +1,8 @@
-const fetch = require('node-fetch')
-const userController = require('../app/Http/UserController')
-const projectController = require('../app/Http/ProjectController')
+const fetch = require('node-fetch');
+const userController = require('../app/Http/UserController');
+const projectController = require('../app/Http/ProjectController');
+const Project = require('../app/Models/Project');
+const mongoose = require('mongoose');
 const { text } = require('express');
 const { response } = require('express');
 const { send } = require('express/lib/response');
@@ -211,16 +213,11 @@ async function newCard(req, res) {
 
 async function createCard(req, res) {
     let user = await userController.getUser(req.session.user._id);
-
+    let project = await projectController.getProjectById(req.query.projectId);
+    let boardId = req.query.board;
     let cardName = req.query.cardName;
-    let cardDescription = req.query.cardDescription;
-    let listId = req.query.list;
-    
-    let url = 'https://api.trello.com/1/cards?idList=' + listId + '&name=' + cardName + '&desc=' + cardDescription + '&key=' + trelloKey + '&token=' + user.authentications.trello.token;
-    let response = await fetch(url, {
-        method: 'POST',
-        });
-    res.redirect('/project?projectId=' + req.query.projectId); // ! Might change later don't know where to put the user.
+
+
 }
 
 async function setup_trello(name, projectId, userId) {
