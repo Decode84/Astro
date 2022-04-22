@@ -6,7 +6,7 @@ const homeCon = require('./app/Http/HomeController')
 const TrelloAPI = require('./trello/trelloApi')
 const middleware = require('./app/Middleware/Authorization')
 
-const { createAccountLimit, loginLimit } = require('./app/Middleware/Rate')
+const { createAccountLimit, loginLimit, mailLimit } = require('./app/Middleware/Rate')
 const { authenticateValidation, registerValidation } = require('./app/Validation/AuthValidation')
 
 /**
@@ -26,12 +26,14 @@ router.get('/reset', authCon.showReset)
 router.post('/authenticate', loginLimit, authenticateValidation, authCon.authenticate)
 router.post('/signup', createAccountLimit, registerValidation, authCon.signup)
 router.post('/logout', middleware.authLogin, authCon.logout)
+router.post('/resetpass', mailLimit, authCon.resetPass)
+router.post('/updatepass', authCon.updatePass)
 
 // Project
-router.get('/project', projectCon.project)
+router.get('/project', middleware.authLogin, projectCon.project)
 
 // Projects
-router.get('/projects', projectCon.projects)
+router.get('/projects', middleware.authLogin, projectCon.projects)
 
 // Admin (TODO: check for role)
 router.get('/admin/board', middleware.authLogin, adminCon.showBoard)
