@@ -24,9 +24,13 @@ const UserSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    discord: {
+        type: String
+    },
     HashedPassword: String,
     projectIDs: [
     ],
-});
+    authentications: Schema.Types.Mixed,
+}, { strict: false });
 
 module.exports = mongo.model("User", UserSchema);

@@ -19,11 +19,14 @@ function showProjects(req, res) {
     if (req.method == 'POST') {
         delProject(req.body.projectId);
 
-        res.redirect('/projects');
+        res.redirect('projects/');
     } else {
+
         getAllProjects(req.session.user._id).then(projects => {
 
-            res.render('project-overview/overview', { projects: projects });
+            res.render('projects/overview', {   projects: projects,
+                                                user: req.session.user
+            });
 
         });
     }
@@ -37,7 +40,9 @@ function showProjects(req, res) {
  * @param {*} res 
  */
 function showProject(req, res) {
-    res.render('dashboard/Dashboard', { project: req.project });
+    res.render('project/project', {    project: req.project,
+                                       user: req.session.user 
+    });
 }
 
 /**
@@ -66,14 +71,23 @@ function createProject(req, res) {
         });            
     
     } else {
-        res.render('project-overview/createProject');
+        res.render('projects/createProject');
     }
 }
 
 function editProject(req, res) {
     console.log('inside editProject');
     console.log(req.session.user.projectIDs);
-    res.render('project-overview/editProject', { project: req.project });
+    let url = req.url;
+    let projecId = url.split('=').pop();
+
+    getProjectById(projecId).then(project => {
+        let project = project;
+    });
+
+    res.render('projects/editProject', {    project: project,
+                                            user: req.session.user 
+    });
 }
 
 /**
@@ -250,12 +264,13 @@ async function removeUserFromProject(projectId, UserId) {
 async function addServiceToProject(projectId, serviceCategory, serviceId) {
     // Get the project
     let project = await getProjectById(projectId);
-
     // Create new service object
-    project.categories[serviceCategory].services = {...project.categories[serviceCategory].services, [serviceId]: {state: 'active'}};
+    project.categories[serviceCategory].services = { ...project.categories[serviceCategory].services, [serviceId]: { state: 'active' } };
 
     await project.save();
 }
+
+
 
 // Modules to export for testing purposes.
 module.exports = {
