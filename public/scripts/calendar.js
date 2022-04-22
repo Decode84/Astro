@@ -18,9 +18,13 @@
       },
     ],
     dateChanged: (currentDate, events) => {
-      console.log("date change", currentDate, events);
+      
     },
+    selectedDateClicked: (currentDate, events) => {
+      document.getElementById("test").innerHTML = ""
+    },
+
     monthChanged: (currentDate, events) => {
-      console.log("month change", currentDate, events);
+
     },
   });

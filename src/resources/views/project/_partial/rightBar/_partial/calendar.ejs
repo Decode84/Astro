@@ -1,4 +1,10 @@
-<div id="calendar-a"></div>
-
 <script src="https://cdn.jsdelivr.net/npm/color-calendar/dist/bundle.js"></script>
 <script src="/scripts/calendar.js"></script>
+
+<div class="mb-2" id="calendar-a"></div>
+
+<!-- Da javascript filen er blevet included kan jeg køre funktionerne direkte her i ejs format (<%= %>)
+     Implementering af eventHandling i kalderen og at de appropriate bokser og lignede vises -->
+<div id="test">
+  <%= %> <%- include('./cal_events.ejs', { date: currentDate }) %>
+</div>
