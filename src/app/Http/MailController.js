@@ -23,11 +23,7 @@ class MailController {
         }
 
         mail.sendMail(mailOptions, function (error, info) {
-            if (error) {
-                console.log(1)
-            } else {
-                console.log(0)
-            }
+            if (error) console.log(error)
         })
     }
 }

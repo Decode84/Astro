@@ -5,21 +5,24 @@
 </header>
 <main class="content-evenly flex items-center justify-center" style="height: calc(100vh - var(--header-h))">
     <div class="w-96">
-        <form action="/updatePass" method="post" class="p-8 mx-auto border-t-8 rounded shadow-lg" style="background-color: var(--pri-color);border-color: var(--acc-color)">
-            <input type="hidden" name="token" class="form-control" value="<%= token %>">
-            <h1 class="text-2xl text-center font-bold">Reset your password</h1>
+        <% if (typeof message !=="undefined" ) { %>
+            <%- include('./_partial/infoBox', { message: message}); %>
+                <% } %>
+                    <form action="/updatePass" method="post" class="p-8 mx-auto border-t-8 rounded shadow-lg" style="background-color: var(--pri-color);border-color: var(--acc-color)">
+                        <input type="hidden" name="token" class="form-control" value="<%= token %>">
+                        <h1 class="text-2xl text-center font-bold">Reset your password</h1>
 
-            <label class="text text-left block mb-2 mt-4" for="password">New password</label>
-            <input type="password" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="password" id="newpassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required />
+                        <label class="text text-left block mb-2 mt-4" for="password">New password</label>
+                        <input type="password" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="password" id="newpassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required />
 
-            <label class="text text-left block mb-2 mt-4" for="password">Password Confirmation</label>
-            <input type="password" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="passwordConfirmation" id="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required />
+                        <label class="text text-left block mb-2 mt-4" for="password">Password Confirmation</label>
+                        <input type="password" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="passwordConfirmation" id="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required />
 
-            <a class="hover:text-indigo-600 block mt-6 text-sm" href="/login">Remembered your old password?</a>
+                        <a class="hover:text-indigo-600 block mt-6 text-sm" href="/login">Remembered your old password?</a>
 
-            <div class="text-center pt-4">
-                <button class="py-2 px-4 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" style="background-color: var(--acc-color)" id="submit" type="submit">Update password</button>
-            </div>
-        </form>
+                        <div class="text-center pt-4">
+                            <button class="py-2 px-4 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" style="background-color: var(--acc-color)" id="submit" type="submit">Update password</button>
+                        </div>
+                    </form>
     </div>
 </main>

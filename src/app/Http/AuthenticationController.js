@@ -13,7 +13,8 @@ class AuthenticationController {
         if (req.session.user) {
             res.redirect('/projects')
         } else {
-            res.render('auth/login')
+            const message = req.session.loginMessage
+            res.render('auth/login', { message: message })
         }
     };
 
@@ -26,7 +27,8 @@ class AuthenticationController {
         if (req.session.user) {
             res.redirect('/projects')
         } else {
-            res.render('auth/register')
+            const message = req.session.registerMessage
+            res.render('auth/register', { message: message })
         }
     };
 
@@ -39,7 +41,8 @@ class AuthenticationController {
         if (req.session.user) {
             res.redirect('/projects')
         } else {
-            res.render('auth/forgot')
+            const message = req.session.forgotMessage
+            res.render('auth/forgot', { message: message })
         }
     };
 
@@ -50,7 +53,7 @@ class AuthenticationController {
      */
     async showReset(req, res) {
         if (req.session.user) {
-            res.redirect('/dashboard')
+            res.redirect('/projects')
         } else {
             res.render('auth/reset', {
                 token: req.query.token
@@ -68,7 +71,11 @@ class AuthenticationController {
         const { username, password } = req.body
 
         User.findOne({ username }).then((user) => {
-            if (!user) return res.status(400).send('User does not exist')
+            if (!user) {
+                req.session.loginMessage = 'User does not exists'
+                res.redirect('/login')
+                return
+            }
 
             bcrypt.compare(password, user.password).then((isMatch) => {
                 if (isMatch) {
@@ -77,7 +84,8 @@ class AuthenticationController {
                         res.redirect('/projects')
                     })
                 } else {
-                    return res.status(400).send('Incorrect password')
+                    req.session.loginMessage = 'Incorrect password'
+                    res.redirect('/login')
                 }
             }).catch((err) => console.log(err))
         })
@@ -93,7 +101,11 @@ class AuthenticationController {
         const { name, username, email, password, passwordConfirmation } = req.body
 
         User.findOne({ username }).then((user) => {
-            if (user) return res.status(400).send('User already exists')
+            if (user) {
+                req.session.registerMessage = 'User already exists'
+                res.redirect('/register')
+                return
+            }
             const newUser = new User({ name, username, email, password })
 
             bcrypt.hash(newUser.password, 10, function (err, hash) {
@@ -102,8 +114,8 @@ class AuthenticationController {
                 newUser.save().then((user) => {
                     req.session.user = user
                     res.redirect('/projects')
-                }).catch((err) => console.log(err))
-            })
+                })
+            }).catch((err) => console.log(err))
         })
     };
 
@@ -133,7 +145,11 @@ class AuthenticationController {
         const { email } = req.body
 
         User.findOne({ email }).then((user) => {
-            if (!user) return res.status(400).send('No user with this email exists')
+            if (!user) {
+                req.session.forgotMessage = 'No user with this email exists'
+                res.redirect('/forgot')
+                return
+            }
 
             const token = randtoken.generate(20)
             const sent = mailCon.sendEmail(email, token)
@@ -141,10 +157,11 @@ class AuthenticationController {
             if (sent !== '0') {
                 user.token = token
                 user.save().then(() => {
-                    res.redirect('/')
-                }).catch((err) => console.log(err))
+                    req.session.forgotMessage = 'Email sent'
+                    res.redirect('/forgot')
+                })
             }
-        })
+        }).catch((err) => console.log(err))
     };
 
     /**
@@ -167,9 +184,9 @@ class AuthenticationController {
                 user.save().then((user) => {
                     req.session.user = user
                     res.redirect('/projects')
-                }).catch((err) => console.log(err))
+                })
             })
-        })
+        }).catch((err) => console.log(err))
     };
 }
 
