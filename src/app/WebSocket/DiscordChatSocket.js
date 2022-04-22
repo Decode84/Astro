@@ -10,6 +10,7 @@ exports.StartDiscordWebSocket = function (server) {
         // to accept it.
         autoAcceptConnections: false
     });
+    let clients = []
     
     wsServer.on('request', function(request) {
         if (!originIsAllowed(request.origin)) {
@@ -19,7 +20,8 @@ exports.StartDiscordWebSocket = function (server) {
             return;
         }
         
-        const connection = request.accept('echo-protocol', request.origin)
+        const connection = request.accept('null', request.origin)
+        clients.push(connection)
         console.log((new Date()) + ' Connection accepted.');
         connection.on('message', function(message) {
             if (message.type === 'utf8') {
@@ -33,6 +35,7 @@ exports.StartDiscordWebSocket = function (server) {
         });
         connection.on('close', function(reasonCode, description) {
             console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+            clients.splice(clients.indexOf(connection), 1)
         });
     });
 }

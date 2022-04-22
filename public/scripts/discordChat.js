@@ -4,7 +4,7 @@ let input = document.getElementById("input"); // Find the input field
 input.focus(); // Set keyboard focus
 // Register for notification of new messages using EventSource
 
-let chatSocket = new WebSocket('ws://localhost:8080');
+let chatSocket = new WebSocket('ws://localhost:4000');
 
 chatSocket.onmessage = function (event) {
     let div = document.createElement("div"); // Create a <div>
