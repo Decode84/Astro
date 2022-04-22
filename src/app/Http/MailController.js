@@ -3,7 +3,6 @@ const path = require('path')
 
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 
-//  https://www.tutsmake.com/forgot-reset-password-in-node-js-express-mysql/
 class MailController {
     sendEmail(email, token) {
         const mail = nodemailer.createTransport({
