@@ -17,7 +17,7 @@ async function OnGuildCreate (guild) {
         return
     }
     const message = `Hello thanks for adding me to ${guild.name} (id:${guild.id})\nClick to link to project:\n`
-
+    
     const buttonRows = await CreateButtons(projects)
     // Send message with string contents and button
     const sentMessage = await user.send({ content: message, components: buttonRows })
@@ -66,13 +66,14 @@ async function CreateCollector (guild, sentMessage) {
             components: []
         })
         // TODO: handle the usecase where project is already linked or make already linked projects not display
-
+        
         const discord = { serverID: `${guild.id}`, Webhook: '', inviteLink: '' }
-        const web = await CreateWebHook(guild, discord)
-        const invite = await CreateInvite(guild, discord)
+        const textChannel = await guild.channels.cache.filter(c => c.type === 'GUILD_TEXT').first();
+        const web = await CreateWebHook(await textChannel, discord)
+        const invite = await CreateInvite(guild, await textChannel, discord)
         await web
         await invite
-
+        
         // Update DB
         project.categories.messaging.services = { ...project.categories.messaging.services, discord }
         project.markModified('categories.messaging.services')
@@ -81,40 +82,34 @@ async function CreateCollector (guild, sentMessage) {
 }
 /**
  * @function Creates a discord invite
+ * @param {Channel} channel
  * @param {{Webhook: string}} discord
- * @param {guild} guild
- * @returns {Promise<Project>} Promise of Webhook written to discord.invitelink.
+ * @returns {Promise<Webhook | void>} Promise of Webhook written to discord.invitelink.
  */
-function CreateWebHook (guild, discord) {
-    return guild.channels.fetch()
-        .then(channels => {
-            channels.first().createWebhook('ProjectHub Webhook', {
-                // Insert options like profilepic etc. here
-            }).then(webhook => {
-                webhook.send('ProjectHub Integrated')
-                discord.Webhook = `${webhook.id}`
-                // guild.fetchWebhooks().get(webhook.id); maybe need to do it with channel.fetchwebhooks instead?
-            })
-        })
+function CreateWebHook (channel, discord) {
+    return channel.createWebhook('ProjectHub Webhook', {
+        // Insert options like profilepic etc. here
+    }).then(webhook => {
+        webhook.send('ProjectHub Integrated')
+        discord.Webhook = `${webhook.id}`
+        // guild.fetchWebhooks().get(webhook.id); maybe need to do it with channel.fetchwebhooks instead?
+    })
         .catch(console.error)
 }
 /**
  * @function Creates a discord invite
+ * @param {Channel} channel
  * @param {{inviteLink: string}} discord
- * @param {guild} guild
- * @returns {Promise<Project>} Promise of invite written to discord.invitelink.
+ * @returns {Promise<Invite>} Promise of invite written to discord.invitelink.
  */
-function CreateInvite (guild, discord) {
-    return guild.channels.fetch()
-        .then(channels => {
-            guild.invites.create(channels.first(), {
-                maxAge: 0,
-                reason: 'Invite project members from ProjectHub'
-            }).then(invite => {
-                console.log(`Created invitelink: ${invite.url}`)
-                discord.inviteLink = `${invite.url}`
-            })
-        })
+function CreateInvite (guild, channel, discord) {
+    return guild.invites.create(channel, {
+        maxAge: 0,
+        reason: 'Invite project members from ProjectHub'
+    }).then(invite => {
+        console.log(`Created invitelink: ${invite.url}`)
+        discord.inviteLink = `${invite.url}`
+    })
 }
 
 module.exports = { OnGuildCreate }

@@ -1,6 +1,7 @@
 const WebSocketServer = require('websocket').server
 
 exports.StartDiscordWebSocket = function (server) {
+    return;
     let wsServer = new WebSocketServer({
         httpServer: server,
         // You should not use autoAcceptConnections for production
