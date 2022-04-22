@@ -39,7 +39,13 @@ router.get('/projects', middleware.authLogin, projectCon.projects)
 router.get('/admin/board', middleware.authLogin, adminCon.showBoard)
 
 // Trello
-router.get('/trello', TrelloAPI.trello)
-router.get('/trello/callback', TrelloAPI.recieveToken)
+router.get('/trello', TrelloAPI.trello);
+router.get('/trello/callback', TrelloAPI.recieveToken);
+router.get('/trello/newCard', TrelloAPI.newCard);
+router.get('/trello/createCard', TrelloAPI.createCard);
+
+// Trello API
+router.get('/api/trello/boards', TrelloAPI.listBoards);
+router.get('/api/trello/lists', TrelloAPI.listLists);
 
 module.exports = router
