@@ -13,8 +13,7 @@ class AuthenticationController {
         if (req.session.user) {
             res.redirect('/projects')
         } else {
-            const message = req.session.loginMessage
-            res.render('auth/login', { message: message })
+            res.render('auth/login', { message: req.flash('loginMessage') })
         }
     };
 
@@ -27,8 +26,7 @@ class AuthenticationController {
         if (req.session.user) {
             res.redirect('/projects')
         } else {
-            const message = req.session.registerMessage
-            res.render('auth/register', { message: message })
+            res.render('auth/register', { message: req.flash('registerMessage') })
         }
     };
 
@@ -41,8 +39,7 @@ class AuthenticationController {
         if (req.session.user) {
             res.redirect('/projects')
         } else {
-            const message = req.session.forgotMessage
-            res.render('auth/forgot', { message: message })
+            res.render('auth/forgot', { message: req.flash('forgotMessage') })
         }
     };
 
@@ -56,7 +53,8 @@ class AuthenticationController {
             res.redirect('/projects')
         } else {
             res.render('auth/reset', {
-                token: req.query.token
+                token: req.query.token,
+                message: req.flash('resetMessage')
             })
         }
     };
@@ -72,7 +70,7 @@ class AuthenticationController {
 
         User.findOne({ username }).then((user) => {
             if (!user) {
-                req.session.loginMessage = 'User does not exists'
+                req.flash('loginMessage', 'User does not exists')
                 res.redirect('/login')
                 return
             }
@@ -84,7 +82,7 @@ class AuthenticationController {
                         res.redirect('/projects')
                     })
                 } else {
-                    req.session.loginMessage = 'Incorrect password'
+                    req.flash('loginMessage', 'Incorrect password')
                     res.redirect('/login')
                 }
             }).catch((err) => console.log(err))
@@ -102,7 +100,7 @@ class AuthenticationController {
 
         User.findOne({ username }).then((user) => {
             if (user) {
-                req.session.registerMessage = 'User already exists'
+                req.flash('registerMessage', 'User allready exists')
                 res.redirect('/register')
                 return
             }
@@ -146,7 +144,7 @@ class AuthenticationController {
 
         User.findOne({ email }).then((user) => {
             if (!user) {
-                req.session.forgotMessage = 'No user with this email exists'
+                req.flash('forgotMessage', 'No user with this email exists')
                 res.redirect('/forgot')
                 return
             }
@@ -157,7 +155,7 @@ class AuthenticationController {
             if (sent !== '0') {
                 user.token = token
                 user.save().then(() => {
-                    req.session.forgotMessage = 'Email sent'
+                    req.flash('forgotMessage', 'Email sent')
                     res.redirect('/forgot')
                 })
             }
@@ -175,7 +173,11 @@ class AuthenticationController {
         const { token, password } = req.body
 
         User.findOne({ token }).then((user) => {
-            if (!user) return res.status(400).send('No user with this token found')
+            if (!user) {
+                req.flash('forgotMessage', 'Token invalid')
+                res.redirect('/forgot')
+                return
+            }
 
             bcrypt.hash(password, 10, function (err, hash) {
                 if (err) console.log(err)

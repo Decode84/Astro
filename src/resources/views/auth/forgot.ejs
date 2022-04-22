@@ -5,7 +5,7 @@
 </header>
 <main class="content-evenly flex items-center justify-center" style="height: calc(100vh - var(--header-h))">
     <div class="w-96">
-        <% if (typeof message !=="undefined" ) { %>
+        <% if (message.toString() !=="" ) { %>
             <%- include('./_partial/infoBox', { message: message}); %>
                 <% } %>
                     <form method="post" action="/resetpass" class="p-8 mx-auto border-t-8 rounded shadow-lg" style="background-color: var(--pri-color); border-color: var(--acc-color)">

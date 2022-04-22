@@ -30,6 +30,7 @@
     "ejs": "^3.0.2",
     "express": "^4.17.3",
     "express-ejs-layouts": "^2.5.1",
+    "express-flash": "^0.0.2",
     "express-rate-limit": "^6.3.0",
     "express-session": "^1.17.2",
     "helmet": "^5.0.2",

@@ -4,6 +4,7 @@ const path = require('path')
 const expressEjsLayout = require('express-ejs-layouts')
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const sessions = require('express-session')
+const flash = require('express-flash')
 const mongoStore = require('connect-mongo')
 const db = require('./database/mongo')
 const cors = require('cors')
@@ -37,6 +38,7 @@ app.use(sessions({
     })
 }))
 
+app.use(flash())
 
 app.use(cors())
 
