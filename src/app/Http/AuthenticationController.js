@@ -85,8 +85,8 @@ class AuthenticationController {
                     req.flash('loginMessage', 'Incorrect password')
                     res.redirect('/login')
                 }
-            }).catch((err) => console.log(err))
-        })
+            })
+        }).catch((err) => console.log(err))
     };
 
     /**
@@ -113,8 +113,8 @@ class AuthenticationController {
                     req.session.user = user
                     res.redirect('/projects')
                 })
-            }).catch((err) => console.log(err))
-        })
+            })
+        }).catch((err) => console.log(err))
     };
 
     /**
