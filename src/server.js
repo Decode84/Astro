@@ -4,6 +4,7 @@ const path = require('path')
 const expressEjsLayout = require('express-ejs-layouts')
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const sessions = require('express-session')
+const flash = require('express-flash')
 const mongoStore = require('connect-mongo')
 const db = require('./database/mongo')
 const cors = require('cors')
@@ -21,6 +22,7 @@ app.use(sessions({
     secret: process.env.SECRET_KEY,
     saveUninitialized: false, // don't create session until something stored
     resave: false, // don't save session if unmodified
+    // rolling: true, //Reset the cookie Max-Age on every request
     cookie: {
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
         secure: false // true for https
@@ -36,6 +38,7 @@ app.use(sessions({
     })
 }))
 
+app.use(flash())
 
 app.use(cors())
 
@@ -44,7 +47,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 // Routes path
-app.use('/', express.static('public'), require('./routes/web'))
+app.use('/', express.static('public'), require('./routes'))
 
 // Server app
 const PORT = process.env.PRI_SERVER_PORT || process.env.SEC_SERVER_PORT
