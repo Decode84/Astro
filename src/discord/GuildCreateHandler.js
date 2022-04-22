@@ -2,11 +2,11 @@ const User = require('../app/Models/User')
 const Project = require('../app/Models/Project')
 const { MessageActionRow, MessageButton } = require('discord.js')
 // https://discord.js.org/#/docs/main/stable/class/ClientUser?scrollTo=send
-async function OnGuildCreate (guild) {
+async function OnGuildCreate(guild) {
     // TODO: make sure that the bot has all the needed perms
     const auditLogs = await guild.fetchAuditLogs() // auditLogs is the discord servers log for everything the admins do
     const user = await auditLogs.entries.first().executor // We know this is the admin who added the bot
-    const userInDB = await User.findOne({ discord: user.id }, 'projectIDs')
+    const userInDB = await User.findOne({ services: { discord: user.id } }, 'projectIDs')
     await userInDB
     const projects = userInDB.projectIDs
     if (projects.length === 0) {
@@ -28,7 +28,7 @@ async function OnGuildCreate (guild) {
  * buttons do the linking.
  * @param {int[]} projects
  */
-async function CreateButtons (projects) {
+async function CreateButtons(projects) {
     // The buttons can max have 5 rows and 5 buttons in each row for a total of 25 buttons. NO MORE
     // buttons can be added in a single message. This restriction is made by discord
     const buttonRows = []
@@ -53,7 +53,7 @@ async function CreateButtons (projects) {
  * @param {Message<boolean>} sentMessage
  * @param {guild} guild
  */
-async function CreateCollector (guild, sentMessage) {
+async function CreateCollector(guild, sentMessage) {
     const collector = sentMessage.createMessageComponentCollector({
         componentType: 'BUTTON',
         maxComponents: 1
@@ -85,7 +85,7 @@ async function CreateCollector (guild, sentMessage) {
  * @param {guild} guild
  * @returns {Promise<Project>} Promise of Webhook written to discord.invitelink.
  */
-function CreateWebHook (guild, discord) {
+function CreateWebHook(guild, discord) {
     return guild.channels.fetch()
         .then(channels => {
             channels.first().createWebhook('ProjectHub Webhook', {
@@ -104,7 +104,7 @@ function CreateWebHook (guild, discord) {
  * @param {guild} guild
  * @returns {Promise<Project>} Promise of invite written to discord.invitelink.
  */
-function CreateInvite (guild, discord) {
+function CreateInvite(guild, discord) {
     return guild.channels.fetch()
         .then(channels => {
             guild.invites.create(channels.first(), {
