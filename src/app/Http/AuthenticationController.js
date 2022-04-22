@@ -144,7 +144,7 @@ class AuthenticationController {
 
         User.findOne({ email }).then((user) => {
             if (!user) {
-                req.flash('forgotMessage', 'No user with this email exists')
+                req.flash('forgotMessage', 'No user with this email exist')
                 res.redirect('/forgot')
                 return
             }
