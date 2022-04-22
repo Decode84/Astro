@@ -5,6 +5,7 @@ const projectCon = require('./app/Http/ProjectController')
 const homeCon = require('./app/Http/HomeController')
 const TrelloAPI = require('./trello/trelloApi')
 const middleware = require('./app/Middleware/Authorization')
+const discordCon = require('./app/Http/DiscordController')
 
 const { createAccountLimit, loginLimit } = require('./app/Middleware/Rate')
 const { authenticateValidation, registerValidation } = require('./app/Validation/AuthValidation')
@@ -39,5 +40,9 @@ router.get('/admin/board', middleware.authLogin, adminCon.showBoard)
 // Trello
 router.get('/trello', TrelloAPI.trello)
 router.get('/trello/callback', TrelloAPI.recieveToken)
+
+// Discord
+router.get('/discord', discordCon.discordAuth)
+router.post('/discord', discordCon.discordAuth)
 
 module.exports = router

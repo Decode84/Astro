@@ -48,10 +48,13 @@ app.use('/', express.static('public'), require('./routes'))
 
 // Server app
 const PORT = process.env.PRI_SERVER_PORT || process.env.SEC_SERVER_PORT
-app.listen(PORT, (err) => {
+const server = app.listen(PORT, (err) => {
     if (err) console.log(err)
     console.log(`Homepage hosted here: http://localhost:${PORT}/`)
 })
 
 // Run Discord bot
 require('./discord/DiscordBot')
+
+// Run Discord Chat WebSocket
+require('./app/WebSocket/DiscordChatSocket').StartDiscordWebSocket(server)
