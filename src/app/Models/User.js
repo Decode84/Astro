@@ -1,5 +1,5 @@
-const mongo = require('mongoose');
-const Schema = mongo.Schema;
+const mongo = require('mongoose')
+const Schema = mongo.Schema
 
 const UserSchema = new Schema({
     name: {
@@ -19,6 +19,9 @@ const UserSchema = new Schema({
     password: {
         type: String,
         required: true
+    },
+    token: {
+        type: String
     },
     date: {
         type: Date,
