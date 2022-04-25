@@ -1,5 +1,7 @@
 const User = require('../Models/User')
 const bcrypt = require('bcrypt')
+const randtoken = require('rand-token')
+const mailCon = require('./MailController')
 
 class AuthenticationController {
     /**
@@ -7,11 +9,11 @@ class AuthenticationController {
      * @param {*} req
      * @param {*} res
      */
-    async showLogin (req, res) {
+    async showLogin(req, res) {
         if (req.session.user) {
             res.redirect('/projects')
         } else {
-            res.render('auth/login')
+            res.render('auth/login', { message: req.flash('loginMessage') })
         }
     };
 
@@ -20,11 +22,11 @@ class AuthenticationController {
      * @param {*} req
      * @param {*} res
      */
-    async showRegister (req, res) {
+    async showRegister(req, res) {
         if (req.session.user) {
             res.redirect('/projects')
         } else {
-            res.render('auth/register')
+            res.render('auth/register', { message: req.flash('registerMessage') })
         }
     };
 
@@ -33,11 +35,27 @@ class AuthenticationController {
      * @param {*} req
      * @param {*} res
      */
-    async showForgot (req, res) {
+    async showForgot(req, res) {
         if (req.session.user) {
             res.redirect('/projects')
         } else {
-            res.render('auth/forgot')
+            res.render('auth/forgot', { message: req.flash('forgotMessage') })
+        }
+    };
+
+    /**
+     * Show the reset page if user wants to reset password
+     * @param {*} req
+     * @param {*} res
+     */
+    async showReset(req, res) {
+        if (req.session.user) {
+            res.redirect('/projects')
+        } else {
+            res.render('auth/reset', {
+                token: req.query.token,
+                message: req.flash('resetMessage')
+            })
         }
     };
 
@@ -47,11 +65,15 @@ class AuthenticationController {
      * @param {*} res
      * @returns
      */
-    async authenticate (req, res) {
+    async authenticate(req, res) {
         const { username, password } = req.body
 
         User.findOne({ username }).then((user) => {
-            if (!user) return res.status(400).send('User does not exist')
+            if (!user) {
+                req.flash('loginMessage', 'User does not exists')
+                res.redirect('/login')
+                return
+            }
 
             bcrypt.compare(password, user.password).then((isMatch) => {
                 if (isMatch) {
@@ -60,10 +82,11 @@ class AuthenticationController {
                         res.redirect('/projects')
                     })
                 } else {
-                    return res.status(400).send('Incorrect password')
+                    req.flash('loginMessage', 'Incorrect password')
+                    res.redirect('/login')
                 }
-            }).catch((err) => console.log(err))
-        })
+            })
+        }).catch((err) => console.log(err))
     };
 
     /**
@@ -72,11 +95,15 @@ class AuthenticationController {
      * @param {*} res
      * @returns
      */
-    async signup (req, res) {
+    async signup(req, res) {
         const { name, username, email, password, passwordConfirmation } = req.body
 
         User.findOne({ username }).then((user) => {
-            if (user) return res.status(400).send('User already exists')
+            if (user) {
+                req.flash('registerMessage', 'User allready exists')
+                res.redirect('/register')
+                return
+            }
             const newUser = new User({ name, username, email, password })
 
             bcrypt.hash(newUser.password, 10, function (err, hash) {
@@ -85,9 +112,9 @@ class AuthenticationController {
                 newUser.save().then((user) => {
                     req.session.user = user
                     res.redirect('/projects')
-                }).catch((err) => console.log(err))
+                })
             })
-        })
+        }).catch((err) => console.log(err))
     };
 
     /**
@@ -95,7 +122,7 @@ class AuthenticationController {
      * @param {*} req
      * @param {*} res
      */
-    async logout (req, res) {
+    async logout(req, res) {
         if (req.session) {
             req.session.destroy(() => {
                 res.redirect('/login')
@@ -103,6 +130,65 @@ class AuthenticationController {
         } else {
             res.redirect('/login')
         }
+    };
+
+    /**
+     * Used to send mail with token to reset user password
+     * @param {*} req
+     * @param {*} res
+     * @returns
+     */
+
+    async resetPass(req, res) {
+        const { email } = req.body
+
+        User.findOne({ email }).then((user) => {
+            if (!user) {
+                req.flash('forgotMessage', 'No user with this email exist')
+                res.redirect('/forgot')
+                return
+            }
+
+            const token = randtoken.generate(20)
+            const sent = mailCon.sendEmail(email, token)
+
+            if (sent !== '0') {
+                user.token = token
+                user.save().then(() => {
+                    req.flash('forgotMessage', 'Email sent')
+                    res.redirect('/forgot')
+                })
+            }
+        }).catch((err) => console.log(err))
+    };
+
+    /**
+     * Used to send mail with token to reset user password
+     * @param {*} req
+     * @param {*} res
+     * @returns
+     */
+
+    async updatePass(req, res) {
+        const { token, password } = req.body
+
+        User.findOne({ token }).then((user) => {
+            if (!user) {
+                req.flash('forgotMessage', 'Token invalid')
+                res.redirect('/forgot')
+                return
+            }
+
+            bcrypt.hash(password, 10, function (err, hash) {
+                if (err) console.log(err)
+                user.password = hash
+                user.token = undefined
+                user.save().then((user) => {
+                    req.session.user = user
+                    res.redirect('/projects')
+                })
+            })
+        }).catch((err) => console.log(err))
     };
 }
 
