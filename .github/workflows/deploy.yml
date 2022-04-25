@@ -10,10 +10,11 @@ jobs:
       - name: Deploy nodejs
         uses: appleboy/ssh-action@v0.1.4
         with:
-          host: ${{ secrets.HOST }}
+          host: ${{ secrets.SSH_HOST }}
           key: ${{ secrets.SSH_KEY }}
-          username: ${{ secrets.USERNAME }}
+          username: ${{ secrets.SSH_USERNAME }}
           passphrase: ${{ secrets.PASSPHRASE }}
+          port: ${{ secrets.PORT }}
           
           script: |
             mkdir test
