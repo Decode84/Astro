@@ -7,19 +7,34 @@ const { send } = require('express/lib/response');
 
 const trelloKey = 'e5b8e9efa5bf84e76b15d443eb9b5afc';
 
+/**
+ * @function trello
+ * @description Redirects the user to the Trello authentication page.
+ * @param {*} req 
+ * @param {*} res 
+ */
 async function trello(req, res) {
     let return_url = 'http://localhost:4000/trello/callback';
     res.redirect('https://trello.com/1/authorize?return_url=' + return_url + '&callback_method=fragment&?expiration=30days&name=Project_Hub&response_type=fragment&scope=read,write,account&key=' + trelloKey);
 }
 
+/**
+ * @function recieveToken
+ * @description Recieves the token from the Trello callback.
+ * @param {*} req 
+ * @param {*} res 
+ */
 async function recieveToken(req, res) {
     let token;
+    // If the token is undefined, then the user will execute the conversion script.
     if (req.query.token === undefined) {
         res.render("trello/Trello");
     }
+    // If the token does not exist, then an error will be displayed.
     else if (req.query.token === "none") {
         res.send("No token was provided.");
     }
+    // If the token exists, then the token will be saved to the user's account.
     else {
         token = req.query.token;
 
@@ -33,7 +48,8 @@ async function recieveToken(req, res) {
 }
 
 /**
- *
+ * @function newOrganization
+ * @description Creates a new organization for the user.
  * @param {String} name The name of the organization to be created.
  * @param {String} userId The id of the user who is creating the organization.
  * @param {String} projectId The id of the project that the organization is being created for.
@@ -46,6 +62,7 @@ async function newOrganization(name, userId, projectId) {
     let project = await projectController.getProjectById(projectId);
     let user = await userController.getUser(userId);
 
+    // Try to create the organization if trello is active for the project.
     try {
         if (project.categories.planning.services.trello.state === 'active') {
             const response = await fetch('https://api.trello.com/1/organizations?displayName=' + name + '&key=' + trelloKey + '&token=' + user.authentications.trello.token, {
@@ -61,7 +78,7 @@ async function newOrganization(name, userId, projectId) {
 
             organizationId = json.id;
 
-
+            // Save organization id to database for future use.
             let service = { ...project.categories.planning.services };
             service.trello.organizationId = organizationId;
             project.markModified('categories.planning.services');
@@ -77,7 +94,8 @@ async function newOrganization(name, userId, projectId) {
 }
 
 /**
- *
+ * @function newBoard
+ * @description Creates a new board for the user.
  * @param {String} name The name of the board to be created.
  * @param {String} projectId The id of the project that the board is being created for.
  */
@@ -85,6 +103,7 @@ async function newBoard(name, projectId, userId) {
     let project = await projectController.getProjectById(projectId);
     let user = await userController.getUser(userId);
     let response;
+    // try to create the board if trello is active for the project for a given organization.
     try {
         let organizationId = project.categories.planning.services.trello.organizationId;
         response = await fetch('https://api.trello.com/1/boards?name=' + name + '&idOrganization=' + organizationId + '&key=' + trelloKey + '&token=' + user.authentications.trello.token, {
@@ -95,6 +114,8 @@ async function newBoard(name, projectId, userId) {
         console.log(e);
     }
     let json;
+
+    // If the board was created, then the board id will be saved to the project.
     try {
         const text = await response.text();
         json = JSON.parse(text);
@@ -115,6 +136,12 @@ async function newBoard(name, projectId, userId) {
 
 }
 
+/**
+ * 
+ * @param {String} userId The id of the user who wants to create a new list.
+ * @param {String} boardId The id of the board that the list is being created for.
+ * @param {String} name The name of the list to be created.
+ */
 async function newList(userId, boardId, name) {
     let user = await userController.getUser(userId);
 
@@ -160,6 +187,12 @@ async function listBoards(req, res) {
     }
 }
 
+/**
+ * @function listLists
+ * @description Returns all the lists in a given board.
+ * @param {*} req 
+ * @param {*} res 
+ */
 async function listLists(req, res) {
     
     if (req.query.projectId === undefined) {
@@ -185,6 +218,12 @@ async function listLists(req, res) {
     }
 }
 
+/**
+ * @function newCard
+ * @description Renders an html page that allows the user to create a new card.
+ * @param {*} req 
+ * @param {*} res 
+ */
 async function newCard(req, res) {
     let user = await userController.getUser(req.session.user._id);
     let access = false;
@@ -206,6 +245,12 @@ async function newCard(req, res) {
 
 }
 
+/**
+ * @function createCard
+ * @description Creates a new card in the given list.
+ * @param {*} req 
+ * @param {*} res 
+ */
 async function createCard(req, res) {
     let user = await userController.getUser(req.session.user._id);
 
@@ -220,16 +265,17 @@ async function createCard(req, res) {
     res.redirect('/project?projectId=' + req.query.projectId); // ! Might change later don't know where to put the user.
 }
 
+/**
+ * 
+ * @param {String} name The name of the organization to create.
+ * @param {String} projectId The id of the project that the organization is being created for.
+ * @param {String} userId The id of the user who is creating the organization.
+ */
 async function setup_trello(name, projectId, userId) {
     await newOrganization(name, userId, projectId);
     let boardId = await newBoard('SCRUM', projectId, userId);
-    /*
-    await newList(userId, boardId, 'Backlog');
-    await newList(userId, boardId, 'In Progress');
-    await newList(userId, boardId, 'Done');
-    */
+    
 }
-//setup_trello('Work', '625ff3fb57b5de881281e626', '6256b0c5245953b0b9304075');
 
 module.exports = {
     trello,
