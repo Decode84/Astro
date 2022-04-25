@@ -16,9 +16,8 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           
           script: |
-            cd dev
             pm2 stop 1
-            git clone git@github.com:KB885/Astro.git
-            cd Astro
+            cd dev/Astro
+            git fetch
             pm2 start 1
             echo "Deployment was successful"
