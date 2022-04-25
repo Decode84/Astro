@@ -17,7 +17,7 @@ app.use(expressEjsLayout)
 require('./database/mongo')
 
 // Register session cookies
-app.use(sessions({
+const sessionManager = sessions({
     secret: process.env.SECRET_KEY,
     saveUninitialized: false, // don't create session until something stored
     resave: false, // don't save session if unmodified
@@ -34,7 +34,8 @@ app.use(sessions({
         //    hashing: 'sha256'
         // }
     })
-}))
+})
+app.use(sessionManager)
 
 
 app.use(cors())
@@ -57,4 +58,4 @@ const server = app.listen(PORT, (err) => {
 require('./discord/DiscordBot')
 
 // Run Discord Chat WebSocket
-require('./app/WebSocket/DiscordChatSocket').StartDiscordWebSocket(server)
+require('./app/WebSocket/DiscordChatSocket').StartDiscordWebSocket(server, sessionManager)

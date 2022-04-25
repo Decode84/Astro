@@ -7,6 +7,7 @@ const guildCreateHandler = require('./GuildCreateHandler')
 // token is the bots login credentials and needs to be kept confident
 const token = process.env.DISCORD_BOT_TOKEN
 if (token) {
+    require('./RegCommands')
     const client = new Client({
         intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_INVITES, Intents.FLAGS.GUILD_MEMBERS,
             Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_MESSAGE_TYPING, Intents.FLAGS.GUILD_MESSAGES]
@@ -15,7 +16,6 @@ if (token) {
         console.log('Discord Ready!')
     })
     const commandHandler = require('./CommandHandler')
-    require('./RegCommands')
     client.on('interactionCreate', async interaction => {
         if (interaction.isCommand()) { await commandHandler.Handlecommand(interaction) }
         // else if(interaction.is) add other interaction than commands here
