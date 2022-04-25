@@ -1,0 +1,21 @@
+name: Deploy
+on:
+  push:
+    branches: [dev]
+    
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy nodejs
+        uses: appleboy/ssh-action@v.0.1.2
+        with:
+          host: ${{ secrets.HOST }}
+          key: ${{ secrets.SSH_KEY }}
+          username: ${{ secrets.USERNAME }}
+          
+          script: |
+            mkdir test
+            cd test
+            git clone git@github.com:KB885/Astro.git
+            echo "Deployment was successful"
