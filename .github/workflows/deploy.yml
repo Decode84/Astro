@@ -11,9 +11,10 @@ jobs:
         uses: appleboy/ssh-action@v0.1.4
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.USER_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.PORT }}
-          password: ${{ secrets.USER_PASS }}
+          username: ${{ secrets.SSH_USERNAME }}
+          passphrase: ${{ secrets.PASSPHRASE }}
           
           script: |
             mkdir test
