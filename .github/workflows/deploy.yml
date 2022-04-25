@@ -16,7 +16,9 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           
           script: |
-            mkdir test
-            cd test
+            cd dev
+            pm2 stop
             git clone git@github.com:KB885/Astro.git
+            cd Astro
+            pm2 start "npm run start cloud"
             echo "Deployment was successful"
