@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy nodejs
-        uses: appleboy/ssh-action@v.0.1.2
+        uses: actions/checkout@v1
         with:
           host: ${{ secrets.HOST }}
           key: ${{ secrets.SSH_KEY }}
