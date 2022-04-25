@@ -27,11 +27,16 @@ router.post('/authenticate', loginLimit, authenticateValidation, authCon.authent
 router.post('/signup', createAccountLimit, registerValidation, authCon.signup)
 router.post('/logout', middleware.authLogin, authCon.logout)
 
-// Project
-router.get('/project', projectCon.project)
-
-// Projects
-router.get('/projects', projectCon.projects)
+// Project overview GET
+router.get('/projects', projectCon.showProjects)
+router.get('/create-project', projectCon.createProject)
+router.get('/project', projectCon.showProject)
+router.get('/edit', projectCon.editProject)
+// Project overview POST
+router.post('/create-project', projectCon.createProject)
+router.post('/projects', projectCon.showProjects)
+router.post('/project', projectCon.showProject)
+router.post('/edit', projectCon.editProject)
 
 // Admin (TODO: check for role)
 router.get('/admin/board', middleware.authLogin, adminCon.showBoard)

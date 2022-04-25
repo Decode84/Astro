@@ -50,57 +50,89 @@ function showProject(req, res) {
  * @param {*} req
  * @param {*} res
  */
-function createProject(req, res) {
-
-    if (req.method == 'POST') {
-        const projectName = req.body.projectName;
-        const invitedUsers = req.body.emails;
-        const UserID = req.session.user._id;
+function createProject (req, res) {
+    if (req.method === 'POST') {
+        const projectName = req.body.projectName
+        const invitedUsers = req.body.emails
+        const UserID = req.session.user._id
 
         newProject(projectName, UserID).then(projectId => {
-
             if (invitedUsers != null) {
                 // Add the project to the user's project list.
                 invitedUsers.forEach(user => {
                     User.find({ email: user }).then(user => {
-                        addUserToProject(projectId, user[0]._id);
-                    });
-                }); 
+                        addUserToProject(projectId, user[0]._id)
+                    })
+                })
             }
-            
-        });            
-    
+        })
+        res.redirect('/projects/')
     } else {
-        res.render('projects/createProject');
+        res.render('projects/createProject')
     }
 }
 
-function editProject(req, res) {
-    console.log('inside editProject');
-    console.log(req.session.user.projectIDs);
-    let url = req.url;
-    let projecId = url.split('=').pop();
+async function editProject (req, res) {
+    // const projectId = mongoose.Types.ObjectId(url.split('=').pop())
+    const projectId = req.body.projectID
 
-    getProjectById(projecId).then(project => {
-        let project = project;
-    });
+    if (req.method === 'GET') {
+        getProjectById(req.query.projectId).then(async (project) => {
+            const projectObj = project
+            const projectMembers = []
 
-    res.render('projects/editProject', {    project: project,
-                                            user: req.session.user 
-    });
+            for (const member of project.members) {
+                const user = await userController.getUser(member)
+                projectMembers.push(user.email)
+            }
+
+            console.log('members of project ' + projectMembers)
+            res.render('projects/editProject', {
+                project: projectObj,
+                projectMembers: projectMembers,
+                user: req.session.user
+            })
+        })
+    }
+
+    if (req.method === 'POST') {
+        const projectName = req.body.projectName
+        const invitedUsers = req.body.emails
+        const UserID = req.session.user._id
+
+        if (req.body.edit === 'true') {
+            updateProject(projectId, projectName, UserID).then(() => {
+                if (invitedUsers != null) {
+                    // Add the project to the user's project list.
+                    invitedUsers.forEach(invUser => {
+                        console.log('invited user: ' + invUser)
+                        User.find({ email: invUser }).then(user => {
+                            console.log('user from POST: ' + user[0]._id)
+                            addUserToProject(projectId, user[0]._id)
+                        })
+                    })
+                }
+            })
+            res.redirect('/projects/')
+        } else if (req.body.edit === 'false') {
+            removeUserFromProject(projectId, UserID)
+            res.redirect('/edit?projectId=' + projectId)
+        }
+    }
 }
+
 
 /**
  * @function Gets a project by id.
- * @param {String} id 
+ * @param {String} id
  * @returns {Promise<Project>} The project.
  */
-async function getProjectById(id) {
+async function getProjectById (id) {
     try {
-        const project = await Project.findById(id);
-        return project;
+        const project = await Project.findById(id)
+        return project
     } catch (error) {
-        console.log(error);
+        console.log(error)
     }
 }
 
@@ -156,11 +188,21 @@ async function newProject(projectName, UserID) {
     return project._id;
 }
 
-async function updateProject(projectId) {
+// Update the project in the database
+async function updateProject (projectID, projectName, UserID) {
     // Get the project
-    let project = await getProjectById(projectId);
+    const project = await getProjectById(projectID)
 
+    // Update the project
+    project.name = projectName
+    if (project.members.includes(UserID) === true) {
+        console.log('User is already a member of the project')
+    } else {
+        project.members.push(UserID)
+    }
 
+    // Save the project
+    await project.save()
 }
 
 
@@ -198,22 +240,23 @@ async function addUserToProject(projectId, UserId) {
     const project = await getProjectById(projectId);
 
     // Add the user to the project
-    console.log(project.members.length);
+    console.log('project ' + project);
 
     for (i = 0; i < project.members.length; i++) {
         if (project.members[i] != UserId) {
             // Add user
             project.members.push(UserId);
 
+            console.log('user id : ' + UserId)
             // Add the project to the user's project list
             userController.getUser(UserId).then(user => {
+                console.log('user : ' + user)
                 user.projectIDs.push(project._id);
                 user.save();
             });
 
             // Save the project
             await project.save();
-            console.log('User added to project');
 
         } else {
             console.log('User is already a member of this project.');
@@ -230,6 +273,7 @@ async function addUserToProject(projectId, UserId) {
 async function removeUserFromProject(projectId, UserId) {
     // Get the project
     const project = await getProjectById(projectId);
+    console.log('projectId : ' + projectId)
 
     for (i = 0; i < project.members.length; i++) {
         if (project.members[i] == UserId) {
