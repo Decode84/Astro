@@ -1,10 +1,16 @@
-<script src="https://cdn.jsdelivr.net/npm/color-calendar/dist/bundle.js"></script>
-<script src="/scripts/calendar.js"></script>
-
 <div class="mb-2" id="calendar-a"></div>
 
-<!-- Da javascript filen er blevet included kan jeg køre funktionerne direkte her i ejs format (<%= %>)
+  <!-- Da javascript filen er blevet included kan jeg køre funktionerne direkte her i ejs format (<%= %>)
      Implementering af eventHandling i kalderen og at de appropriate bokser og lignede vises -->
-<div id="test">
-  <%= %> <%- include('./cal_events.ejs', { date: currentDate }) %>
-</div>
+  <div class="p-1 rounded mb-0.5" id="cal_events">
+  </div>
+  <div class="p-1 rounded flex flex-row items-center bg-white" id="cal_add">
+    <button id="plus"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+    </svg></button>
+    <p class="ml-1">Add Event</p>
+  
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/color-calendar/dist/bundle.js"></script>
+  <script src="/scripts/calendar.js"></script>
