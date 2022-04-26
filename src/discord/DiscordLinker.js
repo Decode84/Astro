@@ -1,6 +1,7 @@
 const User = require('../app/Models/User')
 const Project = require('../app/Models/Project')
 const { MessageActionRow, MessageButton } = require('discord.js')
+const { cli } = require('tailwindcss/lib/constants');
 // https://discord.js.org/#/docs/main/stable/class/ClientUser?scrollTo=send
 /**
  * @function Links a Projecthub Project with Discord. Invoked by CommandHandler and GuildCreateHandler
@@ -10,8 +11,15 @@ const { MessageActionRow, MessageButton } = require('discord.js')
  * @returns {Promise<void>}
  */
 async function Link(guild, client, interaction = null) {
-    const userInDB = await User.findOne({ discord: client.id }, 'projectIDs')
-    const projects = await userInDB.projectIDs
+    const id = client.id
+    console.log(id)
+    const userInDB = await User.findOne({ services: {discord: id} }, 'projectIDs')
+    if (!userInDB)
+    {
+        console.log("couldnt find user")
+        return
+    }
+    const projects = userInDB.projectIDs
     if (projects.length === 0) {
         const message = `Hello thanks for adding me to ${guild.name} (id:${guild.id})\n
         Unfortunately as of right now, you're not part of any projects in ProjectHub.\n
