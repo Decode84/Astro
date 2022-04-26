@@ -17,4 +17,12 @@ const loginLimit = rateLimit({
     legacyHeaders: false // Disable the `X-RateLimit-*` headers
 })
 
-module.exports = { createAccountLimit, loginLimit }
+const mailLimit = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 5, // limit each IP to 5 requests per windowMs
+    message: 'Too many mails sent from this IP, please try again after an hour',
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false // Disable the `X-RateLimit-*` headers
+})
+
+module.exports = { createAccountLimit, loginLimit, mailLimit }
