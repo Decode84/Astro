@@ -2,7 +2,7 @@ const router = require('express').Router()
 const authCon = require('./app/Http/AuthenticationController')
 const adminCon = require('./app/Http/Admin/AdminController')
 const projectCon = require('./app/Http/ProjectController')
-//  const discordCon = require('./app/Http/DiscordController')
+const discordCon = require('./app/Http/DiscordController')
 const homeCon = require('./app/Http/HomeController')
 const TrelloAPI = require('./trello/trelloApi')
 const middleware = require('./app/Middleware/Authorization')
@@ -40,8 +40,8 @@ router.get('/projects', middleware.authLogin, projectCon.projects)
 router.get('/admin/board', middleware.authLogin, adminCon.showBoard)
 
 // Discord
-//  router.get('/discord', discordCon.discordAuth)
-//  router.post('/discord', discordCon.discordAuth)
+router.get('/discord', discordCon.discordAuth)
+router.post('/discord', discordCon.discordAuth)
 
 // Trello
 router.get('/trello', TrelloAPI.trello)
