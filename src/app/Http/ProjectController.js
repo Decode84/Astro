@@ -72,6 +72,11 @@ function createProject (req, res) {
     }
 }
 
+/**
+ * @function Edit name and invited users of a project.
+ * @param {*} req 
+ * @param {*} res 
+ */
 async function editProject (req, res) {
     // const projectId = mongoose.Types.ObjectId(url.split('=').pop())
     const projectId = req.body.projectID
@@ -98,7 +103,6 @@ async function editProject (req, res) {
     if (req.method === 'POST') {
         const projectName = req.body.projectName
         const invitedUsers = req.body.emails
-        const UserID = req.session.user._id
 
         if (req.body.edit === 'true') {
             // updateProject(projectId, projectName, invitedUsers)
@@ -175,7 +179,12 @@ async function newProject(projectName, UserID) {
     return project._id;
 }
 
-// Update the project in the database
+/**
+ * @function Update a project's name and invited users in the database
+ * @param {Object} projectID 
+ * @param {String} projectName 
+ * @param {Array} invitedUsers 
+ */
 async function updateProject (projectID, projectName, invitedUsers) {
     // Get the project
     const project = await getProjectById(projectID)

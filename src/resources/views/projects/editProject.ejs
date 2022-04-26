@@ -44,16 +44,11 @@
 <script>
     let emails = [];
 
-    
-
     document.querySelectorAll('.inv-member').forEach((member) => {
         emails.push(member.innerHTML);
     });
 
-
-    console.log();
-
-
+    // post request on form submit
     editProjForm.onsubmit = async (e) => {
         e.preventDefault();
 
@@ -112,39 +107,11 @@
 
     document.querySelectorAll('.remove-user').forEach((button) => {
         button.addEventListener('click', async (e) => {
-
             let email = document.querySelector('.inv-member').innerHTML;
             let index = emails.indexOf(email);
             emails.splice(index, 1);
             button.parentElement.remove();
             console.log(emails);
-        
-
-
-
-
-
-            /*
-            let response = await fetch('/edit', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    projectID : document.URL.split('=').pop(),
-                    projectName: document.getElementById('projectName').value,
-                    emails: emails,
-                    edit: 'false' 
-                })
-            }).then((res) => {
-                if (res.status === 200) {
-                    console.log('Successfully removed user from the project');
-                } else {
-                    alert('Something went wrong trying to remove the user from the project');
-                }
-            });
-            */
-
         });
     });
 </script>
