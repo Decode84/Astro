@@ -1,0 +1,23 @@
+name: Deploy
+on:
+  push:
+    branches: [dev]
+    
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy nodejs
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.PORT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          
+          script: |
+            pm2 stop 1
+            cd dev/Astro
+            git fetch
+            pm2 start 1
+            echo "Deployment was successful"

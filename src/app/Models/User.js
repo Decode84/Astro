@@ -1,5 +1,5 @@
-const mongo = require('mongoose');
-const Schema = mongo.Schema;
+const mongo = require('mongoose')
+const Schema = mongo.Schema
 
 const UserSchema = new Schema({
     name: {
@@ -20,17 +20,19 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
+    token: {
+        type: String,
+        expires: '10m'
+    },
     date: {
         type: Date,
         default: Date.now
     },
-    discord: {
-        type: String
-    },
-    HashedPassword: String,
+    services: Schema.Types.Mixed,
     projectIDs: [
+        String
     ],
-    authentications: Schema.Types.Mixed,
-}, { strict: false });
+    authentications: Schema.Types.Mixed
+}, { strict: false })
 
-module.exports = mongo.model("User", UserSchema);
+module.exports = mongo.model('User', UserSchema)
