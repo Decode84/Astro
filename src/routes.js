@@ -5,6 +5,7 @@ const projectCon = require('./app/Http/ProjectController')
 //  const discordCon = require('./app/Http/DiscordController')
 const homeCon = require('./app/Http/HomeController')
 const TrelloAPI = require('./trello/trelloApi')
+const githubAPI = require('./github/githubApi')
 const middleware = require('./app/Middleware/Authorization')
 
 const { createAccountLimit, loginLimit, mailLimit } = require('./app/Middleware/Rate')
@@ -44,13 +45,16 @@ router.get('/admin/board', middleware.authLogin, adminCon.showBoard)
 //  router.post('/discord', discordCon.discordAuth)
 
 // Trello
-router.get('/trello', TrelloAPI.trello);
-router.get('/trello/callback', TrelloAPI.recieveToken);
-router.get('/trello/newCard', TrelloAPI.newCard);
-router.get('/trello/createCard', TrelloAPI.createCard);
+router.get('/trello', TrelloAPI.trello)
+router.get('/trello/callback', TrelloAPI.recieveToken)
+router.get('/trello/newCard', TrelloAPI.newCard)
+router.get('/trello/createCard', TrelloAPI.createCard)
 
 // Trello API
-router.get('/api/trello/boards', TrelloAPI.listBoards);
-router.get('/api/trello/lists', TrelloAPI.listLists);
+router.get('/api/trello/boards', TrelloAPI.listBoards)
+router.get('/api/trello/lists', TrelloAPI.listLists)
+
+// Github API
+router.post('/api/github/hook', githubAPI.githubHook)
 
 module.exports = router
