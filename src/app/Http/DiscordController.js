@@ -41,21 +41,20 @@ exports.discordAuth = async (req, res) => {
  * @returns {Promise<void>}
  */
 async function handleAuth(req, code) {
-    // console.log(`Discord OAuth request with code: ${req.query.code}`)
     try {
         const tokenResult = await getToken(code)
-        // console.log(tokenResult.status);
         const token = await tokenResult.json()
-        // console.log(await token);
-
         const userResult = await getUserData(token)
         const discordUser = await userResult.json()
+        if (!req.session.user) {
+            console.log("User not logged in before Discord Auth")
+            return
+        }
         if ((await discordUser).message === '401: Unauthorized') {
             console.log('failed to link user with discord because of invalid token')
             return
         }
         console.log(discordUser)
-        // console.log(discordUser.id);
         putUserInDB(discordUser, req)
     } catch (error) {
         console.error(error)

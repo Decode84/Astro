@@ -1,5 +1,4 @@
 // Take care of some UI details
-let nick = prompt("Enter your nickname"); // Get user's nickname
 let input = document.getElementById("input"); // Find the input field
 input.focus(); // Set keyboard focus
 // Register for notification of new messages using EventSource
@@ -16,7 +15,7 @@ chatSocket.onmessage = function (event) {
 
 // Post the user's messages to the server using fetch
 input.addEventListener("change", () => { // When the user strikes return
-    chatSocket.send(nick + ":" + input.value);
+    chatSocket.send(input.value);
     console.log("message sent: " + input.value);
     input.value = ""; // Clear the input
 });
