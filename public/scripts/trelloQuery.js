@@ -1,3 +1,7 @@
+/**
+ * @function main
+ * @description A simple function that converts hash to query string
+ */
 function main() {
     let hash;
 

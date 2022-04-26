@@ -1,7 +1,11 @@
+/**
+ * @function main
+ * @description Main function
+ */
 async function main() {
     let select_board = document.getElementById("board-select");
 
-
+    // Add event listener that executes when the user changes the selected board
     select_board.addEventListener("change", async function () {
         // Display a loading message while the lists are being fetched
         let select_list = document.getElementById("list-select");
@@ -29,6 +33,11 @@ async function main() {
     });
 }
 
+/**
+ * @function displayLists
+ * @description Display the lists in the HTML
+ * @param {Array<Object>} lists 
+ */
 async function displayLists(lists) {
     let select_list = document.getElementById("list-select");
     select_list.innerHTML = "";
