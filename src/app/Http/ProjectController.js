@@ -199,7 +199,6 @@ async function updateProject (projectID, projectName, invitedUsers) {
             // Get user from emails
             await User.find({ _id: member }).then(user => {
                 if (!invitedUsers.includes(user[0].email)) {
-                    console.log('invited users: ' + invitedUsers + ' user: ' + user[0].email)
                     // Remove user from project
                     removeUserFromProject(project._id, user[0]._id)
                 }
@@ -304,11 +303,8 @@ async function removeUserFromProject(projectId, UserId) {
                 user.save();
             });
 
-            console.log('User removed from project');
-
         } else {
             console.log('User is not a member of this project.');
-            console.log('project member type : ' + typeof projectId + ' userId type : ' + typeof UserId)
         }
     }
 
