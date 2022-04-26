@@ -31,11 +31,17 @@ router.post('/logout', middleware.authLogin, authCon.logout)
 router.post('/resetpass', mailLimit, authCon.resetPass)
 router.post('/updatepass', authCon.updatePass)
 
-// Project
-router.get('/project', middleware.authLogin, projectCon.project)
+// Project overview GET
+router.get('/projects', projectCon.showProjects)
+router.get('/create-project', projectCon.createProject)
+router.get('/project', projectCon.showProject)
+router.get('/edit', projectCon.editProject)
+// Project overview POST
+router.post('/create-project', projectCon.createProject)
+router.post('/projects', projectCon.showProjects)
+router.post('/project', projectCon.showProject)
+router.post('/edit', projectCon.editProject)
 
-// Projects
-router.get('/projects', middleware.authLogin, projectCon.projects)
 
 // Admin (TODO: check for role)
 router.get('/admin/board', middleware.authLogin, adminCon.showBoard)
