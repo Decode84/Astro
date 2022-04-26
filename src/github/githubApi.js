@@ -4,6 +4,7 @@ async function githubHook (req, res) {
 }
 
 // Test
+// Commit test
 
 module.exports = {
     githubHook
