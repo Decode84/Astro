@@ -101,22 +101,9 @@ async function editProject (req, res) {
         const UserID = req.session.user._id
 
         if (req.body.edit === 'true') {
-            updateProject(projectId, projectName, UserID).then(() => {
-                if (invitedUsers != null) {
-                    // Add the project to the user's project list.
-                    invitedUsers.forEach(invUser => {
-                        console.log('invited user: ' + invUser)
-                        User.find({ email: invUser }).then(user => {
-                            console.log('user from POST: ' + user[0]._id)
-                            addUserToProject(projectId, user[0]._id)
-                        })
-                    })
-                }
-            })
+            // updateProject(projectId, projectName, invitedUsers)
+            updateProject(projectId, projectName, invitedUsers)
             res.redirect('/projects/')
-        } else if (req.body.edit === 'false') {
-            removeUserFromProject(projectId, UserID)
-            res.redirect('/edit?projectId=' + projectId)
         }
     }
 }
@@ -189,19 +176,43 @@ async function newProject(projectName, UserID) {
 }
 
 // Update the project in the database
-async function updateProject (projectID, projectName, UserID) {
+async function updateProject (projectID, projectName, invitedUsers) {
     // Get the project
     const project = await getProjectById(projectID)
 
     // Update the project
     project.name = projectName
-    if (project.members.includes(UserID) === true) {
-        console.log('User is already a member of the project')
+
+    console.log('invited users: ' + invitedUsers)
+    if (invitedUsers.length < project.members.length) {
+        // Remove users from the project
+        for (const member of project.members) {
+            // Get user from emails
+            await User.find({ _id: member }).then(user => {
+                if (!invitedUsers.includes(user[0].email)) {
+                    console.log('invited users: ' + invitedUsers + ' user: ' + user[0].email)
+                    // Remove user from project
+                    removeUserFromProject(project._id, user[0]._id)
+                }
+            })
+        }
+    } else if (invitedUsers.length > project.members.length) {
+        // Add users to the project
+        for (const member of invitedUsers) {
+            // Get user from emails
+            await User.find({ email: member }).then(user => {
+                if (!project.members.includes(user[0]._id)) {
+                    // Add user to project
+                    addUserToProject(projectID, user[0]._id)
+                }
+            })
+        }
     } else {
-        project.members.push(UserID)
+        console.log('No new members')
+        await project.save()
     }
 
-    // Save the project
+    // Save the project to the database
     await project.save()
 }
 
@@ -247,10 +258,8 @@ async function addUserToProject(projectId, UserId) {
             // Add user
             project.members.push(UserId);
 
-            console.log('user id : ' + UserId)
             // Add the project to the user's project list
             userController.getUser(UserId).then(user => {
-                console.log('user : ' + user)
                 user.projectIDs.push(project._id);
                 user.save();
             });
@@ -275,7 +284,7 @@ async function removeUserFromProject(projectId, UserId) {
     const project = await getProjectById(projectId);
     console.log('projectId : ' + projectId)
 
-    for (i = 0; i < project.members.length; i++) {
+    for (let i = 0; i < project.members.length; i++) {
         if (project.members[i] == UserId) {
             // Remove user
             project.members.splice(i, 1);
@@ -286,12 +295,11 @@ async function removeUserFromProject(projectId, UserId) {
                 user.save();
             });
 
-            // Save the project
-            await project.save();
             console.log('User removed from project');
 
         } else {
             console.log('User is not a member of this project.');
+            console.log('project member type : ' + typeof projectId + ' userId type : ' + typeof UserId)
         }
     }
 
