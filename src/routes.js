@@ -5,7 +5,7 @@ const projectCon = require('./app/Http/ProjectController')
 //  const discordCon = require('./app/Http/DiscordController')
 const homeCon = require('./app/Http/HomeController')
 const TrelloAPI = require('./trello/trelloApi')
-const githubAPI = require('./github/githubApi')
+const githubAPI = require('./app/Http/GithubController')
 const middleware = require('./app/Middleware/Authorization')
 
 const { createAccountLimit, loginLimit, mailLimit } = require('./app/Middleware/Rate')
@@ -61,6 +61,6 @@ router.get('/api/trello/boards', TrelloAPI.listBoards)
 router.get('/api/trello/lists', TrelloAPI.listLists)
 
 // Github API
-router.post('/api/github/hook', githubAPI.githubHook)
+router.post('/api/github/hook', githubAPI.hook)
 
 module.exports = router
