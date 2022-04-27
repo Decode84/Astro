@@ -9,6 +9,8 @@ async function githubHook (req, res) {
 }
 */
 
+// Test
+
 async function githubRequest (url, installationId) {
     const token = await createJWT(installationId)
     const res = await fetch(`https://api.github.com${url}`, {
