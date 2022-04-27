@@ -4,16 +4,16 @@
   </svg>
   <div class="m-0">
     <p class="text-sm ml-2 font-normal">
-      <%- userInfo.username%>
+      <%= user.name %>
     </p>
     <p class="text-sm ml-2 font-light">
-      <%- userInfo.useremail%>
+      <%= user.email %>
     </p>
   </div>
 
-  <form method="post" action="/logout" class="ml-auto">
-    <button type="submit">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 hover:cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+  <form action="/logout" method="post">
+    <button type="submit" class="ml-auto font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
         <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
       </svg>
     </button>

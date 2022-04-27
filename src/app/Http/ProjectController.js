@@ -8,24 +8,106 @@ const DiscordCon = require('./ServiceControllers/DiscordController')
 // ! Included for debugging purposes.
 const authenticationController = require('./AuthenticationController')
 
-async function project(req, res) {
+/**
+ * @function Shows a list of all the users projects
+ * @param {*} req
+ * @param {*} res
+ */
+
+function showProjects(req, res) {
+    if (req.method === 'POST') {
+        delProject(req.body.projectId)
+        res.redirect('projects/')
+    } else {
+        getAllProjects(req.session.user._id).then(projects => {
+            res.render('projects/overview', {
+                projects: projects,
+                user: req.session.user
+            })
+        })
+    }
+}
+
+/**
+ * @function Shows a single projects page
+ * @param {*} req
+ * @param {*} res
+ */
+async function showProject(req, res) {
     res.render('project/project', {
-        discordInfo: await DiscordCon.discordAuth(req, res),
-        userInfo: {
-            username: req.session.user.username,
-            useremail: req.session.user.email
-        }
+        project: req.project,
+        user: req.session.user,
+        discordInfo: await DiscordCon.discordAuth(req, res)
     })
 }
 
-function projects(req, res) {
-    res.render('projects/projects', {
-        userInfo: {
-            username: req.session.user.username,
-            useremail: req.session.user.email
-        }
-    })
+/**
+ * @function Displays the create project page, and creates a new project if the user submits the form.
+ * @param {*} req
+ * @param {*} res
+ */
+function createProject(req, res) {
+    if (req.method === 'POST') {
+        const projectName = req.body.projectName
+        const invitedUsers = req.body.emails
+        const UserID = req.session.user._id
+
+        newProject(projectName, UserID).then(projectId => {
+            if (invitedUsers != null) {
+                // Add the project to the user's project list.
+                invitedUsers.forEach(user => {
+                    User.find({ email: user }).then(user => {
+                        addUserToProject(projectId, user[0]._id)
+                    })
+                })
+            }
+        })
+        res.redirect('/projects/')
+    } else {
+        res.render('projects/createProject')
+    }
 }
+
+/**
+ * @function Edit name and invited users of a project.
+ * @param {*} req 
+ * @param {*} res 
+ */
+async function editProject(req, res) {
+    // const projectId = mongoose.Types.ObjectId(url.split('=').pop())
+    const projectId = req.body.projectID
+
+    if (req.method === 'GET') {
+        getProjectById(req.query.projectId).then(async (project) => {
+            const projectObj = project
+            const projectMembers = []
+
+            for (const member of project.members) {
+                const user = await userController.getUser(member)
+                projectMembers.push(user.email)
+            }
+
+            console.log('members of project ' + projectMembers)
+            res.render('projects/editProject', {
+                project: projectObj,
+                projectMembers: projectMembers,
+                user: req.session.user
+            })
+        })
+    }
+
+    if (req.method === 'POST') {
+        const projectName = req.body.projectName
+        const invitedUsers = req.body.emails
+
+        if (req.body.edit === 'true') {
+            // updateProject(projectId, projectName, invitedUsers)
+            updateProject(projectId, projectName, invitedUsers)
+            res.redirect('/projects/')
+        }
+    }
+}
+
 
 /**
  * @function Gets a project by id.
@@ -42,17 +124,27 @@ async function getProjectById(id) {
 }
 
 /**
- * @function Gets a list of all projects.
+ * @function Gets a list of all user's projects.
  * @returns {Promise<Array<Project>>} An array of projects.
  */
-async function getAllProjects() {
+async function getAllProjects(UserID) {
     try {
-        const projects = await Project.find()
-        return projects
+        const userProjects = [];
+        const user = await User.findById(UserID);
+        for (let projectID of user.projectIDs) {
+            const project = await getProjectById(projectID);
+            userProjects.push(project);
+        }
+
+
+        return userProjects;
+
     } catch (error) {
         console.log(error)
     }
 }
+
+
 
 /**
  * @function Creates a new project in the database and adds it to the user's project list.
@@ -82,7 +174,50 @@ async function newProject(projectName, UserID) {
     return project._id
 }
 
-//  newProject('Test Project3', '624aace6e20f9986b02cc288');
+/**
+ * @function Update a project's name and invited users in the database
+ * @param {Object} projectID 
+ * @param {String} projectName 
+ * @param {Array} invitedUsers 
+ */
+async function updateProject(projectID, projectName, invitedUsers) {
+    // Get the project
+    const project = await getProjectById(projectID)
+
+    // Update the project
+    project.name = projectName
+
+    console.log('invited users: ' + invitedUsers)
+    if (invitedUsers.length < project.members.length) {
+        // Remove users from the project
+        for (const member of project.members) {
+            // Get user from emails
+            await User.find({ _id: member }).then(user => {
+                if (!invitedUsers.includes(user[0].email)) {
+                    // Remove user from project
+                    removeUserFromProject(project._id, user[0]._id)
+                }
+            })
+        }
+    } else if (invitedUsers.length > project.members.length) {
+        // Add users to the project
+        for (const member of invitedUsers) {
+            // Get user from emails
+            await User.find({ email: member }).then(user => {
+                if (!project.members.includes(user[0]._id)) {
+                    // Add user to project
+                    addUserToProject(projectID, user[0]._id)
+                }
+            })
+        }
+    } else {
+        console.log('No new members')
+        await project.save()
+    }
+
+    // Save the project to the database
+    await project.save()
+}
 
 /**
  * @function The function will remove a project from the database. It will also remove the project from the user's project list.
@@ -118,8 +253,6 @@ async function addUserToProject(projectId, UserId) {
     const project = await getProjectById(projectId)
 
     // Add the user to the project
-    console.log(project.members.length)
-
     for (let i = 0; i < project.members.length; i++) {
         if (project.members[i] !== UserId) {
             // Add user
@@ -132,8 +265,7 @@ async function addUserToProject(projectId, UserId) {
             })
 
             // Save the project
-            await project.save()
-            console.log('User added to project')
+            await project.save();
         } else {
             console.log('User is already a member of this project.')
         }
@@ -147,10 +279,12 @@ async function addUserToProject(projectId, UserId) {
  */
 async function removeUserFromProject(projectId, UserId) {
     // Get the project
-    const project = await getProjectById(projectId)
+    const project = await getProjectById(projectId);
+    console.log('projectId : ' + projectId)
 
     for (let i = 0; i < project.members.length; i++) {
-        if (project.members[i] === UserId) {
+        if (project.members[i] == UserId) {
+
             // Remove user
             project.members.splice(i, 1)
 
@@ -160,9 +294,6 @@ async function removeUserFromProject(projectId, UserId) {
                 user.save()
             })
 
-            // Save the project
-            await project.save()
-            console.log('User removed from project')
         } else {
             console.log('User is not a member of this project.')
         }
@@ -188,8 +319,12 @@ async function addServiceToProject(projectId, serviceCategory, serviceId) {
 
 // Modules to export for testing purposes.
 module.exports = {
-    project,
-    projects,
+    showProjects,
+    showProject,
+    createProject,
+    delProject,
+    editProject,
+    newProject,
     getProjectById,
     getAllProjects,
     addUserToProject,
