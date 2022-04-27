@@ -1,0 +1,17 @@
+<div id="overlay" style="position: fixed;">
+    <form action="/trello/createCard">
+        <input id="projectIdInput" type="hidden" name="projectId" value="{{projectId}}">
+        <input type="text" name="cardName" placeholder="Card Name" required>
+        <input type="text" name="cardDescription" placeholder="Card Description">
+        <select name="board" id="board-select" class="form-control" style="width: 100%;">
+            <option id="select-option" value="">Select a board</option>
+        </select>
+        <select name="list" id="list-select" class="form-control" style="width: 100%;">
+            <option id="liststate" value="">No board selected</option>
+        </select>
+        <input type="submit" class="btn btn-primary" value="Create Card" id="create-card-btn">
+    </form>
+</div>
+
+<script src="/scripts/listBoards.js"></script>
+<script src="/scripts/listLists.js"></script>
