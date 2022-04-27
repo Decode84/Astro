@@ -1,34 +1,36 @@
 <section class="m-auto w-2/5 pt-6">
-    <form method="post" id="createProjForm" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <form method="post" id="createProjForm" class="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4">
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
                 Project
             </label>
-            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="projectName" id="projectName" type="text" placeholder="Name">
+            <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:outline-none focus:shadow-outline" name="projectName" id="projectName" type="text" placeholder="Name">
         </div>
 
         <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
-        Invite members 
+            Add members
         </label>
         <div class="mb-6 flex justify-between">
-            <div class="w-10/12">
-                <input class="shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="inviteInput" type="email" placeholder="bdsm69@student.aau.dk">
+            <div class="flex flex-1">
+                <input class="border-2 py-1 p-2 mr-2 border-gray-200 bg-gray-50 w-full rounded-md focus:outline-none focus:shadow-outline" id="inviteInput" type="email" placeholder="bd69sm@student.aau.dk">
             </div>
-            <input class="bg-blue-500 hover:bg-blue-700 text-white font-bold px-3.5 cursor-pointer rounded focus:outline-none focus:shadow-outline" type="button" id="inviteMember" value="Invite">
+            <button class="px-3.5 w-24 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" style="background-color: var(--acc-color)" type="button" id="inviteMember">
+                Invite
+            </button>
         </div>
 
         <div id="invited" class="mb-6">
             <label id="labelInvMembers" class="block text-gray-700 text-sm font-bold mb-2">
-                Invited members
+                Members to be invited
             </label>
-            
+
         </div>
 
         <div class="flex items-center justify-between">
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+            <button class="px-3.5 py-2 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" style="background-color: var(--acc-color)" type="submit">
                 Create Project
             </button>
-            <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline" href="/projects">
+            <a class="text-center w-24 px-3.5 py-2 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" style="background-color: var(--acc-color)" href="/projects">
                 Cancel
             </a>
         </div>
