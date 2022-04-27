@@ -56,7 +56,7 @@ function createProject (req, res) {
         const UserID = req.session.user._id
 
         newProject(projectName, UserID).then(projectId => {
-            if (invitedUsers != null) {
+            if (invitedUsers !== null) {
                 // Add the project to the user's project list.
                 invitedUsers.forEach(user => {
                     User.find({ email: user }).then(user => {
@@ -184,7 +184,7 @@ async function newProject (projectName, UserID) {
  * @param {String} projectName 
  * @param {Array} invitedUsers 
  */
-async function updateProject (projectID, projectName, invitedUsers) {
+async function  updateProject (projectID, projectName, invitedUsers) {
     // Get the project
     const project = await getProjectById(projectID)
 
