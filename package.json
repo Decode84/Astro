@@ -21,6 +21,7 @@
     "bcrypt": "^5.0.1",
     "celebrate": "^15.0.1",
     "clean-jsdoc-theme": "^3.3.4",
+    "color-calendar": "^1.0.7",
     "connect-mongo": "^4.6.0",
     "cors": "^2.8.5",
     "discord-api-types": "^0.31.0",
