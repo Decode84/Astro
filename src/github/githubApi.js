@@ -1,5 +1,6 @@
 const { createAppAuth } = require('@octokit/auth-app')
 const fs = require('fs')
+const path = require('path')
 
 /*
 async function githubHook (req, res) {
@@ -20,7 +21,13 @@ async function githubRequest (url, installationId) {
 }
 
 // Github App Private key
-const pem = fs.readFileSync('./astro-github.pem', 'urf8')
+const _path = path.resolve(__dirname, '../github.pem')
+
+fs.access(_path, fs.F_OK, (err) => {
+    if (err) console.error(err)
+})
+
+const pem = fs.readFileSync(_path, 'utf8')
 
 async function createJWT (installationId) {
     const auth = createAppAuth({
