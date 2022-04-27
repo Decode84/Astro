@@ -7,6 +7,7 @@ const homeCon = require('./app/Http/HomeController')
 const TrelloAPI = require('./trello/trelloApi')
 const githubAPI = require('./app/Http/GithubController')
 const middleware = require('./app/Middleware/Authorization')
+const calEventCon = require('./app/Http/calEventController')
 
 const { createAccountLimit, loginLimit, mailLimit } = require('./app/Middleware/Rate')
 const { authenticateValidation, registerValidation } = require('./app/Validation/AuthValidation')
@@ -62,5 +63,9 @@ router.get('/api/trello/lists', TrelloAPI.listLists)
 
 // Github API
 router.post('/api/github/hook', githubAPI.hook)
+
+// Calendar events
+router.post('/add_event', calEventCon.event_add)
+router.get('/get_events', calEventCon.event_get)
 
 module.exports = router
