@@ -4,9 +4,9 @@ class GithubController {
     async hook (req) {
         if (req.body != null) {
             const installationId = req.body.installation.id
-            getPackageJSON(req.body.repository.full_name, installationId)
+            const log = getPackageJSON(req.body.repository.full_name, installationId)
             // getIssues(req.body.repository.issues, installationId)
-            console.log('Github Hook', getPackageJSON)
+            console.log('Github Hook', log)
         }
     }
 }
