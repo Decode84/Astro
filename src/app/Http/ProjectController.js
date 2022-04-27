@@ -3,16 +3,28 @@ const Project = require('../Models/Project')
 const userController = require('./UserController')
 const uid = require('uid-safe')
 const User = require('../Models/User')
+const DiscordCon = require('./ServiceControllers/DiscordController')
 
 // ! Included for debugging purposes.
 const authenticationController = require('./AuthenticationController')
 
-function project (req, res) {
-    res.render('project/project')
+async function project(req, res) {
+    res.render('project/project', {
+        discordInfo: await DiscordCon.discordAuth(req, res),
+        userInfo: {
+            username: req.session.user.username,
+            useremail: req.session.user.email
+        }
+    })
 }
 
-function projects (req, res) {
-    res.render('projects/projects')
+function projects(req, res) {
+    res.render('projects/projects', {
+        userInfo: {
+            username: req.session.user.username,
+            useremail: req.session.user.email
+        }
+    })
 }
 
 /**
@@ -20,7 +32,7 @@ function projects (req, res) {
  * @param {String} id
  * @returns {Promise<Project>} The project.
  */
-async function getProjectById (id) {
+async function getProjectById(id) {
     try {
         const project = await Project.findById(id)
         return project
@@ -33,7 +45,7 @@ async function getProjectById (id) {
  * @function Gets a list of all projects.
  * @returns {Promise<Array<Project>>} An array of projects.
  */
-async function getAllProjects () {
+async function getAllProjects() {
     try {
         const projects = await Project.find()
         return projects
@@ -48,7 +60,7 @@ async function getAllProjects () {
  * @param {String} UserID The id of the user who created the project.
  * @returns {Promise<projectId>} The id of the project.
  */
-async function newProject (projectName, UserID) {
+async function newProject(projectName, UserID) {
     // This function will also not provide authentication. Therefore, a function should handle that before this function is called.
     // TODO: Create a UI for the user to create a new project.
     // TODO: Save the project id to a user database.
@@ -101,7 +113,7 @@ async function delProject(projectId) {
  * @param {String} projectId
  * @param {String} UserId
  */
-async function addUserToProject (projectId, UserId) {
+async function addUserToProject(projectId, UserId) {
     // Get the project
     const project = await getProjectById(projectId)
 
@@ -133,7 +145,7 @@ async function addUserToProject (projectId, UserId) {
  * @param {String} projectId
  * @param {String} UserId
  */
-async function removeUserFromProject (projectId, UserId) {
+async function removeUserFromProject(projectId, UserId) {
     // Get the project
     const project = await getProjectById(projectId)
 
@@ -165,7 +177,7 @@ async function removeUserFromProject (projectId, UserId) {
  * @param {String} serviceCategory The category of which the service is in.
  * @param {String} serviceId The id of the service to be added.
  */
-async function addServiceToProject (projectId, serviceCategory, serviceId) {
+async function addServiceToProject(projectId, serviceCategory, serviceId) {
     // Get the project
     const project = await getProjectById(projectId)
     // Create new service object

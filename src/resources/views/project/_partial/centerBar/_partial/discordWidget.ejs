@@ -2,18 +2,29 @@
     <h2 class="text-lg underline underline-offset-2 pb-3">Discord</h2>
     <div class="flex flex-row pb-1">
         <p class="inline">Link your project with Discord</p>
-        <button class="rounded-md text-white ml-auto w-20" style="background-color: var(--acc-color);">Link</button>
+        <button class="rounded-md text-white ml-auto w-20" style="background-color: var(--acc-color);">
+            <a href="<%- discordInfo.AuthLink%>">Link</a>
+        </button>
     </div>
     <div class="flex flex-row pb-1">
         <p class="inline">Create discord server for project</p>
-        <button class="rounded-md text-white ml-auto w-20" style="background-color: var(--acc-color);">Create</button>
+        <button class="rounded-md text-white ml-auto w-20" style="background-color: var(--acc-color);">
+            <a href="<%- discordInfo.CreateServerLink%>" target="_blank">Create</a>
+        </button>
     </div>
     <div class="flex flex-row pb-1">
         <p class="inline">Invite bot to discord server</p>
-        <button class="rounded-md text-white ml-auto w-20" style="background-color: var(--acc-color);">Invite</button>
+        <button class="rounded-md text-white ml-auto w-20" style="background-color: var(--acc-color);">
+            <a href="<%- discordInfo.InviteBotLink%>" target="_blank">Invite</a>
+        </button>
     </div>
-    <div class="flex flex-row pb-1">
-        <p class="inline">Open your discord server</p>
-        <button class="rounded-md text-white ml-auto w-20" style="background-color: var(--acc-color);">Open</button>
-    </div>
+
+    <% if (discordInfo.ServerInviteLink) { %>
+        <div class="flex flex-row pb-1">
+            <p class="inline">Open your discord server</p>
+            <button class="rounded-md text-white ml-auto w-20" style="background-color: var(--acc-color);">
+                <a href="<%- discordInfo.ServerInviteLink%>" target="_blank">Open</a>
+            </button>
+        </div>
+        <% } %>
 </div>

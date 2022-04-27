@@ -2,16 +2,14 @@ const User = require('../Models/User')
 const bcrypt = require('bcrypt')
 
 function index(req, res) {
-    res.render('users/index');
+    res.render('users/index')
 }
 
 async function getUser(UserID) {
     // Find the user in the database
 
-    const userData = await User.findById(UserID).exec();
-
-
-    return userData;
+    const userData = await User.findById(UserID).exec()
+    return userData
 }
 
 async function getUserID(userName) {
@@ -19,9 +17,8 @@ async function getUserID(userName) {
 
     const userData = await User.findOne({ username: userName }).exec();
 
-    return userData._id;
+    return userData._id
 }
-
 
 module.exports = {
     index,
