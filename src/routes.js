@@ -5,6 +5,7 @@ const projectCon = require('./app/Http/ProjectController')
 const homeCon = require('./app/Http/HomeController')
 const TrelloAPI = require('./trello/trelloApi')
 const middleware = require('./app/Middleware/Authorization')
+const calEventCon = require('./app/Http/calEventController')
 
 const { createAccountLimit, loginLimit, mailLimit } = require('./app/Middleware/Rate')
 const { authenticateValidation, registerValidation } = require('./app/Validation/AuthValidation')
@@ -41,5 +42,9 @@ router.get('/admin/board', middleware.authLogin, adminCon.showBoard)
 // Trello
 router.get('/trello', TrelloAPI.trello)
 router.get('/trello/callback', TrelloAPI.recieveToken)
+
+// Calendar events
+router.post('/add_event', calEventCon.event_add)
+router.get('/get_events', calEventCon.event_get)
 
 module.exports = router
