@@ -83,6 +83,7 @@ async function editProject(req, res) {
             const projectMembers = []
 
             for (const member of project.members) {
+                console.log(member)
                 const user = await userController.getUser(member)
                 projectMembers.push(user.email)
             }
