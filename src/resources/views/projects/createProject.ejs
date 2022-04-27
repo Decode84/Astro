@@ -1,0 +1,85 @@
+<section class="m-auto w-2/5 pt-6">
+    <form method="post" id="createProjForm" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+                Project
+            </label>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="projectName" id="projectName" type="text" placeholder="Name">
+        </div>
+
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+        Invite members 
+        </label>
+        <div class="mb-6 flex justify-between">
+            <div class="w-10/12">
+                <input class="shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="inviteInput" type="email" placeholder="bdsm69@student.aau.dk">
+            </div>
+            <input class="bg-blue-500 hover:bg-blue-700 text-white font-bold px-3.5 cursor-pointer rounded focus:outline-none focus:shadow-outline" type="button" id="inviteMember" value="Invite">
+        </div>
+
+        <div id="invited" class="mb-6">
+            <label id="labelInvMembers" class="block text-gray-700 text-sm font-bold mb-2">
+                Invited members
+            </label>
+            
+        </div>
+
+        <div class="flex items-center justify-between">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                Create Project
+            </button>
+            <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline" href="/projects">
+                Cancel
+            </a>
+        </div>
+    </form>
+</section>
+
+
+<script>
+    // keep track of all email invites
+    let emails = [];
+
+    if (document.getElementById('labelInvMembers')) {
+        document.getElementById('labelInvMembers').style.display = 'none';
+    }
+
+    createProjForm.onsubmit = async (e) => {
+        e.preventDefault();
+
+        let response = await fetch('/create-project', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                projectName: document.getElementById('projectName').value,
+                emails: emails
+            })
+        }).then((res) => {
+            if (res.status === 200) {
+                window.location.href = '/projects';
+            } else {
+                alert('Something went wrong');
+            }
+        });
+    };
+
+
+    // add email to array and displays it in the invited members section
+    document.getElementById("inviteMember").addEventListener('click', () => {
+        let email = document.getElementById("inviteInput").value;
+        if (email !== "") {
+            document.getElementById('labelInvMembers').style.display = 'block';
+            let invited = document.createElement("input");
+
+            invited.name = "invited";
+            invited.value = email;
+            invited.disabled = true;
+            document.getElementById("invited").appendChild(invited);
+            emails.push(email);
+            console.log(emails);
+            document.getElementById("inviteInput").value = "";
+        }
+    })
+</script>
