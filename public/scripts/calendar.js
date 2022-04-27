@@ -55,6 +55,7 @@ async function createCal() {
         });
 
       if (events.length >= 1) {
+        document.getElementById("cal_events").classList.remove("hidden");
         let text = "";
         events.forEach((element) => {
           text +=
@@ -63,6 +64,8 @@ async function createCal() {
         document.getElementById("cal_events").innerHTML =
           "<h2>Events:</h2> " + text;
         document.getElementById("cal_events").classList.add("bg-white");
+      } else {
+        document.getElementById("cal_events").classList.add("hidden");
       }
     },
     selectedDateClicked: (currentDate, events) => {},
