@@ -1,5 +1,19 @@
 createCal();
 
+function formatDate(date) {
+  var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+  if (month.length < 2) 
+      month = '0' + month;
+  if (day.length < 2) 
+      day = '0' + day;
+
+  return [year, month, day].join('-');
+}
+
 async function eventArray() {
   let eventArray = [];
   const response = await fetch("/get_events");
@@ -33,11 +47,11 @@ async function createCal() {
         .getElementById("plus")
         .addEventListener("click", function () {
           document.getElementById("cal_add").innerHTML =
-            '<form action="/add_event "method="post">' +
-            '<input type="datetime-local" class="my-1 " id="time" name="time">' +
-            '<input type="text" class="my-1" name="name" id="name" placeholder="eventname" required />' +
-            '<button class="text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" style="background-color: var(--acc-color)" id="submit" type="submit">Add</button>' +
-            "</form>";
+            `<form action="/add_event "method="post">
+            <input type="datetime-local" value="${formatDate(currentDate)}T12:00" class="my-1 " id="time" name="time">
+            <input type="text" class="my-1" name="name" id="name" placeholder="eventname" required />
+            <button class="text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" style="background-color: var(--acc-color)" id="submit" type="submit">Add</button>
+            </form>;`
         });
 
       if (events.length >= 1) {
