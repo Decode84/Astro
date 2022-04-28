@@ -9,7 +9,7 @@ const { MessageActionRow, MessageButton } = require('discord.js')
  * @param {Interaction} interaction
  * @returns {Promise<void>}
  */
-async function Link (guild, client, interaction = null) {
+async function Link (guild, client, interaction = null, channel = null) {
     const id = client.id
     const userInDB = await User.findOne({ services: { discord: id } }, 'projectIDs')
     if (!userInDB) {
@@ -33,7 +33,7 @@ async function Link (guild, client, interaction = null) {
     } else {
         sentMessage = await client.send({ content: message, components: buttonRows })
     }
-    await CreateCollector(guild, await sentMessage) // eventListener for when the user clicks the button
+    await CreateCollector(guild, await sentMessage, channel) // eventListener for when the user clicks the button
 }
 /**
  * @function Creates buttons for the message. One button for each plausible project. A collector will later make the
@@ -65,7 +65,7 @@ async function CreateButtons (projects) {
  * @param {Message<boolean>} sentMessage
  * @param {guild} guild
  */
-async function CreateCollector (guild, sentMessage) {
+async function CreateCollector (guild, sentMessage, textChannel) {
     const collector = sentMessage.createMessageComponentCollector({
         componentType: 'BUTTON',
         maxComponents: 1
@@ -79,8 +79,10 @@ async function CreateCollector (guild, sentMessage) {
         })
         // TODO: handle the usecase where project is already linked or make already linked projects not display
 
-        const discord = { serverID: `${guild.id}`, webhook: '', inviteLink: '' }
-        const textChannel = await guild.channels.cache.filter(c => c.type === 'GUILD_TEXT').first()
+        if (!textChannel) {
+            textChannel = await guild.channels.cache.filter(c => c.type === 'GUILD_TEXT').first()
+        }
+        const discord = { serverID: `${guild.id}`, webhook: '', inviteLink: '', textChannel: `${textChannel.id}` }
         const web = await CreateWebHook(await textChannel, discord)
         const invite = await CreateInvite(guild, await textChannel, discord)
         await web

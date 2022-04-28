@@ -11,7 +11,7 @@ async function HandleCommand (interaction) {
             await interaction.reply({ content: 'This command only works in Guild servers', ephemeral: true })
             break
         }
-        await Linker.Link(interaction.guild, interaction.user, interaction)
+        await Linker.Link(interaction.guild, interaction.user, interaction, interaction.channel)
         break
     default:
         console.log('Warning: Registered to unhandled command')

@@ -76,12 +76,12 @@ async function OpenNewProject (bot, session) {
     const currentProject = {
         projectID: session.user.projectIDs[0],
         webhook: new WebhookClient({ url: discord.webhook }),
-        collector: await addChatCollector(bot, discord.serverID),
+        collector: await addChatCollector(bot, discord.serverID, discord.textChannel),
         connections: [],
         latestMessages: []
     }
     // get previous messages in discord
-    const messages = await ChatHandler.readLatestMessages(bot, discord.serverID) // Guaranteed 10 messages
+    const messages = await ChatHandler.readLatestMessages(bot, discord.serverID, discord.textChannel) // Guaranteed 10 messages
     messages.forEach(m => {
         const message = { username: m.author.username, message: m.content, discord: !(m.system || m.webhookId) }
         currentProject.latestMessages.push(message)
