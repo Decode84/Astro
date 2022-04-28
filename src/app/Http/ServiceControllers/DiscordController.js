@@ -1,7 +1,7 @@
 const fetch = require('node-fetch')
 const path = require('path')
-const User = require('../Models/User')
-const Project = require('../Models/Project')
+const User = require('../../Models/User')
+const Project = require('../../Models/Project')
 
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const clientID = process.env.DISCORD_CLIENT_ID
@@ -26,12 +26,12 @@ exports.discordAuth = async (req, res) => {
     const project = await Project.findById(TEMP_currentproject)
     await project
     if (project.categories.messaging.services.discord) { ServerInviteLink = project.categories.messaging.services.discord.inviteLink }
-    res.render('projects/services/discord', {
+    return {
         AuthLink: AuthLink,
         InviteBotLink: InviteBotLink,
         CreateServerLink: CreateServerLink,
         ServerInviteLink: ServerInviteLink
-    })
+    }
 }
 
 /**

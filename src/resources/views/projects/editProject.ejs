@@ -1,0 +1,117 @@
+<section class="m-auto w-2/5 pt-6">
+    <form method="post" id="editProjForm" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+                Project
+            </label>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="projectName" id="projectName" type="text" placeholder="Name" value="<%= project.name %>">
+        </div>
+
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+        Invite members 
+        </label>
+        <div class="mb-6 flex justify-between">
+            <div class="w-10/12">
+                <input class="shadow appearance-none border rounded w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="inviteInput" type="email" placeholder="bdsm69@student.aau.dk">
+            </div>
+            <input class="bg-blue-500 hover:bg-blue-700 text-white font-bold px-3.5 cursor-pointer rounded focus:outline-none focus:shadow-outline" type="button" id="inviteMember" value="Invite">
+        </div>
+
+        <div id="invited" class="mb-6">
+            <label id="labelInvMembers" class="block text-gray-700 text-sm font-bold mb-2">
+                Invited members
+            </label>
+            <% projectMembers.forEach((member) => { %>
+                <div class="flex items-center justify-between py-2">
+                    <p class="inv-member w-10/12"><%= member %></p>
+                    <input class="remove-user bg-blue-500 hover:bg-blue-700 text-white font-bold px-3.5 cursor-pointer rounded focus:outline-none focus:shadow-outline" type="button" id="removeMember" value="Remove">
+                </div>
+            <% }); %>
+            
+        </div>
+
+        <div class="flex items-center justify-between">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                Update Project
+            </button>
+            <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline" href="/projects">
+                Cancel
+            </a>
+        </div>
+    </form>
+</section>
+
+<script>
+    let emails = [];
+
+    document.querySelectorAll('.inv-member').forEach((member) => {
+        emails.push(member.innerHTML);
+    });
+
+    // post request on form submit
+    editProjForm.onsubmit = async (e) => {
+        e.preventDefault();
+
+        console.log('emails: ', emails);
+        
+        let response = await fetch('/edit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                projectID : document.URL.split('=').pop(),
+                projectName: document.getElementById('projectName').value,
+                emails: emails,
+                edit: 'true'
+            })
+        }).then((res) => {
+            if (res.status === 200) {
+                window.location.href = '/projects';
+            } else {
+                alert('Something went wrong trying to edit the project');
+            }
+        });
+        
+    };
+
+    // add email to array and displays it in the invited members section
+    document.getElementById("inviteMember").addEventListener('click', () => {
+        let email = document.getElementById("inviteInput").value;
+        if (email !== "") {
+            document.getElementById('labelInvMembers').style.display = 'block';
+            let invited = document.createElement("p");
+            let remove = document.createElement("input");
+            let div = document.createElement("div");
+
+            div.setAttribute('class', 'flex items-center justify-between py-2')
+
+            remove.setAttribute('class', 'remove-user bg-blue-500 hover:bg-blue-700 text-white font-bold px-3.5 cursor-pointer rounded focus:outline-none focus:shadow-outline')
+            remove.setAttribute('type', 'button')
+            remove.setAttribute('value', 'Remove')
+
+            invited.setAttribute('class', 'inv-member w-10/12')
+            invited.innerHTML = email;
+            invited.setAttribute('id', 'invited')
+
+
+            div.appendChild(invited)
+            div.appendChild(remove)
+
+            document.getElementById("invited").appendChild(div)
+            emails.push(email);
+            console.log(emails);
+            document.getElementById("inviteInput").value = "";
+        }
+    })
+
+    document.querySelectorAll('.remove-user').forEach((button) => {
+        button.addEventListener('click', async (e) => {
+            let email = document.querySelector('.inv-member').innerHTML;
+            let index = emails.indexOf(email);
+            emails.splice(index, 1);
+            button.parentElement.remove();
+            console.log(emails);
+        });
+    });
+</script>

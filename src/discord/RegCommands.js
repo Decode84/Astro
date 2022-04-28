@@ -1,5 +1,5 @@
 // Build on this with https://discordjs.guide/interactions/slash-commands.html#registering-slash-commands
-const path = require("path");
+const path = require('path');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v10');
 
