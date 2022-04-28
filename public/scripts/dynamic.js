@@ -24,8 +24,13 @@ function setActiveCategory(name) {
         disableAllCategoryTabsBut('communication-widget')
     } else if (name === 'Writing') {
         disableAllCategoryTabsBut('writing-widget')
+<<<<<<< HEAD
     } else if (name === 'Version control') {
         disableAllCategoryTabsBut('version-control-widget')
+=======
+    } else if (name === 'Version conrol') {
+        disableAllCategoryTabsBut('versio-control-widget')
+>>>>>>> dev
     } else if (name === 'UML/Tools') {
         disableAllCategoryTabsBut('uml-tools-widget')
     } else if (name === 'File sharing') {
