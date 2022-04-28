@@ -1,21 +1,37 @@
-const socket = new WebSocket('ws://localhost:4000/');
-socket.addEventListener('error', function (event) {
-    // TODO: remove chat because its not linked properly
-    console.log('WebSocket error: ', event);
-});
-let input = document.getElementById("input");
-input.focus(); // Set keyboard focus
+try { // Primarily only for the first line in case WSS is not running
+    const socket = new WebSocket('ws://localhost:4000/')
+    const input = document.getElementById('input')
+    input.focus() // move cursor
 
-socket.onmessage = function (event) {
-    //TODO: Make this look nicer and more discordy
-    let div = document.createElement("div")
-    const message = JSON.parse(event.data)
-    div.append(message.username + ": " + message.message)
-    input.before(div)
-    input.scrollIntoView()
+    // Receive message
+    socket.onmessage = function (event) {
+        // TODO: Make this look nicer and more discordy
+        const div = document.createElement('div')
+        const message = JSON.parse(event.data)
+        // message.discord: Boolean - true if it's discord, false if other WS
+        div.append(message.username + ': ' + message.message)
+        input.before(div)
+        input.scrollIntoView()
+    }
+    // Send message
+    input.addEventListener('change', () => {
+        socket.send(input.value)
+        input.value = ''
+    })
+    socket.onclose = (event) => {
+        // TODO: remove chat if its not linked properly
+        switch (event.code) {
+        case 401:
+            // No session
+            break
+        case 1000:
+            // no problems
+            break
+        default:
+            // other errors
+            break
+        }
+    }
+} catch (e) {
+    console.log(e)
 }
-// Post the user's messages to the server using fetch
-input.addEventListener("change", () => { // When the user strikes enter
-    socket.send(input.value);
-    input.value = ""; // Clear the input
-});

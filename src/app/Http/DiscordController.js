@@ -25,8 +25,7 @@ exports.discordAuth = async (req, res) => {
     let ServerInviteLink = ''
     const project = await Project.findById(TEMP_currentproject)
     await project
-    if (project.categories.messaging.services.discord)
-        ServerInviteLink = project.categories.messaging.services.discord.inviteLink
+    if (project.categories.messaging.services.discord) { ServerInviteLink = project.categories.messaging.services.discord.inviteLink }
     res.render('projects/services/discord', {
         AuthLink: AuthLink,
         InviteBotLink: InviteBotLink,
@@ -41,14 +40,14 @@ exports.discordAuth = async (req, res) => {
  * @param code
  * @returns {Promise<void>}
  */
-async function handleAuth(req, code) {
+async function handleAuth (req, code) {
     try {
         const tokenResult = await getToken(code)
         const token = await tokenResult.json()
         const userResult = await getUserData(token)
         const discordUser = await userResult.json()
         if (!req.session.user) {
-            console.log("User not logged in before Discord Auth")
+            console.log('User not logged in before Discord Auth')
             return
         }
         if ((await discordUser).message === '401: Unauthorized') {
@@ -68,7 +67,7 @@ async function handleAuth(req, code) {
  * @param {int} code
  * @returns {*|Promise<Response>} Token
  */
-function getToken(code) {
+function getToken (code) {
     return fetch('https://discord.com/api/oauth2/token', {
         method: 'POST',
         body: new URLSearchParams({
@@ -90,7 +89,7 @@ function getToken(code) {
  * @param token
  * @returns {*|Promise<Response>} Userdata object
  */
-function getUserData(token) {
+function getUserData (token) {
     return fetch('https://discord.com/api/users/@me', {
         headers: {
             authorization: `${token.token_type} ${token.access_token}`
@@ -103,7 +102,7 @@ function getUserData(token) {
  * @param discordUser
  * @param req
  */
-function putUserInDB(discordUser, req) {
+function putUserInDB (discordUser, req) {
     // TODO: handle the usecase where users discord is already linked to another account
     const username = req.session.user.username
     User.findOne({ username: username }).then(user => {

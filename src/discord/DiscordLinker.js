@@ -9,12 +9,11 @@ const { MessageActionRow, MessageButton } = require('discord.js')
  * @param {Interaction} interaction
  * @returns {Promise<void>}
  */
-async function Link(guild, client, interaction = null) {
+async function Link (guild, client, interaction = null) {
     const id = client.id
-    const userInDB = await User.findOne({ services: {discord: id} }, 'projectIDs')
-    if (!userInDB)
-    {
-        console.log("couldnt find user")
+    const userInDB = await User.findOne({ services: { discord: id } }, 'projectIDs')
+    if (!userInDB) {
+        console.log('couldnt find user')
         return
     }
     const projects = userInDB.projectIDs
@@ -29,10 +28,11 @@ async function Link(guild, client, interaction = null) {
     const buttonRows = await CreateButtons(projects)
     // Send message with string contents and button
     let sentMessage
-    if (interaction)
+    if (interaction) {
         sentMessage = await interaction.reply({ content: message, components: buttonRows, ephemeral: true, fetchReply: true })
-    else
+    } else {
         sentMessage = await client.send({ content: message, components: buttonRows })
+    }
     await CreateCollector(guild, await sentMessage) // eventListener for when the user clicks the button
 }
 /**
@@ -78,14 +78,14 @@ async function CreateCollector (guild, sentMessage) {
             components: []
         })
         // TODO: handle the usecase where project is already linked or make already linked projects not display
-        
+
         const discord = { serverID: `${guild.id}`, webhook: '', inviteLink: '' }
-        const textChannel = await guild.channels.cache.filter(c => c.type === 'GUILD_TEXT').first();
+        const textChannel = await guild.channels.cache.filter(c => c.type === 'GUILD_TEXT').first()
         const web = await CreateWebHook(await textChannel, discord)
         const invite = await CreateInvite(guild, await textChannel, discord)
         await web
         await invite
-        
+
         // Update DB
         project.categories.messaging.services = { ...project.categories.messaging.services, discord }
         project.markModified('categories.messaging.services')

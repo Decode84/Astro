@@ -9,22 +9,25 @@ const commandHandler = require('./CommandHandler');
 const token = process.env.DISCORD_BOT_TOKEN
 
 exports.StartBot = () => {
-    require('./RegCommands')
-    const client = new Client({
-        intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_INVITES, Intents.FLAGS.GUILD_MEMBERS,
-            Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_MESSAGE_TYPING, Intents.FLAGS.GUILD_MESSAGES]
-    })
-    client.once('ready', () => {
-        console.log('Discord Ready!')
-    })
-    const commandHandler = require('./CommandHandler')
-    client.on('interactionCreate', async interaction => {
-        if (interaction.isCommand()) { await commandHandler.Handlecommand(interaction) }
-        // else if(interaction.is) add other interaction than commands here
-    })
-    client.on('guildCreate', guild => guildCreateHandler.OnGuildCreate(guild))
-    client.login(token)
-    return client
+    try {
+        require('./RegCommands')
+        const client = new Client({
+            intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_INVITES, Intents.FLAGS.GUILD_MEMBERS,
+                Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_MESSAGE_TYPING, Intents.FLAGS.GUILD_MESSAGES]
+        })
+        client.once('ready', () => {
+            console.log('Discord Ready!')
+        })
+        client.on('interactionCreate', async interaction => {
+            if (interaction.isCommand()) { await commandHandler.Handlecommand(interaction) }
+            // else if(interaction.is) add other interaction than commands here
+        })
+        client.on('guildCreate', guild => guildCreateHandler.OnGuildCreate(guild))
+        client.login(token)
+        return client
+    } catch (e) {
+        console.log('failed to start bot: ' + e)
+    }
 }
 
 // Create a new client instance (log into discord)

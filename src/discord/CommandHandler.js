@@ -1,4 +1,3 @@
-const User = require('../app/Models/User');
 const Linker = require('./DiscordLinker')
 
 async function HandleCommand (interaction) {
@@ -8,8 +7,7 @@ async function HandleCommand (interaction) {
         await interaction.reply('Pong!')
         break
     case 'link':
-        if (!interaction.inGuild())
-        {
+        if (!interaction.inGuild()) {
             await interaction.reply({ content: 'This command only works in Guild servers', ephemeral: true })
             break
         }

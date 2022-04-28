@@ -6,11 +6,6 @@ const { Routes } = require('discord-api-types/v10');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') })
 const clientID = process.env.DISCORD_CLIENT_ID; // Bot userid to register on (always the same)
 const token = process.env.DISCORD_BOT_TOKEN;
-if (!token) // Should never happen
-{
-    console.log("Couldn't find discord token and therefore can't add commands");
-    return;
-}
 const commands = [
     {
         name: 'ping',
