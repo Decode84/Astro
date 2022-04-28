@@ -1,14 +1,14 @@
 createCal()
 
-async function createCal () {
+async function createCal() {
     const calendar = new Calendar({
         id: '#calendar-a',
         theme: 'glass',
         weekdayType: 'long-upper',
         monthDisplayType: 'long',
         primaryColor: 'var(--acc-color)',
-        headerBackgroundColor: 'var(--acc-color)',
-        weekdaysColor: 'rgb(130, 0, 0)',
+        headerBackgroundColor: 'var(--pri-color)',
+        headerColor: 'var(--acc-color)',
         calendarSize: 'small',
         borderRadius: '0.25rem',
         layoutModifiers: ['month-left-align'],
@@ -20,17 +20,17 @@ async function createCal () {
                 .getElementById('time')
                 .setAttribute('value', formatDate(currentDate) + 'T12:00')
         },
-        selectedDateClicked: (currentDate, events) => {},
-        monthChanged: (currentDate, events) => {}
+        selectedDateClicked: (currentDate, events) => { },
+        monthChanged: (currentDate, events) => { }
     })
     setInterval(updateAvailableEvents, 2000, calendar)
 }
 
-async function updateAvailableEvents (calendar) {
+async function updateAvailableEvents(calendar) {
     calendar.setEventsData(await getEventsArray())
 }
 
-function formatDate (date) {
+function formatDate(date) {
     const d = new Date(date)
     const month = ('0' + (d.getMonth() + 1)).slice(-2)
     const day = ('0' + d.getDate()).slice(-2)
@@ -38,7 +38,7 @@ function formatDate (date) {
     return [year, month, day].join('-')
 }
 
-async function getEventsArray () {
+async function getEventsArray() {
     const eventArray = []
     const response = await fetch('/get-events')
     const events = await response.json()
@@ -52,7 +52,7 @@ async function getEventsArray () {
     return eventArray
 }
 
-function addEventBtnClicked () {
+function addEventBtnClicked() {
     document
         .getElementById('submit-event-btn-container')
         .classList.remove('hidden')
@@ -61,7 +61,7 @@ function addEventBtnClicked () {
         .classList.add('hidden')
 }
 
-async function submitEventBtnClicked () {
+async function submitEventBtnClicked() {
     const time = document
         .getElementById('time').value
     const name = document
@@ -86,7 +86,7 @@ async function submitEventBtnClicked () {
         .classList.remove('hidden')
 }
 
-function cancelEventBtnClicked () {
+function cancelEventBtnClicked() {
     document
         .getElementById('submit-event-btn-container')
         .classList.add('hidden')
@@ -95,7 +95,7 @@ function cancelEventBtnClicked () {
         .classList.remove('hidden')
 }
 
-function updateEventList (events) {
+function updateEventList(events) {
     const calEventsContainer = document.getElementById('cal-events-container')
     const calEvents = document.getElementById('cal-events')
     if (events.length > 0) {

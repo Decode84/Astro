@@ -1,25 +1,22 @@
-<div class="border-l border-gray-300 my-5"></div>
-<div class="p-5 flex flex-col w-full overflow-y-auto">
-  <!-- Project members  -->
-  <div class="bg-white mb-4 rounded-lg px-4 py-3 w-full drop-shadow-sm flex flex-col">
-    <h2 class="text-lg font-medium pb-2">Project members</h2>
-    <div class="flex flex-row">
-      <%- include('./_partial/member', { name:'Aavild' }); %>
-        <%- include('./_partial/member', { name:'Aleksander' }); %>
-    </div>
-    <div class="flex flex-row">
-      <%- include('./_partial/member', { name:'Jakob' }); %>
-        <%- include('./_partial/member', { name:'Mike' }); %>
-    </div>
-    <div class="flex flex-row">
-      <%- include('./_partial/member', { name:'Erik' }); %>
-        <%- include('./_partial/member', { name:'Rasmus' }); %>
-    </div>
-    <div class="flex flex-row">
-      <%- include('./_partial/member', { name:'William' }); %>
-    </div>
+<!-- Project members  -->
+<div class="bg-white mb-4 rounded-lg px-4 py-3 w-full drop-shadow-sm flex flex-col">
+  <h2 class="text-lg font-medium pb-2">Project members</h2>
+  <div class="flex flex-row">
+    <%- include('./_partial/member', { name:'Aavild' }); %>
+      <%- include('./_partial/member', { name:'Aleksander' }); %>
   </div>
-
-  <!-- Chat/Calender  -->
-  <%- include('./_partial/calendar'); %>
+  <div class="flex flex-row">
+    <%- include('./_partial/member', { name:'Jakob' }); %>
+      <%- include('./_partial/member', { name:'Mike' }); %>
+  </div>
+  <div class="flex flex-row">
+    <%- include('./_partial/member', { name:'Erik' }); %>
+      <%- include('./_partial/member', { name:'Rasmus' }); %>
+  </div>
+  <div class="flex flex-row">
+    <%- include('./_partial/member', { name:'William' }); %>
+  </div>
 </div>
+
+<!-- Chat/Calender  -->
+<%- include('./_partial/calendar'); %>
