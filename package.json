@@ -42,7 +42,8 @@
     "nodemailer": "^6.7.3",
     "postcss-cli": "^9.1.0",
     "rand-token": "^1.0.1",
-    "uid-safe": "^2.1.5"
+    "uid-safe": "^2.1.5",
+    "websocket": "^1.0.34"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.2",
