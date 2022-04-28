@@ -43,7 +43,6 @@ router.post('/projects', projectCon.showProjects)
 router.post('/project', projectCon.showProject)
 router.post('/edit', projectCon.editProject)
 
-
 // Admin (TODO: check for role)
 router.get('/admin/board', middleware.authLogin, adminCon.showBoard)
 
@@ -65,7 +64,7 @@ router.get('/api/trello/lists', TrelloAPI.listLists)
 router.post('/api/github/hook', githubAPI.hook)
 
 // Calendar events
-router.post('/add_event', calEventCon.event_add)
-router.get('/get_events', calEventCon.event_get)
+router.post('/add-event', calEventCon.addEventToDb)
+router.get('/get-events', calEventCon.getEventsFromDb)
 
 module.exports = router

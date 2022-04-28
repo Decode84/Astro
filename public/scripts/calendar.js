@@ -1,75 +1,110 @@
-createCal();
+createCal()
 
-function formatDate(date) {
-  var d = new Date(date),
-      month = '' + (d.getMonth() + 1),
-      day = '' + d.getDate(),
-      year = d.getFullYear();
+async function createCal () {
+    const calendar = new Calendar({
+        id: '#calendar-a',
+        theme: 'glass',
+        weekdayType: 'long-upper',
+        monthDisplayType: 'long',
+        primaryColor: 'var(--acc-color)',
+        headerBackgroundColor: 'var(--acc-color)',
+        weekdaysColor: 'rgb(130, 0, 0)',
+        calendarSize: 'small',
+        borderRadius: '0.25rem',
+        layoutModifiers: ['month-left-align'],
+        eventsData: await getEventsArray(),
 
-  if (month.length < 2) 
-      month = '0' + month;
-  if (day.length < 2) 
-      day = '0' + day;
-
-  return [year, month, day].join('-');
+        dateChanged: (currentDate, events) => {
+            updateEventList(events)
+            document
+                .getElementById('time')
+                .setAttribute('value', formatDate(currentDate) + 'T12:00')
+        },
+        selectedDateClicked: (currentDate, events) => {},
+        monthChanged: (currentDate, events) => {}
+    })
+    setInterval(updateAvailableEvents, 2000, calendar)
 }
 
-async function eventArray() {
-  let eventArray = [];
-  const response = await fetch("/get_events");
-  const events = await response.json();
-  events.forEach((event) => {
-    eventArray.push({ name: event.name, start: event.start, end: event.end });
-  });
-  return eventArray;
+async function updateAvailableEvents (calendar) {
+    calendar.setEventsData(await getEventsArray())
 }
 
-async function createCal() {
-  let calA = new Calendar({
-    id: "#calendar-a",
-    theme: "glass",
-    weekdayType: "long-upper",
-    monthDisplayType: "long",
-    headerBackgroundColor: "var(--acc-color)",
-    primaryColor: "var(--acc-color)",
-    calendarSize: "small",
-    borderRadius: "0.25rem",
-    layoutModifiers: ["month-left-align"],
-    eventsData: await eventArray(),
+function formatDate (date) {
+    const d = new Date(date)
+    const month = ('0' + (d.getMonth() + 1)).slice(-2)
+    const day = ('0' + d.getDate()).slice(-2)
+    const year = d.getFullYear()
+    return [year, month, day].join('-')
+}
 
-    dateChanged: (currentDate, events) => {
-      document.getElementById("cal_events").innerHTML = "";
-      document.getElementById("cal_events").classList.remove("bg-white");
+async function getEventsArray () {
+    const eventArray = []
+    const response = await fetch('/get-events')
+    const events = await response.json()
+    events.forEach((event) => {
+        eventArray.push({
+            name: event.name,
+            start: event.start,
+            end: event.end
+        })
+    })
+    return eventArray
+}
 
-      document.getElementById("cal_add").innerHTML =
-        '<button id="plus"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg></button><p class="ml-1">Add Event</p>';
-      let plus_svg = document
-        .getElementById("plus")
-        .addEventListener("click", function () {
-          document.getElementById("cal_add").innerHTML =
-            `<form action="/add_event "method="post">
-            <input type="datetime-local" value="${formatDate(currentDate)}T12:00" class="my-1 " id="time" name="time">
-            <input type="text" class="my-1" name="name" id="name" placeholder="eventname" required />
-            <button class="text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" style="background-color: var(--acc-color)" id="submit" type="submit">Add</button>
-            </form>;`
-        });
+function addEventBtnClicked () {
+    document
+        .getElementById('submit-event-btn-container')
+        .classList.remove('hidden')
+    document
+        .getElementById('add-event-btn-container')
+        .classList.add('hidden')
+}
 
-      if (events.length >= 1) {
-        document.getElementById("cal_events").classList.remove("hidden");
-        let text = "";
+async function submitEventBtnClicked () {
+    const time = document
+        .getElementById('time').value
+    const name = document
+        .getElementById('name').value
+
+    const data = {
+        time: time,
+        name: name
+    }
+
+    await fetch('/add-event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+
+    document
+        .getElementById('submit-event-btn-container')
+        .classList.add('hidden')
+    document
+        .getElementById('add-event-btn-container')
+        .classList.remove('hidden')
+}
+
+function cancelEventBtnClicked () {
+    document
+        .getElementById('submit-event-btn-container')
+        .classList.add('hidden')
+    document
+        .getElementById('add-event-btn-container')
+        .classList.remove('hidden')
+}
+
+function updateEventList (events) {
+    const calEventsContainer = document.getElementById('cal-events-container')
+    const calEvents = document.getElementById('cal-events')
+    if (events.length > 0) {
+        calEventsContainer.classList.remove('hidden')
+        calEvents.innerHTML = ''
         events.forEach((element) => {
-          text +=
-            "<p>" + element.name + " " + element.start.slice(-8, -3) + "</p>";
-        });
-        document.getElementById("cal_events").innerHTML =
-          "<h2>Events:</h2> " + text;
-        document.getElementById("cal_events").classList.add("bg-white");
-      } else {
-        document.getElementById("cal_events").classList.add("hidden");
-      }
-    },
-    selectedDateClicked: (currentDate, events) => {},
-
-    monthChanged: (currentDate, events) => {},
-  });
+            calEvents.innerHTML += `<p>${element.name} ${element.start.slice(-8, -3)} </p>`
+        })
+    } else {
+        calEventsContainer.classList.add('hidden')
+    }
 }
