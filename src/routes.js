@@ -34,7 +34,7 @@ router.post('/updatepass', authCon.updatePass)
 
 // Project overview GET
 router.get('/projects', projectCon.showProjects)
-router.get('/create-project', projectCon.createProject)
+router.get('/create-project', middleware.authLogin, projectCon.createProject)
 router.get('/project', projectCon.showProject)
 router.get('/edit', projectCon.editProject)
 // Project overview POST
@@ -42,7 +42,6 @@ router.post('/create-project', projectCon.createProject)
 router.post('/projects', projectCon.showProjects)
 router.post('/project', projectCon.showProject)
 router.post('/edit', projectCon.editProject)
-
 
 // Admin (TODO: check for role)
 router.get('/admin/board', middleware.authLogin, adminCon.showBoard)
