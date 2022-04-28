@@ -13,9 +13,16 @@ const calendar = new Calendar({
 })
 updateAvailableEvents(calendar)
 setInterval(updateAvailableEvents, 2000, calendar)
+upperCaseMonth()
 
 async function updateAvailableEvents(calendar) {
     calendar.setEventsData(await getEventsArray())
+    upperCaseMonth()
+}
+
+function upperCaseMonth() {
+    const calendarMonth = document.querySelector('.calendar__month')
+    calendarMonth.innerHTML = calendarMonth.innerHTML.charAt(0).toUpperCase() + calendarMonth.innerHTML.slice(1)
 }
 
 function formatDate(date) {

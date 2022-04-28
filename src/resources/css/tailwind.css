@@ -18,7 +18,7 @@
     --acc-color: #2563EB;
 }
 
-:not(span) {
+* {
     font-family: 'Anek Bangla', 'sans-serif';
     color: rgb(71 85 105);
 }
