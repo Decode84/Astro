@@ -9,39 +9,34 @@ const authenticationController = require('./AuthenticationController')
 
 /**
  * @function Shows a list of all the users projects
- * @param {*} req 
- * @param {*} res 
+ * @param {*} req
+ * @param {*} res
  */
-function showProjects(req, res) {
-
-
+function showProjects (req, res) {
     if (req.method == 'POST') {
-        delProject(req.body.projectId);
+        delProject(req.body.projectId)
 
-        res.redirect('projects/');
+        res.redirect('projects/')
     } else {
-
         getAllProjects(req.session.user._id).then(projects => {
-
-            res.render('projects/overview', {   projects: projects,
-                                                user: req.session.user
-            });
-
-        });
+            res.render('projects/overview', {
+                projects: projects,
+                user: req.session.user
+            })
+        })
     }
-
-
 }
 
 /**
  * @function Shows a single projects page
- * @param {*} req 
- * @param {*} res 
+ * @param {*} req
+ * @param {*} res
  */
-function showProject(req, res) {
-    res.render('project/project', {    project: req.project,
-                                       user: req.session.user 
-    });
+function showProject (req, res) {
+    res.render('project/project', {
+        project: req.project,
+        user: req.session.user
+    })
 }
 
 /**
@@ -69,13 +64,12 @@ function createProject (req, res) {
     } else {
         res.render('projects/createProject')
     }
-
 }
 
 /**
  * @function Edit name and invited users of a project.
- * @param {*} req 
- * @param {*} res 
+ * @param {*} req
+ * @param {*} res
  */
 async function editProject (req, res) {
     // const projectId = mongoose.Types.ObjectId(url.split('=').pop())
@@ -112,7 +106,6 @@ async function editProject (req, res) {
     }
 }
 
-
 /**
  * @function Gets a project by id.
  * @param {String} id
@@ -131,24 +124,20 @@ async function getProjectById (id) {
  * @function Gets a list of all user's projects.
  * @returns {Promise<Array<Project>>} An array of projects.
  */
-async function getAllProjects(UserID) {
+async function getAllProjects (UserID) {
     try {
-        const userProjects = [];
-        const user = await User.findById(UserID);
-        for (let projectID of user.projectIDs) {
-            const project = await getProjectById(projectID);
-            userProjects.push(project);
+        const userProjects = []
+        const user = await User.findById(UserID)
+        for (let i = 0; i < user.projectIDs.length(); i++) {
+            const project = await getProjectById(user.projectIDs[i])
+            userProjects.push(project)
         }
 
-        
-        return userProjects;
-
+        return userProjects
     } catch (error) {
         console.log(error)
     }
 }
-
-
 
 /**
  * @function Creates a new project in the database and adds it to the user's project list.
@@ -180,11 +169,11 @@ async function newProject (projectName, UserID) {
 
 /**
  * @function Update a project's name and invited users in the database
- * @param {Object} projectID 
- * @param {String} projectName 
- * @param {Array} invitedUsers 
+ * @param {Object} projectID
+ * @param {String} projectName
+ * @param {Array} invitedUsers
  */
-async function  updateProject (projectID, projectName, invitedUsers) {
+async function updateProject (projectID, projectName, invitedUsers) {
     // Get the project
     const project = await getProjectById(projectID)
 
@@ -228,7 +217,7 @@ async function  updateProject (projectID, projectName, invitedUsers) {
  * The function runs asynchronously. There is no return value.
  * @param {string} projectId The id of the project to be removed.
  */
-async function delProject(projectId) {
+async function delProject (projectId) {
     // TODO: Call the remove user function. When it is made.
 
     // Get the list of users in the project.
@@ -269,7 +258,7 @@ async function addUserToProject (projectId, UserId) {
             })
 
             // Save the project
-            await project.save();
+            await project.save()
         } else {
             console.log('User is already a member of this project.')
         }
@@ -283,12 +272,11 @@ async function addUserToProject (projectId, UserId) {
  */
 async function removeUserFromProject (projectId, UserId) {
     // Get the project
-    const project = await getProjectById(projectId);
+    const project = await getProjectById(projectId)
     console.log('projectId : ' + projectId)
 
     for (let i = 0; i < project.members.length; i++) {
         if (project.members[i] == UserId) {
-
             // Remove user
             project.members.splice(i, 1)
 
@@ -297,7 +285,6 @@ async function removeUserFromProject (projectId, UserId) {
                 user.projectIDs.splice(user.projectIDs.indexOf(projectId), 1)
                 user.save()
             })
-
         } else {
             console.log('User is not a member of this project.')
         }
