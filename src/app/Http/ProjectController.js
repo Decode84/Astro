@@ -53,7 +53,7 @@ function createProject(req, res) {
         const UserID = req.session.user._id
 
         newProject(projectName, UserID).then(projectId => {
-            if (invitedUsers != null) {
+            if (invitedUsers !== null) {
                 // Add the project to the user's project list.
                 invitedUsers.forEach(user => {
                     User.find({ email: user }).then(user => {
