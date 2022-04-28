@@ -16,8 +16,8 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           
           script: |
-            pm2 stop 1
+            pm2 stop 0
             cd dev/Astro
-            git fetch
-            pm2 start 1
+            git pull
+            pm2 start 0
             echo "Deployment was successful"
