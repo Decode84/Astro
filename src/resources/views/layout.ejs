@@ -25,9 +25,11 @@
   </head>
 
   <body
-    class="font-sans antialiased h-screen"
+    class="font-sans antialiased h-screen w-full flex justify-center"
     style="background-color: var(--sec-color)"
   >
-    <%- body %>
+    <div class="w-full" style="max-width: var(--max-content-w)">
+      <%- body %>
+    </div>
   </body>
 </html>
