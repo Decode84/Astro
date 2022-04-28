@@ -1,7 +1,6 @@
 const User = require('../app/Models/User')
 const Project = require('../app/Models/Project')
 const { MessageActionRow, MessageButton } = require('discord.js')
-const { cli } = require('tailwindcss/lib/constants');
 // https://discord.js.org/#/docs/main/stable/class/ClientUser?scrollTo=send
 /**
  * @function Links a Projecthub Project with Discord. Invoked by CommandHandler and GuildCreateHandler
@@ -12,7 +11,6 @@ const { cli } = require('tailwindcss/lib/constants');
  */
 async function Link(guild, client, interaction = null) {
     const id = client.id
-    console.log(id)
     const userInDB = await User.findOne({ services: {discord: id} }, 'projectIDs')
     if (!userInDB)
     {
@@ -28,7 +26,6 @@ async function Link(guild, client, interaction = null) {
         return
     }
     const message = `Hello thanks for adding me to ${guild.name} (id:${guild.id})\nClick to link to project:\n`
-    
     const buttonRows = await CreateButtons(projects)
     // Send message with string contents and button
     let sentMessage
@@ -82,7 +79,7 @@ async function CreateCollector (guild, sentMessage) {
         })
         // TODO: handle the usecase where project is already linked or make already linked projects not display
         
-        const discord = { serverID: `${guild.id}`, Webhook: '', inviteLink: '' }
+        const discord = { serverID: `${guild.id}`, webhook: '', inviteLink: '' }
         const textChannel = await guild.channels.cache.filter(c => c.type === 'GUILD_TEXT').first();
         const web = await CreateWebHook(await textChannel, discord)
         const invite = await CreateInvite(guild, await textChannel, discord)
@@ -106,7 +103,7 @@ function CreateWebHook (channel, discord) {
         // Insert options like profilepic etc. here
     }).then(webhook => {
         webhook.send('ProjectHub Integrated')
-        discord.Webhook = `${webhook.id}`
+        discord.webhook = `${webhook.url}`
         // guild.fetchWebhooks().get(webhook.id); maybe need to do it with channel.fetchwebhooks instead?
     })
         .catch(console.error)

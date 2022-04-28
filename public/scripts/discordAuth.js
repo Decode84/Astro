@@ -12,8 +12,10 @@ window.onload = () => {
         return document.getElementById('login').style.display = 'block';
     }
     //after auth
-    if (localStorage.getItem('oauth-state') !== atob(decodeURIComponent(state))) {
-        return document.getElementById('info').innerText = `You may have been clickjacked!`;
+    if (localStorage.getItem('oauth-state') !== atob(decodeURIComponent(state)))
+    {
+        // May have been clickjacked
+        return document.getElementById('info').innerText = `Failed to authenticate. Try again`;
     }
     document.getElementById('info').innerText = `Discord account linked`;
 

@@ -1,8 +1,12 @@
 const Project = require('../Models/Project');
 const WebSocketServer = require('websocket').server
-const Discord = require('../../discord/DiscordBot')
+const ChatHandler = require('../../discord/ChatHandler')
+const { WebhookClient,
+    MessageEmbed
+} = require('discord.js');
+const { addChatCollector } = require('../../discord/ChatHandler');
 
-exports.StartDiscordWebSocket = function (server, session) {
+exports.StartDiscordWebSocket = function (server, session, bot) {
     let wsServer = new WebSocketServer({
         httpServer: server,
         autoAcceptConnections: false // Recommended by websocket to be false
@@ -15,74 +19,85 @@ exports.StartDiscordWebSocket = function (server, session) {
             console.log((new Date()) + ' Connection from origin ' + request.origin + ' rejected.');
             return;
         }
-        const connection = request.accept(null, request.origin)
-        
         session(request.httpRequest, {}, async function (err) {
             if (err) { return }
             let session = request.httpRequest.session;
             if (!session.user) {
-                connection.sendUTF('You are not logged in')
+                request.reject(401, 'No session') // 401 Unauthorized
                 return
             }
-            // TODO: Get current project from session instead
-            // push project id if not available to memory
-            // console.log(session.user)
+            const connection = request.accept(null, request.origin)
+            // TODO: Get current project from url instead
             let currentProject = projects.find(project => project.projectID === session.user.projectIDs[0])
             if (!currentProject)
-                currentProject = projects[projects.push({ projectID: session.user.projectIDs[0], connections: [] }) - 1]
-            // TODO: Consider the very special case that someone tries to create 100 websockets
-            /* currentProject.connections.push({ Socket:connection, user:session.user })*/
+            {
+                currentProject = OpenNewProject(bot, session)
+                projects.push(currentProject)
+            }
             // push user to project such that it is subscribed to others messages
             currentProject.connections.push(connection)
-            // console.log((new Date()) + ' Connection accepted.');
-            // console.log(projects)
-            // Discord.client.guilds().guild.channels.cache.filter(c => c.type === 'GUILD_TEXT').first().
             // send latest discord messages to client
-            // connection.on utf8 message send that message in discord
+            currentProject.latestMessages.forEach(message => connection.send(JSON.stringify(message)))
+            // connection.on utf8 message to discord
             connection.on('message', function (message) {
                 if (message.type === 'utf8') {
-                    // console.log('Received Message: ' + message.utf8Data);
+                    // Send message in Discord
+                    currentProject.webhook.send({ content: message.utf8Data, username: session.user.username })
+                    // Send message to other webSockets
                     for (const user of currentProject.connections) {
-                        if (user === connection)
-                            continue
-                        user.sendUTF(message.utf8Data);
-                    }
-                } // TODO: make discord messages better integrated
-                // TODO: Send said message to discord webhook
-            })
-            // connection.on close remove user from project and remove project
-            connection.on('close', function (reasonCode, description) {
-                console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
-                currentProject.connections.splice(currentProject.connections.indexOf(connection), 1)
-                if (currentProject.connections.isEmpty)
-                    projects.splice(projects.indexOf(currentProject), 1)
-            })
-            
-            // Example code of connection
-            /*
-            clients.push(connection)
-            console.log((new Date()) + ' Connection accepted.');
-            connection.on('message', function (message) {
-                if (message.type === 'utf8') {
-                    console.log('Received Message: ' + message.utf8Data);
-                    for (const client of clients) {
-                        client.sendUTF(message.utf8Data);
-                    }
-                } else if (message.type === 'binary') {
-                    console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
-                    for (const client of clients) {
-                        client.sendBytes(message.binaryData);
+                        /*if (user === connection) // TODO: optimise later?
+                            continue*/
+                        const sendMessage = {username: session.user.username, message: message.utf8Data}
+                        user.sendUTF(JSON.stringify(sendMessage ))
+                        currentProject.latestMessages.push(sendMessage)
                     }
                 }
-            });
+            })
+            // connection.on close remove user from project and maybe remove project
             connection.on('close', function (reasonCode, description) {
-                console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
-                clients.splice(clients.indexOf(connection), 1)
-            });*/
+                // console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+                currentProject.connections.splice(currentProject.connections.indexOf(connection), 1)
+                if (currentProject.connections.length === 0)
+                {
+                    projects.splice(projects.indexOf(currentProject), 1)
+                    currentProject.collector.stop()
+                }
+            })
         })
     });
 }
 function originIsAllowed(origin) {
     // TODO: put logic here to detect whether the specified origin is allowed. (DOS security etc)
     return true;
+}
+async function OpenNewProject (bot, session) {
+    const dbProject = await Project.findById(session.user.projectIDs[0])
+    if (!(await dbProject))
+    {
+        console.log('Websocket: failed to get project ' + session.user.projectIDs[0])
+        return
+    }
+    const discord = await dbProject.categories.messaging.services.discord
+    const currentProject = {
+        projectID: session.user.projectIDs[0],
+        webhook: new WebhookClient({ url: discord.webhook }),
+        collector: await addChatCollector(bot, discord.serverID),
+        connections: [],
+        latestMessages: []
+    }
+    // get previous messages in discord
+    const messages = await ChatHandler.readLatestMessages(bot, discord.serverID) //Guaranteed 10 messages
+    messages.forEach(m => {
+        const message = {username: m.author.username, message: m.content}
+        currentProject.latestMessages.push(message)
+    })
+    // Listen for new discord messages
+    currentProject.collector.on('collect', m => {
+        const message = {username: m.author.username, message: m.content}
+        currentProject.latestMessages.shift().push(message)
+        for (const user of currentProject.connections) {
+            user.sendUTF(JSON.stringify(message ))
+        }
+    })
+    return currentProject
 }

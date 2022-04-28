@@ -1,21 +1,21 @@
-// Take care of some UI details
-let input = document.getElementById("input"); // Find the input field
+const socket = new WebSocket('ws://localhost:4000/');
+socket.addEventListener('error', function (event) {
+    // TODO: remove chat because its not linked properly
+    console.log('WebSocket error: ', event);
+});
+let input = document.getElementById("input");
 input.focus(); // Set keyboard focus
-// Register for notification of new messages using EventSource
 
-let chatSocket = new WebSocket('ws://localhost:4000/awdawd');
-
-chatSocket.onmessage = function (event) {
-    let div = document.createElement("div"); // Create a <div>
-    div.append(event.data); // Add text from the message
-    input.before(div); // And add div before input
-    input.scrollIntoView(); // Ensure input elt is visible
-    console.log(event.data);
+socket.onmessage = function (event) {
+    //TODO: Make this look nicer and more discordy
+    let div = document.createElement("div")
+    const message = JSON.parse(event.data)
+    div.append(message.username + ": " + message.message)
+    input.before(div)
+    input.scrollIntoView()
 }
-
 // Post the user's messages to the server using fetch
-input.addEventListener("change", () => { // When the user strikes return
-    chatSocket.send(input.value);
-    console.log("message sent: " + input.value);
+input.addEventListener("change", () => { // When the user strikes enter
+    socket.send(input.value);
     input.value = ""; // Clear the input
 });

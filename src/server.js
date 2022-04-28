@@ -57,8 +57,11 @@ const server = app.listen(PORT, (err) => {
     console.log(`Homepage hosted here: http://localhost:${PORT}/`)
 })
 
-// Run Discord bot
-require('./discord/DiscordBot')
-
-// Run Discord Chat WebSocket
-require('./app/WebSocket/DiscordChatSocket').StartDiscordWebSocket(server, sessionManager)
+// Run Discord Bot and WebSocket
+let discordBot
+if (process.env.DISCORD_BOT_TOKEN)
+{
+    discordBot = require('./discord/DiscordBot').StartBot()
+    require('./app/WebSocket/DiscordChatSocket').StartDiscordWebSocket(server, sessionManager, discordBot)
+}
+else console.log('Couldn\'t find Discord token. Disabling Discord bot')
