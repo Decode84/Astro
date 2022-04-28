@@ -42,8 +42,20 @@ async function recieveToken(req, res) {
         let user = await userController.getUser(req.session.user._id);
         user.authentications = { ...user.authentications, trello: { token: token } };
 
+        // Request for user's information from Trello.
+        let response = await fetch('https://api.trello.com/1/members/me?key=' + trelloKey + '&token=' + token, {
+            method: 'GET',
+        });
+
+        let text = await response.text();
+        let json = JSON.parse(text);
+
+        // Save user's information to database.
+        user.authentications.trello.memberId = json.id
+
         user.markModified('authentications');
         await user.save();
+        res.redirect('/project?projectId=' + req.query.projectId);
     }
 }
 
@@ -91,7 +103,25 @@ async function newOrganization(name, userId, projectId) {
     catch (e) {
         console.log(e);
     }
+
+    // Invite members of a project to the trello organization.
+    let userlist = project.members;
+    for (let i = 0; i < userlist.length; i++) {
+        let euser = await userController.getUser(userlist[i]);
+        if (euser._id !== user._id) {
+            if (user.categories.planning.services.trello.token !== undefined) {
+                let url = 'https://api.trello.com/1/organizations/' + organizationId + '/members/' + euser.authentications.trello.memberId + '?type=normal' + '&key=' + trelloKey + '&token=' + user.authentications.trello.token;
+                let response = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Accept': 'application/json',
+                    }
+                })
+            }
+        }
+    }
 }
+
 
 /**
  * @function newBoard
@@ -194,7 +224,7 @@ async function listBoards(req, res) {
  * @param {*} res 
  */
 async function listLists(req, res) {
-    
+
     if (req.query.projectId === undefined) {
         res.send(null);
     }
@@ -227,9 +257,9 @@ async function listLists(req, res) {
 async function newCard(req, res) {
     let user = await userController.getUser(req.session.user._id);
     let access = false;
-    
+
     for (let i = 0; i < user.projectIDs.length; i++) {
-        
+
         if (user.projectIDs[i]._id.toString() === req.query.projectId) {
             access = true;
         }
@@ -257,11 +287,11 @@ async function createCard(req, res) {
     let cardName = req.query.cardName;
     let cardDescription = req.query.cardDescription;
     let listId = req.query.list;
-    
+
     let url = 'https://api.trello.com/1/cards?idList=' + listId + '&name=' + cardName + '&desc=' + cardDescription + '&key=' + trelloKey + '&token=' + user.authentications.trello.token;
     let response = await fetch(url, {
         method: 'POST',
-        });
+    });
     res.redirect('/project?projectId=' + req.query.projectId); // ! Might change later don't know where to put the user.
 }
 
@@ -274,7 +304,7 @@ async function createCard(req, res) {
 async function setup_trello(name, projectId, userId) {
     await newOrganization(name, userId, projectId);
     let boardId = await newBoard('SCRUM', projectId, userId);
-    
+
 }
 
 module.exports = {
