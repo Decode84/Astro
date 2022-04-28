@@ -20,6 +20,7 @@
     "@octokit/auth-app": "^3.6.1",
     "@tailwindcss/forms": "^0.5.0",
     "@tailwindcss/typography": "^0.5.2",
+    "assert": "^2.0.0",
     "bcrypt": "^5.0.1",
     "celebrate": "^15.0.1",
     "clean-jsdoc-theme": "^3.3.4",

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const mongoose = require('mongoose')
 const path = require('path')
 
@@ -13,6 +14,6 @@ mongoose.connection
 
 beforeEach((done) => {
     mongoose.connection.collections.users.drop(() => {
-        done();
-    });
-});
+        done()
+    })
+})
