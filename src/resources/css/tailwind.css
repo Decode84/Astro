@@ -33,6 +33,8 @@
 
 .color-calendar.glass.color-calendar--small {
     border-radius: 0.5rem;
+    box-shadow: none;
+    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
 }
 
 .color-calendar.glass .calendar__arrow-prev .calendar__arrow-inner::before {
