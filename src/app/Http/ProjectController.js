@@ -34,6 +34,7 @@ function showProjects(req, res) {
  * @param {*} res
  */
 async function showProject(req, res) {
+    console.log(req.project)
     res.render('project/project', {
         project: req.project,
         user: req.session.user,
