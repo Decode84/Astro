@@ -128,8 +128,9 @@ async function getAllProjects (UserID) {
     try {
         const userProjects = []
         const user = await User.findById(UserID)
-        for (let i = 0; i < user.projectIDs.length(); i++) {
-            const project = await getProjectById(user.projectIDs[i])
+
+        for (const projectID of user.projectIDs) {
+            const project = await getProjectById(projectID)
             userProjects.push(project)
         }
 
