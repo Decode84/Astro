@@ -9,6 +9,10 @@ class GithubController {
             console.log('Github Hook', log)
         }
     }
+
+    async page (req, res) {
+        res.render('project/githubtemp')
+    }
 }
 
 module.exports = new GithubController()
