@@ -53,7 +53,7 @@ function createProject(req, res) {
         const UserID = req.session.user._id
 
         newProject(projectName, UserID).then(projectId => {
-            if (invitedUsers != null) {
+            if (invitedUsers !== null) {
                 // Add the project to the user's project list.
                 invitedUsers.forEach(user => {
                     User.find({ email: user }).then(user => {
@@ -83,6 +83,7 @@ async function editProject(req, res) {
             const projectMembers = []
 
             for (const member of project.members) {
+                console.log(member)
                 const user = await userController.getUser(member)
                 projectMembers.push(user.email)
             }
