@@ -36,10 +36,14 @@ app.use('/', express.static('public'), require('./routes'))
 
 // Server app
 const PORT = process.env.PRI_SERVER_PORT || process.env.SEC_SERVER_PORT
-app.listen(PORT, (err) => {
+const server = app.listen(PORT, (err) => {
     if (err) console.log(err)
     console.log(`Homepage hosted here: http://localhost:${PORT}/`)
 })
 
-// Run Discord bot
-require('./discord/DiscordBot')
+// Run Discord Bot and WebSocket
+let discordBot
+if (process.env.DISCORD_BOT_TOKEN && process.env.DISCORD_CLIENT_ID && process.env.DISCORD_APPLICATION_SECRET) {
+    discordBot = require('./discord/DiscordBot').StartBot()
+    require('./app/WebSocket/DiscordChatSocket').StartDiscordWebSocket(server, sessionManager, discordBot)
+} else console.log('Couldn\'t find Discord token. Disabling Discord bot')

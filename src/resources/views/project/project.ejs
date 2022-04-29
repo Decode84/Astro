@@ -5,17 +5,17 @@
 
 <main class="flex flex-row" style="min-width: var(--min-window-w); height: calc(100vh - var(--header-h))">
   <!-- Navigation bar  -->
-  <div class="px-2 py-5 overflow-y-auto drop-shadow-md" style="width: var(--left-col-w); background-color: var(--pri-color)">
+  <div class="pb-5 pl-5 overflow-y-auto" style="width: var(--left-col-w); background: linear-gradient(90deg, var(--sec-color) 22%, var(--pri-color) 44%);">
     <%- include('./_partial/leftBar/navigation'); %>
   </div>
 
   <!-- Dynamic widgets  -->
-  <div class="overflow-y-auto flex-1" style="background-color: var(--sec-color)">
+  <div class="pb-5 pl-5 overflow-y-auto flex-1" style="background-color: var(--sec-color)">
     <%- include('./_partial/centerBar/dynamic'); %>
   </div>
 
   <!-- Static widgets  -->
-  <div class="flex flex-row" style="width: var(--right-col-w); background-color: var(--sec-color)">
+  <div class="p-5 pt-0 flex flex-col w-full overflow-y-auto" style="width: var(--right-col-w); background-color: var(--sec-color)">
     <%- include('./_partial/rightBar/static'); %>
   </div>
 </main>
