@@ -5,19 +5,46 @@
 :root {
     --min-window-w: 1000px;
     --min-overview-w: 600px;
-    --max-content-w: 1200px;
+    --max-content-w: 1100px;
 
     --header-h: 5rem;
     --left-col-w: 15rem;
-    --right-col-w: 18rem;
-    --icon-size: 1.5rem;
+    --right-col-w: 20rem;
+    --icon-size: 1rem;
+    --icon-stroke: 2;
 
     --pri-color: #fff;
     --sec-color: #f5f5f5;
     --acc-color: #2563EB;
 }
 
-:not(span) {
+* {
     font-family: 'Anek Bangla', 'sans-serif';
     color: rgb(71 85 105);
+}
+
+/* Calendar overwrite css below */
+
+.calendar__month,
+.calendar__year {
+    font-weight: 400;
+    font-size: 1.125rem;
+}
+
+.color-calendar.glass.color-calendar--small {
+    border-radius: 0.5rem;
+    box-shadow: none;
+    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
+}
+
+.color-calendar.glass .calendar__arrow-prev .calendar__arrow-inner::before {
+    border-color: var(--acc-color);
+}
+
+.color-calendar.glass .calendar__arrow-next .calendar__arrow-inner::before {
+    border-color: var(--acc-color);
+}
+
+.color-calendar.glass .calendar__days .calendar__day-selected .calendar__day-text {
+    color: white;
 }
