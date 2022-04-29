@@ -33,15 +33,15 @@ router.post('/resetpass', mailLimit, authCon.resetPass)
 router.post('/updatepass', authCon.updatePass)
 
 // Project overview GET
-router.get('/projects', projectCon.showProjects)
+router.get('/projects', middleware.authLogin, projectCon.showProjects)
 router.get('/create-project', middleware.authLogin, projectCon.createProject)
-router.get('/project', projectCon.showProject)
-router.get('/edit', projectCon.editProject)
+router.get('/project', middleware.authLogin, projectCon.showProject)
+router.get('/edit', middleware.authLogin, projectCon.editProject)
 // Project overview POST
-router.post('/create-project', projectCon.createProject)
-router.post('/projects', projectCon.showProjects)
-router.post('/project', projectCon.showProject)
-router.post('/edit', projectCon.editProject)
+router.post('/create-project', middleware.authLogin, projectCon.createProject)
+router.post('/projects', middleware.authLogin, projectCon.showProjects)
+router.post('/project', middleware.authLogin, projectCon.showProject)
+router.post('/edit', middleware.authLogin, projectCon.editProject)
 
 // Admin (TODO: check for role)
 router.get('/admin/board', middleware.authLogin, adminCon.showBoard)
@@ -51,10 +51,10 @@ router.get('/discord', discordCon.discordAuth)
 router.post('/discord', discordCon.discordAuth)
 
 // Trello
-router.get('/trello', TrelloAPI.trello)
-router.get('/trello/callback', TrelloAPI.recieveToken)
-router.get('/trello/newCard', TrelloAPI.newCard)
-router.get('/trello/createCard', TrelloAPI.createCard)
+router.get('/trello', middleware.authLogin, TrelloAPI.trello)
+router.get('/trello/callback', middleware.authLogin, TrelloAPI.recieveToken)
+router.get('/trello/newCard', middleware.authLogin, TrelloAPI.newCard)
+router.get('/trello/createCard', middleware.authLogin, TrelloAPI.createCard)
 
 // Trello API
 router.get('/api/trello/boards', TrelloAPI.listBoards)
@@ -64,7 +64,7 @@ router.get('/api/trello/lists', TrelloAPI.listLists)
 router.post('/api/github/hook', githubAPI.hook)
 
 // Calendar events
-router.post('/add_event', calEventCon.event_add)
-router.get('/get_events', calEventCon.event_get)
+router.post('/add_event', middleware.authLogin, calEventCon.event_add)
+router.get('/get_events', middleware.authLogin, calEventCon.event_get)
 
 module.exports = router

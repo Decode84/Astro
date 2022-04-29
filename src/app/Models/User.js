@@ -7,12 +7,12 @@ const UserSchema = new Schema({
         required: true
     },
     username: {
-        index: { unique: true },
+        unique: true,
         type: String,
         required: true
     },
     email: {
-        index: { unique: true },
+        unique: true,
         type: String,
         required: true
     },
@@ -27,6 +27,9 @@ const UserSchema = new Schema({
     date: {
         type: Date,
         default: Date.now
+    },
+    role: {
+        type: String
     },
     services: Schema.Types.Mixed,
     projectIDs: [
