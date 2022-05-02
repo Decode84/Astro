@@ -24,7 +24,7 @@
                 <% projects.forEach((project, i)=> { %>
                     <% if (i % 2===0) { %>
                         <tr class="h-12 border-t border-gray-100">
-                            <td class="pr-4"><a href="/project" style="color: var(--acc-color)">
+                            <td class="pr-4"><a href=<%=`project/${project.id}`%> style="color: var(--acc-color)">
                                     <%= project.name %>
                                 </a></td>
                             <td class="pr-4 text-xs pl-6">
