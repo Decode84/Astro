@@ -7,7 +7,7 @@ const homeCon = require('./app/Http/HomeController')
 const TrelloAPI = require('./trello/trelloApi')
 const githubAPI = require('./app/Http/GithubController')
 const middleware = require('./app/Middleware/Authorization')
-const calEventCon = require('./app/Http/calEventController')
+const calEventCon = require('./app/Http/CalEventController')
 
 const { createAccountLimit, loginLimit, mailLimit } = require('./app/Middleware/Rate')
 const { authenticateValidation, registerValidation } = require('./app/Validation/AuthValidation')
@@ -65,7 +65,10 @@ router.get('/api/trello/lists', TrelloAPI.listLists)
 router.post('/api/github/hook', githubAPI.hook)
 
 // Calendar events
-router.post('/add_event', middleware.authLogin, calEventCon.event_add)
-router.get('/get_events', middleware.authLogin, calEventCon.event_get)
+router.post('/add-event', calEventCon.addEventToDb)
+router.get('/get-events', calEventCon.getEventsFromDb)
+
+//  The 404 Route (ALWAYS Keep this as the last route)
+router.get('*', (req, res) => res.status(404).render('404'))
 
 module.exports = router

@@ -35,12 +35,15 @@ function showProjects(req, res) {
  */
 async function showProject (req, res) {
     getProjectById(req.params.id).then(async (project) => {
-        console.log("hey")
-        res.render('project/project', {
-            project: req.project,
-            user: req.session.user,
-            discordInfo: await DiscordCon.discordAuth(req, res)
-        })
+        if (project) {
+            res.render('project/project', {
+                project: req.project,
+                user: req.session.user,
+                discordInfo: await DiscordCon.discordAuth(req, res)
+            })
+        } else {
+            res.render('404')
+        }
     })
 }
 
