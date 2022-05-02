@@ -18,7 +18,7 @@
                         <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="username" id="username" required />
 
                         <label class="text text-left block mb-2 mt-4" for="emailaddress">Email</label>
-                        <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="email" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required />
+                        <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="email" id="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,62}$" required />
 
                         <label class="text text-left block mb-2 mt-4" for="password">Password</label>
                         <input type="password" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="password" id="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required />
