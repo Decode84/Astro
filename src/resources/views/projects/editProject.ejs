@@ -4,7 +4,21 @@
             <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
                 Project name
             </label>
-            <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="projectName" id="projectName" type="text" placeholder="Name" value="<%= project.name %>">
+            <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="projectName" id="projectName" type="text" placeholder="Name" value="<%= project.name %>" required>
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">
+                Duration start
+            </label>
+            <input id="durationStart" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:outline-none focus:shadow-outline" type="date" value="<%= project.duration.startTime.toISOString().split('T')[0] %>" required>
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">
+                Duration end
+            </label>
+            <input id="durationEnd" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:outline-none focus:shadow-outline" type="date" value="<%= project.duration.endTime.toISOString().split('T')[0] %>" required>
         </div>
 
         <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
@@ -44,6 +58,9 @@
 </section>
 
 <script>
+    document.getElementById('durationStart').max = new Date().toISOString().split("T")[0];
+    document.getElementById('durationEnd').min = new Date().toISOString().split("T")[0];
+
     // post request on form submit
     editProjForm.onsubmit = async (e) => {
         e.preventDefault();
@@ -59,6 +76,10 @@
                 projectId: document.URL.split('/').at(-1),
                 projectName: document.getElementById('projectName').value,
                 emails: emails,
+                duration: {
+                    startTime: document.getElementById('durationStart').valueAsDate,
+                    endTime: document.getElementById('durationEnd').valueAsDate,
+                }
             })
         }).then((res) => {
             if (res.status === 200) {

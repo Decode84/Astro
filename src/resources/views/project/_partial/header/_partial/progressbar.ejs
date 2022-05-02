@@ -1,5 +1,12 @@
 <div class="pl-5 flex items-center justify-center h-full">
   <div class="w-full rounded-full h-4 bg-white drop-shadow-sm">
-    <div class="h-4 rounded-full drop-shadow-sm" style="width: 70%; background-color: var(--acc-color)"></div>
+    <% 
+      let totalDaySpan = project.duration.endTime.getTime() - project.duration.startTime.getTime()
+      totalDaySpan = Math.ceil(totalDaySpan / (1000 * 3600 * 24))
+      let elapsedDaySpan = (new Date()).getTime() - project.duration.startTime.getTime()
+      elapsedDaySpan = Math.ceil(elapsedDaySpan / (1000 * 3600 * 24))
+      const percentage = elapsedDaySpan / totalDaySpan * 100
+    %>
+    <div class="h-4 rounded-full drop-shadow-sm" style="width: <%=percentage%>%; background-color: var(--acc-color)"></div>
   </div>
 </div>

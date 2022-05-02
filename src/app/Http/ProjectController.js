@@ -112,7 +112,7 @@ async function delProject (req, res) {
  * @param {Array} invitedUsers 
  */
 async function updateProject (req, res) {
-    const { projectId, emails, projectName } = req.body
+    const { projectId, emails, projectName, duration } = req.body
 
     await getProjectById(projectId).then(async (project) => {
         if (project) {
@@ -131,6 +131,7 @@ async function updateProject (req, res) {
             }
 
             project.members = usersSupposed.map(user => user._id)
+            project.duration = { ...duration }
         }
         await project.save()
         res.sendStatus('200')
@@ -174,7 +175,7 @@ async function leaveProject (req, res) {
  * @returns {Promise<projectId>} The id of the project.
  */
 async function newProject (req, res) {
-    const { emails, projectName } = req.body
+    const { emails, projectName, duration } = req.body
     const project = new ProjectModel({ name: projectName })
 
     let users = await Promise.all(emails.map(async email => await userCon.getUserByEmail(email)))
@@ -182,6 +183,7 @@ async function newProject (req, res) {
 
     users.forEach(user => addProjectToUser(project._id, user._id))
     project.members = users.map(user => user._id)
+    project.duration = { ...duration }
 
     await project.save()
     res.redirect(`/project/${project._id}`)
@@ -196,10 +198,7 @@ async function newProject (req, res) {
  */
 async function removeProjectFromUser (projectId, userId) {
     await userCon.getUserById(userId).then(user => {
-        console.log(user.projectIDs)
         user.projectIDs.splice(user.projectIDs.indexOf(projectId), 1)
-        console.log(user.projectIDs)
-        console.log('---')
         user.save()
     })
 }
