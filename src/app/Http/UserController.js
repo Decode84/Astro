@@ -14,7 +14,7 @@ class UserController {
      * @param {*} UserID
      */
     async getUser (UserID) {
-        const userData = await User.findById(UserID).exec()
+        const userData = await User.findById(UserID).catch(() => undefined)
         return userData
     }
 

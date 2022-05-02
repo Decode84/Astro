@@ -1,6 +1,6 @@
 const ProjectModel = require('../Models/Project')
 const Project = require('../Models/Project')
-const userController = require('./UserController')
+const userCon = require('./UserController')
 const uid = require('uid-safe')
 const User = require('../Models/User')
 const DiscordCon = require('./ServiceControllers/DiscordController')
@@ -36,8 +36,15 @@ function showProjects(req, res) {
 async function showProject (req, res) {
     getProjectById(req.params.id).then(async (project) => {
         if (project) {
+            let memberNames = await Promise.all(project.members.map(async id => {
+                const user = await userCon.getUser(id)
+                return user && user.username
+            }))
+            memberNames = memberNames.filter(member => member)
+
             res.render('project/project', {
-                project: req.project,
+                project: project,
+                projectMembers: memberNames,
                 user: req.session.user,
                 discordInfo: await DiscordCon.discordAuth(req, res)
             })
@@ -90,7 +97,7 @@ async function editProject(req, res) {
 
             for (const member of project.members) {
                 console.log(member)
-                const user = await userController.getUser(member)
+                const user = await userCon.getUser(member)
                 projectMembers.push(user.email)
             }
 
@@ -171,7 +178,7 @@ async function newProject(projectName, UserID) {
     project.members.push(UserID)
 
     // Add the project to the user's project list.
-    userController.getUser(UserID).then(user => {
+    userCon.getUser(UserID).then(user => {
         user.projectIDs.push(project._id)
         user.save()
     })
@@ -240,7 +247,7 @@ async function delProject(projectId) {
 
     // Remove the project from the user's project list.
     for (let i = 0; i < users.length; i++) {
-        userController.getUser(users[i]).then(user => {
+        userCon.getUser(users[i]).then(user => {
             user.projectIDs.splice(user.projectIDs.indexOf(projectId), 1)
             user.save()
         })
@@ -266,7 +273,7 @@ async function addUserToProject(projectId, UserId) {
             project.members.push(UserId)
 
             // Add the project to the user's project list
-            userController.getUser(UserId).then(user => {
+            userCon.getUser(UserId).then(user => {
                 user.projectIDs.push(project._id)
                 user.save()
             })
@@ -296,7 +303,7 @@ async function removeUserFromProject(projectId, UserId) {
             project.members.splice(i, 1)
 
             // Remove the project from the user's project list
-            userController.getUser(UserId).then(user => {
+            userCon.getUser(UserId).then(user => {
                 user.projectIDs.splice(user.projectIDs.indexOf(projectId), 1)
                 user.save()
             })
