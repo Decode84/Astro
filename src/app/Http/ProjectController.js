@@ -33,11 +33,14 @@ function showProjects(req, res) {
  * @param {*} req
  * @param {*} res
  */
-async function showProject(req, res) {
-    res.render('project/project', {
-        project: req.project,
-        user: req.session.user,
-        discordInfo: await DiscordCon.discordAuth(req, res)
+async function showProject (req, res) {
+    getProjectById(req.params.id).then(async (project) => {
+        console.log("hey")
+        res.render('project/project', {
+            project: req.project,
+            user: req.session.user,
+            discordInfo: await DiscordCon.discordAuth(req, res)
+        })
     })
 }
 

@@ -35,8 +35,9 @@ router.post('/updatepass', authCon.updatePass)
 // Project overview GET
 router.get('/projects', middleware.authLogin, projectCon.showProjects)
 router.get('/create-project', middleware.authLogin, projectCon.createProject)
-router.get('/project', middleware.authLogin, projectCon.showProject)
+router.get('/project/:id', middleware.authLogin, projectCon.showProject)
 router.get('/edit', middleware.authLogin, projectCon.editProject)
+
 // Project overview POST
 router.post('/create-project', middleware.authLogin, projectCon.createProject)
 router.post('/projects', middleware.authLogin, projectCon.showProjects)
