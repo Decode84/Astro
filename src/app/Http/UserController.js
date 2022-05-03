@@ -11,19 +11,10 @@ class UserController {
 
     /**
      * @description Find the user in the database by their id
-     * @param {*} userId
+     * @param {*} UserID
      */
-    async getUserById (userId) {
-        const userData = await User.findById(userId).catch(() => undefined)
-        return userData
-    }
-
-    /**
-     * @description Find the user in the database by their email
-     * @param {*} userEmail
-     */
-    async getUserByEmail (userEmail) {
-        const userData = await User.findOne({ email: userEmail }).catch(() => undefined)
+    async getUser (UserID) {
+        const userData = await User.findById(UserID).catch(() => undefined)
         return userData
     }
 

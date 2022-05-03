@@ -11,6 +11,9 @@ const authRedirect = 'http://localhost:4000/discord'
 const AuthLink = 'https://discord.com/api/oauth2/authorize?client_id=959004457205637131&redirect_uri=http%3A%2F%2Flocalhost%3A4000%2Fdiscord&response_type=code&scope=identify%20email'
 const InviteBotLink = 'https://discord.com/api/oauth2/authorize?client_id=959004457205637131&permissions=537119937&scope=bot%20applications.commands'
 const CreateServerLink = 'https://discord.new/dQCDNNwCPuhE'
+
+const TEMP_currentproject = '624bfb0bb56cd83f0c16e346' // TODO: use URL instead
+
 /**
  * @function Handling of the discord service
  */
@@ -20,9 +23,9 @@ exports.discordAuth = async (req, res) => {
         await handleAuth(req, code)
     }
     let ServerInviteLink = ''
-    const project = await Project.findById(req.params.id)
+    const project = await Project.findById(TEMP_currentproject)
     await project
-    if (project?.categories?.messaging?.services?.discord) { ServerInviteLink = project.categories.messaging.services.discord.inviteLink }
+    if (project.categories.messaging.services.discord) { ServerInviteLink = project.categories.messaging.services.discord.inviteLink }
     return {
         AuthLink: AuthLink,
         InviteBotLink: InviteBotLink,
