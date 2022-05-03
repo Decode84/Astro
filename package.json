@@ -10,7 +10,7 @@
     "build:css": "postcss src/resources/css/tailwind.css -o public/assets/output.css",
     "generate:key": "node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\"",
     "build:doc": "node_modules/.bin/jsdoc --configure jsdoc.json --verbose",
-    "test": "mocha"
+    "test": "mocha --recursive"
   },
   "author": "P2",
   "license": "ISC",
