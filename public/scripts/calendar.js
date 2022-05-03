@@ -7,22 +7,23 @@ const calendar = new Calendar({
     headerBackgroundColor: 'var(--pri-color)',
     headerColor: 'var(--acc-color)',
     calendarSize: 'small',
-    borderRadius: '0.25rem',
+    borderRadius: '0.5rem',
     layoutModifiers: ['month-left-align'],
     dateChanged: (currentDate, events) => updateEventList(events)
 })
+
+calendar.monthChanged = () => upperCaseMonth(calendar)
 updateAvailableEvents(calendar)
 setInterval(updateAvailableEvents, 2000, calendar)
-upperCaseMonth()
+upperCaseMonth(calendar)
 
 async function updateAvailableEvents(calendar) {
     calendar.setEventsData(await getEventsArray())
-    upperCaseMonth()
+    upperCaseMonth(calendar)
 }
 
-function upperCaseMonth() {
-    const calendarMonth = document.querySelector('.calendar__month')
-    calendarMonth.innerHTML = calendarMonth.innerHTML.charAt(0).toUpperCase() + calendarMonth.innerHTML.slice(1)
+function upperCaseMonth(calendar) {
+    calendar.monthDisplay.innerHTML = calendar.monthDisplay.innerHTML.charAt(0).toUpperCase() + calendar.monthDisplay.innerHTML.slice(1)
 }
 
 function formatDate(date) {
@@ -104,7 +105,7 @@ function updateEventList(events) {
         events.forEach((element) => {
             const d = new Date(element.start)
             const dString = `${('0' + d.getHours()).slice(-2)}:${('0' + d.getMinutes()).slice(-2)}`
-            calEvents.innerHTML += `<p>${dString} - ${element.name}</p>`
+            calEvents.innerHTML += `<p class="truncate ...">${dString} - ${element.name}</p>`
         })
     } else {
         calEventsContainer.classList.add('hidden')

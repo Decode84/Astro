@@ -1,6 +1,6 @@
 const ProjectModel = require('../Models/Project')
 const Project = require('../Models/Project')
-const userController = require('./UserController')
+const userCon = require('./UserController')
 const uid = require('uid-safe')
 const User = require('../Models/User')
 const DiscordCon = require('./ServiceControllers/DiscordController')
@@ -13,7 +13,6 @@ const authenticationController = require('./AuthenticationController')
  * @param {*} req
  * @param {*} res
  */
-
 function showProjects(req, res) {
     if (req.method === 'POST') {
         delProject(req.body.projectId)
@@ -33,11 +32,24 @@ function showProjects(req, res) {
  * @param {*} req
  * @param {*} res
  */
-async function showProject(req, res) {
-    res.render('project/project', {
-        project: req.project,
-        user: req.session.user,
-        discordInfo: await DiscordCon.discordAuth(req, res)
+async function showProject (req, res) {
+    getProjectById(req.params.id).then(async (project) => {
+        if (project) {
+            let memberNames = await Promise.all(project.members.map(async id => {
+                const user = await userCon.getUser(id)
+                return user && user.username
+            }))
+            memberNames = memberNames.filter(member => member)
+
+            res.render('project/project', {
+                project: project,
+                projectMembers: memberNames,
+                user: req.session.user,
+                discordInfo: await DiscordCon.discordAuth(req, res)
+            })
+        } else {
+            res.render('404')
+        }
     })
 }
 
@@ -70,8 +82,8 @@ function createProject(req, res) {
 
 /**
  * @function Edit name and invited users of a project.
- * @param {*} req 
- * @param {*} res 
+ * @param {*} req
+ * @param {*} res
  */
 async function editProject(req, res) {
     // const projectId = mongoose.Types.ObjectId(url.split('=').pop())
@@ -84,7 +96,7 @@ async function editProject(req, res) {
 
             for (const member of project.members) {
                 console.log(member)
-                const user = await userController.getUser(member)
+                const user = await userCon.getUser(member)
                 projectMembers.push(user.email)
             }
 
@@ -109,7 +121,6 @@ async function editProject(req, res) {
     }
 }
 
-
 /**
  * @function Gets a project by id.
  * @param {String} id
@@ -128,24 +139,21 @@ async function getProjectById(id) {
  * @function Gets a list of all user's projects.
  * @returns {Promise<Array<Project>>} An array of projects.
  */
-async function getAllProjects(UserID) {
+async function getAllProjects (UserID) {
     try {
-        const userProjects = [];
-        const user = await User.findById(UserID);
-        for (let projectID of user.projectIDs) {
-            const project = await getProjectById(projectID);
-            userProjects.push(project);
+        const userProjects = []
+        const user = await User.findById(UserID)
+
+        for (const projectID of user.projectIDs) {
+            const project = await getProjectById(projectID)
+            userProjects.push(project)
         }
-
-
-        return userProjects;
-
+      
+        return userProjects
     } catch (error) {
         console.log(error)
     }
 }
-
-
 
 /**
  * @function Creates a new project in the database and adds it to the user's project list.
@@ -165,7 +173,7 @@ async function newProject(projectName, UserID) {
     project.members.push(UserID)
 
     // Add the project to the user's project list.
-    userController.getUser(UserID).then(user => {
+    userCon.getUser(UserID).then(user => {
         user.projectIDs.push(project._id)
         user.save()
     })
@@ -177,9 +185,9 @@ async function newProject(projectName, UserID) {
 
 /**
  * @function Update a project's name and invited users in the database
- * @param {Object} projectID 
- * @param {String} projectName 
- * @param {Array} invitedUsers 
+ * @param {Object} projectID
+ * @param {String} projectName
+ * @param {Array} invitedUsers
  */
 async function updateProject(projectID, projectName, invitedUsers) {
     // Get the project
@@ -225,7 +233,7 @@ async function updateProject(projectID, projectName, invitedUsers) {
  * The function runs asynchronously. There is no return value.
  * @param {string} projectId The id of the project to be removed.
  */
-async function delProject(projectId) {
+async function delProject (projectId) {
     // TODO: Call the remove user function. When it is made.
 
     // Get the list of users in the project.
@@ -234,7 +242,7 @@ async function delProject(projectId) {
 
     // Remove the project from the user's project list.
     for (let i = 0; i < users.length; i++) {
-        userController.getUser(users[i]).then(user => {
+        userCon.getUser(users[i]).then(user => {
             user.projectIDs.splice(user.projectIDs.indexOf(projectId), 1)
             user.save()
         })
@@ -260,13 +268,13 @@ async function addUserToProject(projectId, UserId) {
             project.members.push(UserId)
 
             // Add the project to the user's project list
-            userController.getUser(UserId).then(user => {
+            userCon.getUser(UserId).then(user => {
                 user.projectIDs.push(project._id)
                 user.save()
             })
 
             // Save the project
-            await project.save();
+            await project.save()
         } else {
             console.log('User is already a member of this project.')
         }
@@ -280,21 +288,19 @@ async function addUserToProject(projectId, UserId) {
  */
 async function removeUserFromProject(projectId, UserId) {
     // Get the project
-    const project = await getProjectById(projectId);
+    const project = await getProjectById(projectId)
     console.log('projectId : ' + projectId)
 
     for (let i = 0; i < project.members.length; i++) {
         if (project.members[i] == UserId) {
-
             // Remove user
             project.members.splice(i, 1)
 
             // Remove the project from the user's project list
-            userController.getUser(UserId).then(user => {
+            userCon.getUser(UserId).then(user => {
                 user.projectIDs.splice(user.projectIDs.indexOf(projectId), 1)
                 user.save()
             })
-
         } else {
             console.log('User is not a member of this project.')
         }

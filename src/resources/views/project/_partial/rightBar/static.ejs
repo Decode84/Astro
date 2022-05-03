@@ -1,21 +1,17 @@
 <!-- Project members  -->
 <div class="bg-white mb-4 rounded-lg px-4 py-3 w-full drop-shadow-sm flex flex-col">
   <h2 class="text-lg font-medium pb-2">Project members</h2>
-  <div class="flex flex-row">
-    <%- include('./_partial/member', { name:'Aavild' }); %>
-      <%- include('./_partial/member', { name:'Aleksander' }); %>
-  </div>
-  <div class="flex flex-row">
-    <%- include('./_partial/member', { name:'Jakob' }); %>
-      <%- include('./_partial/member', { name:'Mike' }); %>
-  </div>
-  <div class="flex flex-row">
-    <%- include('./_partial/member', { name:'Erik' }); %>
-      <%- include('./_partial/member', { name:'Rasmus' }); %>
-  </div>
-  <div class="flex flex-row">
-    <%- include('./_partial/member', { name:'William' }); %>
-  </div>
+  
+  <% for (let i = 0; i < projectMembers.length; i += 2)  {%>
+    <div class="flex flex-row">
+      <%- include('./_partial/member', { name: projectMembers[i] }); %>
+      <% if (projectMembers[i + 1]) { %>
+        <%- include('./_partial/member', { name: projectMembers[i + 1] }); %>
+      <% } %>
+    </div>
+    <% } %>
+
+
 </div>
 
 <!-- Chat/Calender  -->

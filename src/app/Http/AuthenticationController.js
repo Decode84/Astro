@@ -9,46 +9,46 @@ class AuthenticationController {
      * @param {*} req
      * @param {*} res
      */
-    async showLogin(req, res) {
+    async showLogin (req, res) {
         if (req.session.user) {
             res.redirect('/projects')
         } else {
             res.render('auth/login', { message: req.flash('loginMessage') })
         }
-    };
+    }
 
     /**
      * Show the register page and check if the user is already logged in
      * @param {*} req
      * @param {*} res
      */
-    async showRegister(req, res) {
+    async showRegister (req, res) {
         if (req.session.user) {
             res.redirect('/projects')
         } else {
             res.render('auth/register', { message: req.flash('registerMessage') })
         }
-    };
+    }
 
     /**
      * Show the forgot password page and check if the user is already logged in
      * @param {*} req
      * @param {*} res
      */
-    async showForgot(req, res) {
+    async showForgot (req, res) {
         if (req.session.user) {
             res.redirect('/projects')
         } else {
             res.render('auth/forgot', { message: req.flash('forgotMessage') })
         }
-    };
+    }
 
     /**
      * Show the reset page if user wants to reset password
      * @param {*} req
      * @param {*} res
      */
-    async showReset(req, res) {
+    async showReset (req, res) {
         if (req.session.user) {
             res.redirect('/projects')
         } else {
@@ -57,7 +57,7 @@ class AuthenticationController {
                 message: req.flash('resetMessage')
             })
         }
-    };
+    }
 
     /**
      * Authenticate the user and redirect to the dashboard
@@ -65,7 +65,7 @@ class AuthenticationController {
      * @param {*} res
      * @returns
      */
-    async authenticate(req, res) {
+    async authenticate (req, res) {
         const { username, password } = req.body
 
         User.findOne({ username }).then((user) => {
@@ -87,7 +87,7 @@ class AuthenticationController {
                 }
             })
         }).catch((err) => console.log(err))
-    };
+    }
 
     /**
      * Create a new user and redirect to the dashboard
@@ -95,10 +95,10 @@ class AuthenticationController {
      * @param {*} res
      * @returns
      */
-    async signup(req, res) {
+    async signup (req, res) {
         const { name, username, email, password, passwordConfirmation } = req.body
 
-        User.findOne({ username }).then((user) => {
+        User.findOne({ $or: [{ username }, { email }] }).then((user) => {
             if (user) {
                 req.flash('registerMessage', 'User allready exists')
                 res.redirect('/register')
@@ -115,14 +115,14 @@ class AuthenticationController {
                 })
             })
         }).catch((err) => console.log(err))
-    };
+    }
 
     /**
      * Logout the user and redirect to the login page
      * @param {*} req
      * @param {*} res
      */
-    async logout(req, res) {
+    async logout (req, res) {
         if (req.session) {
             req.session.destroy(() => {
                 res.redirect('/login')
@@ -130,7 +130,7 @@ class AuthenticationController {
         } else {
             res.redirect('/login')
         }
-    };
+    }
 
     /**
      * Used to send mail with token to reset user password
@@ -139,7 +139,7 @@ class AuthenticationController {
      * @returns
      */
 
-    async resetPass(req, res) {
+    async resetPass (req, res) {
         const { email } = req.body
 
         User.findOne({ email }).then((user) => {
@@ -160,7 +160,7 @@ class AuthenticationController {
                 })
             }
         }).catch((err) => console.log(err))
-    };
+    }
 
     /**
      * Used to send mail with token to reset user password
@@ -169,7 +169,7 @@ class AuthenticationController {
      * @returns
      */
 
-    async updatePass(req, res) {
+    async updatePass (req, res) {
         const { token, password } = req.body
 
         User.findOne({ token }).then((user) => {
@@ -189,7 +189,7 @@ class AuthenticationController {
                 })
             })
         }).catch((err) => console.log(err))
-    };
+    }
 }
 
 module.exports = new AuthenticationController()

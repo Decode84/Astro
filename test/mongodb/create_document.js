@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const User = require('../src/app/Models/User')
+const User = require('../../src/app/Models/User')
 const assert = require('assert')
 
 describe('Creating a user document in MongoDB', () => {
