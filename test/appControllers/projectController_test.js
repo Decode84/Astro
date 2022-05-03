@@ -38,6 +38,8 @@ describe('Creating a project', () => {
             })
     })
 
+    /*
+
     it('Creating a project with no name does not get saved', (done) => {
         User.findOne({ username: 'testuser' })
             .then(user => {
@@ -50,7 +52,7 @@ describe('Creating a project', () => {
                             })
                     })
             })
-    })
+    }) */
 })
 
 describe('Read all projects in a user', () => {
