@@ -1,13 +1,28 @@
 <section class="m-auto w-2/5 pt-6">
-    <form method="post" id="createProjForm" class="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4">
+    <form method="post" id="createProjForm" class="w-96 bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4">
+        <input id="userEmail" type="hidden" value=<%= userEmail%>>
         <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+            <label class="block text-gray-700 text-sm font-bold mb-2">
                 Project
             </label>
-            <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:outline-none focus:shadow-outline" name="projectName" id="projectName" type="text" placeholder="Name">
+            <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:outline-none focus:shadow-outline" type="text" placeholder="Name" id="projectName" required>
         </div>
 
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">
+                Duration start
+            </label>
+            <input id="durationStart" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:outline-none focus:shadow-outline" type="date" required>
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">
+                Duration end
+            </label>
+            <input id="durationEnd" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:outline-none focus:shadow-outline" type="date" required>
+        </div>
+
+        <label class="block text-gray-700 text-sm font-bold mb-2">
             Add members
         </label>
         <div class="mb-6 flex justify-between">
@@ -19,8 +34,8 @@
             </button>
         </div>
 
-        <div id="invited" class="mb-6">
-            <label id="labelInvMembers" class="block text-gray-700 text-sm font-bold mb-2">
+        <div id="invited" class="hidden mb-6">
+            <label id="labelInvMembers" class="text-gray-700 text-sm font-bold mb-2">
                 Members to be invited
             </label>
 
@@ -39,15 +54,16 @@
 
 
 <script>
-    // keep track of all email invites
-    let emails = [];
-
-    if (document.getElementById('labelInvMembers')) {
-        document.getElementById('labelInvMembers').style.display = 'none';
-    }
+    document.getElementById('durationStart').max = new Date().toISOString().split("T")[0];
+    document.getElementById('durationEnd').min = new Date().toISOString().split("T")[0];
 
     createProjForm.onsubmit = async (e) => {
         e.preventDefault();
+
+        const invited = document.querySelectorAll('.inv-member')
+        const emails = [...invited].map(member => member.innerHTML.trim())
+        const userEmail = document.getElementById('userEmail').value
+        emails.push(userEmail)
 
         let response = await fetch('/create-project', {
             method: 'POST',
@@ -56,7 +72,11 @@
             },
             body: JSON.stringify({
                 projectName: document.getElementById('projectName').value,
-                emails: emails
+                emails: emails,
+                duration: {
+                    startTime: document.getElementById('durationStart').valueAsDate,
+                    endTime: document.getElementById('durationEnd').valueAsDate,
+                }
             })
         }).then((res) => {
             if (res.status === 200) {
@@ -72,16 +92,34 @@
     document.getElementById("inviteMember").addEventListener('click', () => {
         let email = document.getElementById("inviteInput").value;
         if (email !== "") {
-            document.getElementById('labelInvMembers').style.display = 'block';
-            let invited = document.createElement("input");
+            document.getElementById('invited').classList.remove('hidden')
+            let invited = document.createElement("p");
+            let remove = document.createElement("input");
+            let div = document.createElement("div");
 
-            invited.name = "invited";
-            invited.value = email;
-            invited.disabled = true;
-            document.getElementById("invited").appendChild(invited);
-            emails.push(email);
-            console.log(emails);
+            div.setAttribute('class', 'flex items-center justify-between py-2')
+
+            remove.setAttribute('class', 'remove-user bg-blue-500 hover:bg-blue-700 text-white font-bold px-3.5 cursor-pointer rounded focus:outline-none focus:shadow-outline')
+            remove.setAttribute('type', 'button')
+            remove.setAttribute('value', 'Remove')
+            remove.addEventListener('click', (e) => removeSelf(e.target));
+
+            invited.setAttribute('class', 'inv-member w-10/12')
+            invited.innerHTML = email;
+            invited.setAttribute('id', 'invited')
+
+            div.appendChild(invited)
+            div.appendChild(remove)
+
+            document.getElementById("invited").appendChild(div)
             document.getElementById("inviteInput").value = "";
         }
     })
+
+    function removeSelf(target) {
+        target.parentElement.remove();
+        if (document.querySelectorAll('.inv-member').length == 0) {
+            document.getElementById('invited').classList.add('hidden')
+        }
+    }
 </script>
