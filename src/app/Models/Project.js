@@ -29,7 +29,12 @@ const projectSchema = new Schema({
 
     members: [
         String
-    ]
+    ],
+    events: [{
+        name: String,
+        start: Date,
+        end: Date
+    }]
 }, { strict: false })
 
 const projectModel = mongo.model('project', projectSchema)

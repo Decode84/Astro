@@ -10,11 +10,15 @@
   <link rel="stylesheet" href="/assets/output.css" />
   <link href="https://fonts.googleapis.com/css?family=Anek Bangla:300,400,700&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/color-calendar/dist/css/theme-glass.css" />
+
   <title>ProjectHub</title>
 </head>
 
-<body class="font-sans antialiased h-screen" style="background-color: var(--sec-color)">
-  <%- body %>
+<body class="font-sans antialiased h-screen w-full flex justify-center" style="background-color: var(--sec-color)">
+  <div class="w-full" style="max-width: var(--max-content-w)">
+    <%- body %>
+  </div>
 </body>
 
 </html>

@@ -1,7 +1,7 @@
 const fetch = require('node-fetch')
 const path = require('path')
-const User = require('../Models/User')
-const Project = require('../Models/Project')
+const User = require('../../Models/User')
+const Project = require('../../Models/Project')
 
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const clientID = process.env.DISCORD_CLIENT_ID
@@ -12,7 +12,7 @@ const AuthLink = 'https://discord.com/api/oauth2/authorize?client_id=95900445720
 const InviteBotLink = 'https://discord.com/api/oauth2/authorize?client_id=959004457205637131&permissions=537119937&scope=bot%20applications.commands'
 const CreateServerLink = 'https://discord.new/dQCDNNwCPuhE'
 
-const TEMP_currentproject = '624bfb0bb56cd83f0c16e346'
+const TEMP_currentproject = '624bfb0bb56cd83f0c16e346' // TODO: use URL instead
 
 /**
  * @function Handling of the discord service
@@ -26,12 +26,12 @@ exports.discordAuth = async (req, res) => {
     const project = await Project.findById(TEMP_currentproject)
     await project
     if (project.categories.messaging.services.discord) { ServerInviteLink = project.categories.messaging.services.discord.inviteLink }
-    res.render('projects/services/discord', {
+    return {
         AuthLink: AuthLink,
         InviteBotLink: InviteBotLink,
         CreateServerLink: CreateServerLink,
         ServerInviteLink: ServerInviteLink
-    })
+    }
 }
 
 /**
@@ -40,22 +40,21 @@ exports.discordAuth = async (req, res) => {
  * @param code
  * @returns {Promise<void>}
  */
-async function handleAuth(req, code) {
-    // console.log(`Discord OAuth request with code: ${req.query.code}`)
+async function handleAuth (req, code) {
     try {
         const tokenResult = await getToken(code)
-        // console.log(tokenResult.status);
         const token = await tokenResult.json()
-        // console.log(await token);
-
         const userResult = await getUserData(token)
         const discordUser = await userResult.json()
+        if (!req.session.user) {
+            console.log('User not logged in before Discord Auth')
+            return
+        }
         if ((await discordUser).message === '401: Unauthorized') {
             console.log('failed to link user with discord because of invalid token')
             return
         }
         console.log(discordUser)
-        // console.log(discordUser.id);
         putUserInDB(discordUser, req)
     } catch (error) {
         console.error(error)
@@ -68,7 +67,7 @@ async function handleAuth(req, code) {
  * @param {int} code
  * @returns {*|Promise<Response>} Token
  */
-function getToken(code) {
+function getToken (code) {
     return fetch('https://discord.com/api/oauth2/token', {
         method: 'POST',
         body: new URLSearchParams({
@@ -90,7 +89,7 @@ function getToken(code) {
  * @param token
  * @returns {*|Promise<Response>} Userdata object
  */
-function getUserData(token) {
+function getUserData (token) {
     return fetch('https://discord.com/api/users/@me', {
         headers: {
             authorization: `${token.token_type} ${token.access_token}`
@@ -103,7 +102,7 @@ function getUserData(token) {
  * @param discordUser
  * @param req
  */
-function putUserInDB(discordUser, req) {
+function putUserInDB (discordUser, req) {
     // TODO: handle the usecase where users discord is already linked to another account
     const username = req.session.user.username
     User.findOne({ username: username }).then(user => {

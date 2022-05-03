@@ -24,6 +24,7 @@
     "bcrypt": "^5.0.1",
     "celebrate": "^15.0.1",
     "clean-jsdoc-theme": "^3.3.4",
+    "color-calendar": "^1.0.7",
     "connect-mongo": "^4.6.0",
     "cors": "^2.8.5",
     "discord-api-types": "^0.31.0",
@@ -41,7 +42,8 @@
     "nodemailer": "^6.7.3",
     "postcss-cli": "^9.1.0",
     "rand-token": "^1.0.1",
-    "uid-safe": "^2.1.5"
+    "uid-safe": "^2.1.5",
+    "websocket": "^1.0.34"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.2",

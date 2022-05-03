@@ -1,6 +1,7 @@
 const { createAppAuth } = require('@octokit/auth-app')
 const fs = require('fs')
 const path = require('path')
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 
 /*
 async function githubHook (req, res) {
