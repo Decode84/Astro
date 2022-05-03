@@ -34,17 +34,15 @@ router.post('/updatepass', authCon.updatePass)
 
 // Project overview GET
 router.get('/projects', middleware.authLogin, projectCon.showProjects)
-router.get('/create-project', middleware.authLogin, projectCon.showCreateProject)
-router.get('/edit-project/:id', middleware.authLogin, projectCon.showEditProject)
+router.get('/create-project', middleware.authLogin, projectCon.createProject)
+router.get('/project/:id', middleware.authLogin, projectCon.showProject)
+router.get('/edit', middleware.authLogin, projectCon.editProject)
 
 // Project overview POST
-router.post('/create-project', middleware.authLogin, projectCon.newProject)
-router.post('/edit-project', middleware.authLogin, projectCon.updateProject)
-router.post('/leave-project', middleware.authLogin, projectCon.leaveProject)
-router.post('/delete-project', middleware.authLogin, projectCon.delProject)
-
-//  Project GET
-router.get('/project/:id', middleware.authLogin, projectCon.showProject)
+router.post('/create-project', middleware.authLogin, projectCon.createProject)
+router.post('/projects', middleware.authLogin, projectCon.showProjects)
+router.post('/project', middleware.authLogin, projectCon.showProject)
+router.post('/edit', middleware.authLogin, projectCon.editProject)
 
 // Admin (TODO: check for role)
 router.get('/admin/board', middleware.authLogin, adminCon.showBoard)
@@ -67,8 +65,8 @@ router.get('/api/trello/lists', TrelloAPI.listLists)
 router.post('/api/github/hook', githubAPI.hook)
 
 // Calendar events
-router.post('/add-event/:id', calEventCon.addEventToDb)
-router.get('/get-events/:id', calEventCon.getEventsFromDb)
+router.post('/add-event', calEventCon.addEventToDb)
+router.get('/get-events', calEventCon.getEventsFromDb)
 
 //  The 404 Route (ALWAYS Keep this as the last route)
 router.get('*', (req, res) => res.status(404).render('404'))
