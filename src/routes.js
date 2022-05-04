@@ -11,7 +11,6 @@ const calEventCon = require('./app/Http/CalEventController')
 
 const { createAccountLimit, loginLimit, mailLimit } = require('./app/Middleware/Rate')
 const { authenticateValidation, registerValidation } = require('./app/Validation/AuthValidation')
-
 /**
  * This web file is the router used to describe the correspondence
  * between the URL and the controller that will perform the action.

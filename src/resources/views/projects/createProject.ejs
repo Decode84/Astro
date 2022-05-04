@@ -45,7 +45,7 @@
             <button class="px-3.5 py-2 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" style="background-color: var(--acc-color)" type="submit">
                 Create Project
             </button>
-            <a class="text-center w-24 px-3.5 py-2 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" style="background-color: var(--acc-color)" href="/projects">
+            <a class="w-24 text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline" href="/projects">
                 Cancel
             </a>
         </div>
@@ -99,12 +99,13 @@
 
             div.setAttribute('class', 'flex items-center justify-between py-2')
 
-            remove.setAttribute('class', 'remove-user bg-blue-500 hover:bg-blue-700 text-white font-bold px-3.5 cursor-pointer rounded focus:outline-none focus:shadow-outline')
+            remove.setAttribute('class', 'remove-user w-24 px-3.5 bg-blue-500 hover:bg-blue-700 text-white font-bold cursor-pointer rounded focus:outline-none focus:shadow-outline')
             remove.setAttribute('type', 'button')
+            remove.setAttribute('style', 'background-color: var(--acc-color)')
             remove.setAttribute('value', 'Remove')
             remove.addEventListener('click', (e) => removeSelf(e.target));
 
-            invited.setAttribute('class', 'inv-member w-10/12')
+            invited.setAttribute('class', 'inv-member flex flex-1 mr-2 truncate')
             invited.innerHTML = email;
             invited.setAttribute('id', 'invited')
 
