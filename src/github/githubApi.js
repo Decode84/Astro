@@ -2,26 +2,16 @@ const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const appID = process.env.GITHUB_APP_ID
 const appSecret = process.env.GITHUB_APP_SECRET
-const { Octokit, App } = require("octokit");
+const { Octokit } = require('octokit')
 const Project = require('../app/Models/Project')
-const { createAppAuth } = require("@octokit/auth-app");
-const { createOAuthAppAuth } = require("@octokit/auth-oauth-app");
-const User = require('../app/Models/User');
-const { request } = require('@octokit/request');
+const { createOAuthAppAuth } = require('@octokit/auth-oauth-app')
 const auth = createOAuthAppAuth({
-    clientType: "oauth-app",
+    clientType: 'oauth-app',
     clientId: appID,
-    clientSecret: appSecret,
-});
+    clientSecret: appSecret
+})
 
-/*start()
-async function start() {
-    
-    const appAuthentication = await auth({
-        type: "oauth-app",
-    });
-}*/
-async function setupProject(userAuthenticationFromWebFlow, user, projectID) {
+async function setupProject (userAuthenticationFromWebFlow, user, projectID) {
     const project = await Project.findById(projectID)
     const octokit = new Octokit({
         auth: userAuthenticationFromWebFlow.token
@@ -36,10 +26,9 @@ async function setupProject(userAuthenticationFromWebFlow, user, projectID) {
         has_wiki: true
     })
     console.log(resp.data)
-    // await createWebHook(resp.data.hooks_url, octokit) //TODO: CANT BE LOCALHOST!!!
     await putGitHubInDB(project, resp.data)
 }
-async function putGitHubInDB(project, data) {
+async function putGitHubInDB (project, data) {
     const github = {
         id: data.id,
         name: data.name,
@@ -53,19 +42,18 @@ async function putGitHubInDB(project, data) {
     project.markModified('categories.development.services')
     project.save()
 }
-async function createWebHook(hookUrl, octokit) {
-    await octokit.request('POST ' + hookUrl.split("com")[1], {
+async function createWebHook (hookUrl, octokit) {
+    await octokit.request('POST ' + hookUrl.split('com')[1], {
         active: true,
         events: [
             'push',
             'pull_request'
         ],
         config: {
-            url: 'https://localhost:4000/api/github/webhook', // TODO: THIS CANT BE LOCALHOST!!!
+            url: 'http://178.128.202.47/api/github/webhook',
             content_type: 'json',
             insecure_ssl: '0'
         }
     })
 }
-module.exports = { auth, setupProject };
-
+module.exports = { auth, setupProject }

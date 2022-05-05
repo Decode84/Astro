@@ -3,12 +3,12 @@ window.onload = () => {
     const url = new URL(window.location)
     const code = url.searchParams.get('code') // SUysVwZaIztTpdkvVzNe6RCZn3fRqC
     const state = url.searchParams.get('state')
-    
+
     // before auth
     if (!code) {
         const randomString = generateRandomString()
         localStorage.setItem('oauth-state', randomString)
-        
+
         document.getElementById('login').href += `&state=${btoa(randomString)}`
         document.getElementById('login').style.display = 'block'
         return
@@ -20,15 +20,15 @@ window.onload = () => {
         return
     }
     document.getElementById('info').innerText = 'Github account linked'
-    
+
     function generateRandomString () {
         let randomString = ''
         const randomNumber = Math.floor(Math.random() * 10)
-        
+
         for (let i = 0; i < 20 + randomNumber; i++) {
             randomString += String.fromCharCode(33 + Math.floor(Math.random() * 94))
         }
-        
+
         return randomString
     }
 }
