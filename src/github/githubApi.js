@@ -1,65 +1,59 @@
-const { createAppAuth } = require('@octokit/auth-app')
-const fs = require('fs')
 const path = require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
-
-/*
-async function githubHook (req, res) {
-    console.log('Github Hook', req.body)
-    res.json({ ok: 1 })
-}
-*/
-
-// Test1
-
-async function githubRequest (url, installationId) {
-    const token = await createJWT(installationId)
-    const res = await fetch(`https://api.github.com${url}`, {
-        headers: {
-            authorization: `Bearer ${token}`,
-            accept: 'application/vnd.github.machine-man-preview+json'
-        }
-    })
-    return res.data
-}
-
-// Github App Private key
-const _path = path.resolve(__dirname, '../github.pem')
-
-fs.access(_path, fs.F_OK, (err) => {
-    if (err) console.error(err)
+const appID = process.env.GITHUB_APP_ID
+const appSecret = process.env.GITHUB_APP_SECRET
+const { Octokit } = require('octokit')
+const Project = require('../app/Models/Project')
+const { createOAuthAppAuth } = require('@octokit/auth-oauth-app')
+const auth = createOAuthAppAuth({
+    clientType: 'oauth-app',
+    clientId: appID,
+    clientSecret: appSecret
 })
 
-const pem = fs.readFileSync(_path, 'utf8')
-
-async function createJWT (installationId) {
-    const auth = createAppAuth({
-        id: process.env.GITHUB_APP_ID,
-        privateKey: pem,
-        installationId,
-        clientId: process.env.GITHUB_APP_CLIENT_ID,
-        clientSecret: process.env.GITHUB_APP_SECRET
+async function setupProject (userAuthenticationFromWebFlow, user, projectID) {
+    const project = await Project.findById(projectID)
+    const octokit = new Octokit({
+        auth: userAuthenticationFromWebFlow.token
     })
-
-    const { token } = await auth({ type: 'installation' })
-    return token
+    // https://docs.github.com/en/rest/repos/repos#create-a-repository-for-the-authenticated-user
+    const resp = await octokit.request('POST /user/repos', {
+        name: project.name, // TODO: prompt user to provide name or retry with numbers
+        description: 'A ProjectHub repository',
+        private: true,
+        has_issues: true,
+        has_projects: true,
+        has_wiki: true
+    })
+    console.log(resp.data)
+    await putGitHubInDB(project, resp.data)
 }
-
-async function getPackageJSON (repo, installationId) {
-    const pkg = await githubRequest(`/repos/${repo}/contents/package.json`, installationId)
-        .then(res => res.content)
-        .then(content => Buffer.from(content, 'base64').toString('utf8'))
-    console.log('package.json:', pkg)
+async function putGitHubInDB (project, data) {
+    const github = {
+        id: data.id,
+        name: data.name,
+        url: data.url,
+        htmlUrl: data.html_url,
+        webHook: data.hooks_url,
+        hookMessages: []
+    }
+    // Update DB
+    project.categories.development.services = { ...project.categories.development.services, github }
+    project.markModified('categories.development.services')
+    project.save()
 }
-
-async function getIssues (repo, installationId) {
-    const issue = await githubRequest(`/repos/${repo}/issues`, installationId)
-        .then(res => res.content)
-        .then(content => Buffer.from(content, 'base64').toString('utf8'))
-    console.log('issue:', issue, issue)
+async function createWebHook (hookUrl, octokit) {
+    await octokit.request('POST ' + hookUrl.split('com')[1], {
+        active: true,
+        events: [
+            'push',
+            'pull_request'
+        ],
+        config: {
+            url: 'http://178.128.202.47/api/github/webhook',
+            content_type: 'json',
+            insecure_ssl: '0'
+        }
+    })
 }
-
-module.exports = {
-    getPackageJSON,
-    getIssues
-}
+module.exports = { auth, setupProject }

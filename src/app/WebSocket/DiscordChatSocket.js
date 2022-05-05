@@ -46,7 +46,7 @@ exports.StartDiscordWebSocket = function (server, session, bot) {
                             continue */
                         const sendMessage = { username: session.user.username, message: message.utf8Data, discord: false }
                         user.sendUTF(JSON.stringify(sendMessage))
-                        currentProject.latestMessages.push(sendMessage)
+                        currentProject.latestMessages.shift().push(sendMessage)
                     }
                 }
             })
