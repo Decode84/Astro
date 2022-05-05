@@ -14,8 +14,6 @@ mongoose.connection
 
 beforeEach((done) => {
     mongoose.connection.collections.users.drop(() => {
-        mongoose.connection.collection.projects.drop(() => {
-            done()
-        })
+        done()
     })
 })

@@ -1,83 +1,75 @@
 /* eslint-disable no-undef */
-const request = require('supertest')
-const assert = require('assert')
-const express = require('express')
-const expressEjsLayout = require('express-ejs-layouts')
-const session = require('express-session')
-const stSession = require('supertest-session')
-const authController = require('../../src/app/Http/AuthenticationController.js')
+const chai = require('chai')
+const mongoose = require('mongoose')
 const User = require('../../src/app/Models/User')
-const flash = require('express-flash')
-const cors = require('cors')
-const path = require('path')
+const sinon = require('sinon')
+const sinonChai = require('sinon-chai')
+const assert = require('assert')
 
-const app = express()
+const AuthenticationController = require('../../src/app/Http/AuthenticationController')
 
-const sess = {
-    secret: 'testSecret',
-    saveUninitialized: false, // don't create session until something stored
-    resave: false, // don't save session if unmodified
-    // rolling: true, //Reset the cookie Max-Age on every request
-    cookie: {
-        maxAge: 24 * 60 * 60 * 1000, // 24 hours
-        secure: false // true for https
-    }
-}
+const expect = chai.expect
+chai.use(sinonChai)
 
-app.set('views', path.join(__dirname, '../../src/resources/views'))
-app.set('view engine', 'ejs')
-app.use(expressEjsLayout)
+let user
 
-app.use(session(sess))
-app.use(flash())
-app.use(cors())
-
-app.use(express.json())
-app.use(express.urlencoded({
-    extended: true
-}))
-
-app.use('/', express.static('public'), require('../../src/routes'))
-
-const PORT = process.env.PRI_SERVER_PORT || process.env.SEC_SERVER_PORT
-app.listen(PORT, (err) => {
-    if (err) console.log(err)
-})
-
-let newUser
-let testSession = null
-
-beforeEach((done) => {
-    // Create a test session
-    testSession = stSession(app)
-
-    // Create a test user
-    newUser = new User({
-        name: 'Test User',
-        username: 'testuser',
+beforeEach(() => {
+    user = new User({
+        name: 'Test AuthUser',
+        username: 'testAuthuser',
         email: 'test@test.test',
-        password: '$2b$10$R.i4.m0ApkV3Em7mzpgNC.w9W9dAoJlvLJa5YjREL108m5XLt2pIO',
-        date: Date.now(),
-        services: {},
-        projectIDs: [],
-        authentications: {}
+        password: '$2b$10$tNYovXfIfiqlbaxWUnFaAeWSE1/gsQIgW3NSNZbVEKEDYn7iF/oe2'
     })
-    newUser.save()
+    user.save()
         .then(() => done())
 })
-/*
-describe('Testing Authentication', () => {
-    it('User verification', (done) => {
-        testSession
-            .get('/authenticate')
-            .send({
-                username: 'testuser',
+
+describe('AuthenticationController', () => {
+    describe('authenticate function', () => {
+        const sandbox = sinon.createSandbox()
+        afterEach(function () {
+            sinon.restore()
+            sandbox.restore()
+        })
+
+        // The request that has the input the function needs.
+        const req = {
+            body: {
+                username: 'testAuthuser',
                 password: 'testPassword'
-            })
-            .set('Accept', 'text/html')
-            .then(response => {
-                console.log(response)
-            })
+            },
+            message: '',
+            flash: function (type, message) {
+                this.body.message = message
+            },
+            session: {
+                user: '',
+                regenerate: function (callback) {
+                    callback()
+                }
+            }
+        }
+
+        // The response that has the output the function should return.
+
+        const res = {
+            redirect: function (url) {
+                console.log("I've been called with this url: " + url)
+            }
+        }
+
+        it('should redirect to projects if login is correct', async () => {
+            // Arrange
+            res.redirect = sandbox.stub().returns(Promise.resolve('/projects'))
+            // Act
+            await AuthenticationController.authenticate(req, res)
+
+            console.log(res.redirect)
+
+            // Assert
+            expect(res.redirect).to.have.been.calledWith('/projects')
+        })
+        it('should flash incorrect password, when the password is wrong', () => {})
+        it('should redirect to login if the user does not exist', () => {})
     })
 })
-*/

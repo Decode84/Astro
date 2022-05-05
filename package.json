@@ -46,6 +46,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.2",
+    "chai": "^4.3.6",
     "eslint": "^7.32.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.25.4",
@@ -55,6 +56,8 @@
     "mocha": "^9.2.2",
     "nodemon": "^2.0.15",
     "postcss": "^8.4.8",
+    "sinon": "^13.0.2",
+    "sinon-chai": "^3.7.0",
     "standard": "^16.0.4",
     "supertest": "^6.2.3",
     "supertest-session": "^4.1.0",
