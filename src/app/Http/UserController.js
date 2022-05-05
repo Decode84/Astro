@@ -1,27 +1,31 @@
 const User = require('../Models/User')
-const bcrypt = require('bcrypt')
 
-function index(req, res) {
-    res.render('users/index')
+class UserController {
+    /**
+     * @description Render the user view
+     * @param {*} res
+     */
+    async index (res) {
+        res.render('users/index')
+    }
+
+    /**
+     * @description Find the user in the database by their id
+     * @param {*} UserID
+     */
+    async getUser (UserID) {
+        const userData = await User.findById(UserID).catch(() => undefined)
+        return userData
+    }
+
+    /**
+     * @description Find the user in the database by their username
+     * @param {string} userName
+     */
+    async getUserID (userName) {
+        const userData = await User.findOne({ username: userName }).exec()
+        return userData._id
+    }
 }
 
-async function getUser(UserID) {
-    // Find the user in the database
-
-    const userData = await User.findById(UserID).exec()
-    return userData
-}
-
-async function getUserID(userName) {
-    // Find the user in the database
-
-    const userData = await User.findOne({ username: userName }).exec();
-
-    return userData._id
-}
-
-module.exports = {
-    index,
-    getUser,
-    getUserID
-};
+module.exports = new UserController()
