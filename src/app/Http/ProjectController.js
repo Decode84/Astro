@@ -20,6 +20,13 @@ const ProjectController = {
             }))
             memberNames = memberNames.filter(member => member)
 
+            const userId = req.session.user._id.toString()
+            const userInProject = await ProjectController.isUserInProject(project, userId)
+            if (!userInProject) {
+                res.render('404')
+                return
+            }
+
             res.render('project/project', {
                 project: project,
                 projectMembers: memberNames,
@@ -66,6 +73,14 @@ const ProjectController = {
                 return user && user.email
             }))
             memberEmails = memberEmails.filter(member => member)
+
+            const userId = req.session.user._id.toString()
+            const userInProject = await ProjectController.isUserInProject(project, userId)
+            if (!userInProject) {
+                res.render('404')
+                return
+            }
+
             res.render('projects/editProject', {
                 project: project,
                 projectMembers: memberEmails,
@@ -118,10 +133,10 @@ const ProjectController = {
             usersSupposed = usersSupposed.filter(member => member)
             usersActually = usersActually.filter(member => member)
 
-            for (const userActually of usersActually) {
+            for await (const userActually of usersActually) {
                 await ProjectController.removeProjectFromUser(project._id, userActually._id)
             }
-            for (const userSupposed of usersSupposed) {
+            for await (const userSupposed of usersSupposed) {
                 await ProjectController.addProjectToUser(project._id, userSupposed._id)
             }
 
@@ -168,6 +183,7 @@ const ProjectController = {
      */
     newProject: async (req, res) => {
         const { emails, projectName, duration } = req.body
+
         const project = new ProjectModel({ name: projectName })
 
         let users = await Promise.all(emails.map(async email => await userCon.getUserByEmail(email)))
@@ -192,7 +208,7 @@ const ProjectController = {
         const user = await userCon.getUserById(userId)
         if (user) {
             user.projectIDs.splice(user.projectIDs.indexOf(projectId), 1)
-            user.save()
+            await user.save()
         }
     },
 
@@ -205,7 +221,7 @@ const ProjectController = {
         const user = await userCon.getUserById(userId)
         if (user) {
             user.projectIDs.push(projectId)
-            user.save()
+            await user.save()
         }
     },
 
@@ -254,6 +270,28 @@ const ProjectController = {
         project.categories[serviceCategory].services = { ...project.categories[serviceCategory].services, [serviceId]: { state: 'active' } }
 
         await project.save()
+    },
+
+    /**
+     * @description checks if user belongs to project
+     * @param {String} projectId The id of the project.
+     * @param {String} serviceCategory The category of which the service is in.
+     * @param {String} serviceId The id of the service to be added.
+     */
+    isUserInProject: async (project, userId) => {
+        let memberIds = await Promise.all(project.members.map(async id => {
+            const user = await userCon.getUserById(id)
+            return user && user._id.toString()
+        }))
+        memberIds = project.members.filter(member => member)
+
+        let matched = false
+        memberIds.forEach(member => {
+            if (userId === member) {
+                matched = true
+            }
+        })
+        return matched
     }
 }
 
