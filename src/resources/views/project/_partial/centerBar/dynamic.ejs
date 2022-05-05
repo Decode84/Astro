@@ -1,23 +1,10 @@
-<div class="p-5 w-full flex flex-col overflow-y-auto">
-  <div class="bg-white rounded-lg w-full drop-shadow-sm px-4 py-3">
-    <%- include('./_partial/discordWidget'); %>
-  </div>
+<div id="dynamic">
+    <%- include('./categories/communication/communicationWidget'); %>
+    <%- include('./categories/planning/planningWidget'); %>
+    <%- include('./categories/writing/writingWidget'); %>
+    <%- include('./categories/versionControl/versionControlWidget'); %>
+    <%- include('./categories/umlTools/umlToolsWidget'); %>
+    <%- include('./categories/fileSharing/fileSharingWidget'); %>
 </div>
 
-
-
-
-<!-- Anchor links -->
-<!-- <div class="p-3" id="Anchor links">
-  <h1 class="text-2xl">Anchor Links</h1>
-  <div class="flex flex-col w-fit">
-    <a href="https://www.atlassian.com/software/jira" target="_blank">Jira!</a>
-    <a href="https://trello.com/" target="_blank">Trello!</a>
-    <a href="https://discord.com/app" target="_blank">Discord!</a>
-    <a href="https://www.messenger.com/" target="_blank">Messenger!</a>
-    <a href="https://www.overleaf.com/project" target="_blank">Overleaf!</a>
-    <a href="https://github.com/" target="_blank">Github</a>
-    <a href="https://www.diagrams.net/" target="_blank">Diagrams!</a>
-    <a href="https://drive.google.com/drive/my-drive" target="_blank">Google drive!</a>
-  </div>
-</div> -->
+<script src="/scripts/dynamic.js"></script>
