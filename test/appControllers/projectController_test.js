@@ -6,7 +6,7 @@ const assert = require('assert')
 
 let newUser
 
-beforeEach(() => {
+beforeEach((done) => {
     // Create a new user
     newUser = new User({
         name: 'Test User',
