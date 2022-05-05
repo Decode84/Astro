@@ -62,7 +62,7 @@ router.get('/api/trello/lists', TrelloAPI.listLists)
 
 // Github API
 router.get('/api/github', githubAPI.page)
-router.post('/api/github/hook', githubAPI.hook)
+router.post('/api/github/webhook', githubAPI.webHookReceiver)
 
 // Calendar events
 router.post('/add_event', calEventCon.event_add)
