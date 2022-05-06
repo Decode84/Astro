@@ -95,7 +95,7 @@ async function CreateCollector (guild, sentMessage, textChannel) {
     })
 }
 /**
- * @function Creates a discord invite
+ * @function Creates a Webhook
  * @param {Channel} channel
  * @param {{Webhook: string}} discord
  * @returns {Promise<Webhook | void>} Promise of Webhook written to discord.invitelink.

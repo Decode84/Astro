@@ -1,11 +1,12 @@
 const ProjectModel = require('../Models/Project')
 const userCon = require('./UserController')
+const uid = require('uid-safe')
 const User = require('../Models/User')
 const DiscordCon = require('./ServiceControllers/DiscordController')
 
+
 const ProjectController = {
     /// GETS //////////////////////////////////
-
     /**
      * @description show a single project page
      * @param {*} req
@@ -15,7 +16,7 @@ const ProjectController = {
         const project = await ProjectController.getProjectById(req.params.id)
         if (project) {
             let memberNames = await Promise.all(project.members.map(async id => {
-                const user = await userCon.getUserById(id)
+                const user = await userCon.getUser(id)
                 return user && user.username
             }))
             memberNames = memberNames.filter(member => member)
@@ -86,8 +87,17 @@ const ProjectController = {
                 projectMembers: memberEmails,
                 user: req.session.user
             })
-        } else {
-            res.render('404')
+        })
+    }
+
+    if (req.method === 'POST') {
+        const projectName = req.body.projectName
+        const invitedUsers = req.body.emails
+
+        if (req.body.edit === 'true') {
+            // updateProject(projectId, projectName, invitedUsers)
+            updateProject(projectId, projectName, invitedUsers)
+            res.redirect('/projects/')
         }
     },
 

@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const User = require('../src/app/Models/User')
+const User = require('../../src/app/Models/User')
 const assert = require('assert')
 
 describe('Delete a User', () => {

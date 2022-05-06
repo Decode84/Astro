@@ -10,7 +10,7 @@
     "build:css": "postcss src/resources/css/tailwind.css -o public/assets/output.css",
     "generate:key": "node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\"",
     "build:doc": "node_modules/.bin/jsdoc --configure jsdoc.json --verbose",
-    "test": "mocha"
+    "test": "mocha --recursive"
   },
   "author": "P2",
   "license": "ISC",
@@ -18,6 +18,9 @@
     "@discordjs/builders": "^0.12.0",
     "@discordjs/rest": "^0.3.0",
     "@octokit/auth-app": "^3.6.1",
+    "@octokit/auth-oauth-app": "^4.3.1",
+    "@octokit/request": "^5.6.3",
+    "@octokit/rest": "^18.12.0",
     "@tailwindcss/forms": "^0.5.0",
     "@tailwindcss/typography": "^0.5.2",
     "assert": "^2.0.0",
@@ -40,6 +43,7 @@
     "mocha": "^9.2.2",
     "mongoose": "^6.2.5",
     "nodemailer": "^6.7.3",
+    "octokit": "^1.7.1",
     "postcss-cli": "^9.1.0",
     "rand-token": "^1.0.1",
     "uid-safe": "^2.1.5",

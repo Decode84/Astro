@@ -1,0 +1,14 @@
+<% if (locals.AuthLink) { %>
+    <p>Hello welcome to the github auth page. First link your ProjectHub account with github.</p>
+    <a style="color:blue;" id="login" class="hidden" href="<%- AuthLink %>">Github Auth</a>
+    <p id="info"></p>
+    <script type="text/javascript" src="/scripts/githubAuth.js"></script>
+<% } else{ %>
+    <h3> Welcome to <a style="color:blue;" target="_blank" href="<%- gitHubLink %>"><%- githubName %></a> GitHub project</h3>
+    <p>Latest messages: </p>
+    <div>
+        <%for (let i = 0; i < gitHubMessages.length; i++) { %>
+            <p><%= gitHubMessages[i] %></p>
+        <% } %>
+    </div>
+<% } %>

@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const User = require('../src/app/Models/User')
+const User = require('../../src/app/Models/User')
 const assert = require('assert')
 
 // Setup the test by creating a new user.
@@ -21,15 +21,12 @@ beforeEach(() => {
         .then(() => done())
 })
 
-describe('Update document entries', () => {
-    it('Updates a user by username', () => {
-        User.findOneAndUpdate({ username: 'testuser' }, { $set: { username: 'testuser2' } })
-            .then(() => {
-                User.findOne({ username: 'testuser2' })
-                    .then(user => {
-                        assert(user.username === 'testuser2')
-                        done()
-                    })
+describe('Reading a users document from the database', () => {
+    it('Finds a user by username', () => {
+        User.findOne({ username: 'testuser' })
+            .then(user => {
+                assert(user.username === 'testuser')
+                done()
             })
     })
 })

@@ -1,56 +1,42 @@
 <section class="m-auto w-2/5 pt-6">
-    <form action="edit_project" method="post" id="editProjForm" class="w-96 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <form method="post" id="editProjForm" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
-                Project name
+                Project
             </label>
-            <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="projectName" id="projectName" type="text" placeholder="Name" value="<%= project.name %>" required>
-        </div>
-
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2">
-                Duration start
-            </label>
-            <input id="durationStart" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:outline-none focus:shadow-outline" type="date" value="<%= project.duration.startTime.toISOString().split('T')[0] %>" required>
-        </div>
-
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2">
-                Duration end
-            </label>
-            <input id="durationEnd" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:outline-none focus:shadow-outline" type="date" value="<%= project.duration.endTime.toISOString().split('T')[0] %>" required>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="projectName" id="projectName" type="text" placeholder="Name" value="<%= project.name %>">
         </div>
 
         <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
-            Invite members
+        Invite members 
         </label>
         <div class="mb-6 flex justify-between">
             <div>
                 <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" id="inviteInput" type="email" placeholder="bdsm69@student.aau.dk">
             </div>
-            <input class="w-24 ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold px-3.5 cursor-pointer rounded focus:outline-none focus:shadow-outline" type="button" id="inviteMember" value="Invite">
+            <input class="bg-blue-500 hover:bg-blue-700 text-white font-bold px-3.5 cursor-pointer rounded focus:outline-none focus:shadow-outline" type="button" id="inviteMember" value="Invite">
         </div>
 
         <div id="invited" class="mb-6">
             <label id="labelInvMembers" class="block text-gray-700 text-sm font-bold mb-2">
                 Invited members
             </label>
-            <% projectMembers.forEach((member)=> { %>
+            <% projectMembers.forEach((member) => { %>
                 <div class="flex items-center justify-between py-2">
                     <p class="inv-member">
                         <%= member %>
                     </p>
                     <input onclick="removeSelf(this)" class="remove-user w-24 px-3.5 bg-blue-500 hover:bg-blue-700 text-white font-bold cursor-pointer rounded focus:outline-none focus:shadow-outline" type="button" id="removeMember" value="Remove">
                 </div>
-                <% }); %>
-
+            <% }); %>
+            
         </div>
 
         <div class="flex items-center justify-between">
             <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
                 Update Project
             </button>
-            <a class="w-24 text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline" href="/projects">
+            <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline" href="/projects">
                 Cancel
             </a>
         </div>
@@ -58,28 +44,28 @@
 </section>
 
 <script>
-    document.getElementById('durationStart').max = new Date().toISOString().split("T")[0];
-    document.getElementById('durationEnd').min = new Date().toISOString().split("T")[0];
+    let emails = [];
+
+    document.querySelectorAll('.inv-member').forEach((member) => {
+        emails.push(member.innerHTML);
+    });
 
     // post request on form submit
     editProjForm.onsubmit = async (e) => {
         e.preventDefault();
-        const invited = document.querySelectorAll('.inv-member')
-        const emails = [...invited].map(member => member.innerHTML.trim());
 
-        let response = await fetch('/edit-project', {
+        console.log('emails: ', emails);
+        
+        let response = await fetch('/edit', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                projectId: document.URL.split('/').at(-1),
+                projectID : document.URL.split('=').pop(),
                 projectName: document.getElementById('projectName').value,
                 emails: emails,
-                duration: {
-                    startTime: document.getElementById('durationStart').valueAsDate,
-                    endTime: document.getElementById('durationEnd').valueAsDate,
-                }
+                edit: 'true'
             })
         }).then((res) => {
             if (res.status === 200) {
@@ -88,13 +74,14 @@
                 alert('Something went wrong trying to edit the project');
             }
         });
-
+        
     };
 
     // add email to array and displays it in the invited members section
     document.getElementById("inviteMember").addEventListener('click', () => {
         let email = document.getElementById("inviteInput").value;
         if (email !== "") {
+            document.getElementById('labelInvMembers').style.display = 'block';
             let invited = document.createElement("p");
             let remove = document.createElement("input");
             let div = document.createElement("div");
@@ -105,21 +92,29 @@
             remove.setAttribute('type', 'button')
             remove.setAttribute('style', 'background-color: var(--acc-color)')
             remove.setAttribute('value', 'Remove')
-            remove.addEventListener('click', (e) => removeSelf(e.target));
 
             invited.setAttribute('class', 'inv-member flex flex-1 mr-2 truncate')
             invited.innerHTML = email;
             invited.setAttribute('id', 'invited')
 
+
             div.appendChild(invited)
             div.appendChild(remove)
 
             document.getElementById("invited").appendChild(div)
+            emails.push(email);
+            console.log(emails);
             document.getElementById("inviteInput").value = "";
         }
     })
 
-    function removeSelf(target) {
-        target.parentElement.remove();
-    }
+    document.querySelectorAll('.remove-user').forEach((button) => {
+        button.addEventListener('click', async (e) => {
+            let email = document.querySelector('.inv-member').innerHTML;
+            let index = emails.indexOf(email);
+            emails.splice(index, 1);
+            button.parentElement.remove();
+            console.log(emails);
+        });
+    });
 </script>
