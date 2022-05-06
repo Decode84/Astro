@@ -12,8 +12,6 @@ const AuthLink = 'https://discord.com/api/oauth2/authorize?client_id=95900445720
 const InviteBotLink = 'https://discord.com/api/oauth2/authorize?client_id=959004457205637131&permissions=537119937&scope=bot%20applications.commands'
 const CreateServerLink = 'https://discord.new/dQCDNNwCPuhE'
 
-const TEMP_currentproject = '6267b30508e43dad558eade6' // TODO: use URL instead
-
 /**
  * @function Handling of the discord service
  */
@@ -23,10 +21,11 @@ exports.discordAuth = async (req, res) => {
         await handleAuth(req, code)
     }
     let ServerInviteLink = ''
-    const project = await Project.findById(TEMP_currentproject)
+    const project = await Project.findById(req.params.id)
     await project
-    if (project.categories.messaging.services.discord)
+    if (project.categories.messaging.services) {
         ServerInviteLink = project.categories.messaging.services.discord.inviteLink
+    }
     return {
         AuthLink: AuthLink,
         InviteBotLink: InviteBotLink,

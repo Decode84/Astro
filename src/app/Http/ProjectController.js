@@ -1,6 +1,5 @@
 const ProjectModel = require('../Models/Project')
 const userCon = require('./UserController')
-const uid = require('uid-safe')
 const User = require('../Models/User')
 const DiscordCon = require('./ServiceControllers/DiscordController')
 
@@ -16,7 +15,7 @@ const ProjectController = {
         const project = await ProjectController.getProjectById(req.params.id)
         if (project) {
             let memberNames = await Promise.all(project.members.map(async id => {
-                const user = await userCon.getUser(id)
+                const user = await userCon.getUserById(id)
                 return user && user.username
             }))
             memberNames = memberNames.filter(member => member)
