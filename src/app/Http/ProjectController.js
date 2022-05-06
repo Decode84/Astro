@@ -87,17 +87,6 @@ const ProjectController = {
                 projectMembers: memberEmails,
                 user: req.session.user
             })
-        })
-    }
-
-    if (req.method === 'POST') {
-        const projectName = req.body.projectName
-        const invitedUsers = req.body.emails
-
-        if (req.body.edit === 'true') {
-            // updateProject(projectId, projectName, invitedUsers)
-            updateProject(projectId, projectName, invitedUsers)
-            res.redirect('/projects/')
         }
     },
 
