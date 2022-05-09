@@ -4,18 +4,19 @@ const mongoose = require('mongoose')
 const User = require('../../src/app/Models/User')
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
-const assert = require('assert')
 
 const AuthenticationController = require('../../src/app/Http/AuthenticationController')
+const { promiseImpl } = require('ejs')
+const { exit } = require('process')
 
-const expect = chai.expect
+const assert = chai.assert
 chai.use(sinonChai)
 
 let user
 
 beforeEach(() => {
     user = new User({
-        name: 'Test AuthUser',
+        name: 'testAuthUser',
         username: 'testAuthuser',
         email: 'test@test.test',
         password: '$2b$10$tNYovXfIfiqlbaxWUnFaAeWSE1/gsQIgW3NSNZbVEKEDYn7iF/oe2'
@@ -26,12 +27,6 @@ beforeEach(() => {
 
 describe('AuthenticationController', () => {
     describe('authenticate function', () => {
-        const sandbox = sinon.createSandbox()
-        afterEach(function () {
-            sinon.restore()
-            sandbox.restore()
-        })
-
         // The request that has the input the function needs.
         const req = {
             body: {
@@ -53,23 +48,47 @@ describe('AuthenticationController', () => {
         // The response that has the output the function should return.
 
         const res = {
+            aurl: '',
             redirect: function (url) {
-                console.log("I've been called with this url: " + url)
+                assert.equal(url, this.aurl)
+                this.done()
             }
         }
 
-        it('should redirect to projects if login is correct', async () => {
-            // Arrange
-            res.redirect = sandbox.stub().returns(Promise.resolve('/projects'))
-            // Act
-            await AuthenticationController.authenticate(req, res)
+        const sandbox = sinon.createSandbox()
 
-            console.log(res.redirect)
+        beforeEach(() => {
 
-            // Assert
-            expect(res.redirect).to.have.been.calledWith('/projects')
         })
-        it('should flash incorrect password, when the password is wrong', () => {})
+        afterEach(function () {
+            sinon.restore()
+            sandbox.restore()
+        })
+
+        it('should redirect to projects if login is correct', function (done) {
+            // Arrange
+            res.aurl = '/projects'
+            res.done = done
+
+            console.log(res.aurl)
+
+            // Act
+            AuthenticationController.authenticate(req, res)
+        })
+
+        it('should flash incorrect password, when the password is wrong', function (done) {
+            // Arrange
+            res.aurl = '/login'
+            res.done = done
+            req.body.password = 'wrongPassword'
+            res.redirect = function (url) {
+                assert.equal(url, this.aurl)
+                assert.equal(req.body.message, 'Incorrect password')
+                done()
+            }
+            // Act
+            AuthenticationController.authenticate(req, res)
+        })
         it('should redirect to login if the user does not exist', () => {})
     })
 })
