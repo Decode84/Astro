@@ -27,6 +27,7 @@ async function setupProject (userAuthenticationFromWebFlow, user, projectID) {
     })
     console.log(resp.data)
     await putGitHubInDB(project, resp.data)
+    await createWebHook(resp.data.hooks_url, octokit)
 }
 async function putGitHubInDB (project, data) {
     const github = {

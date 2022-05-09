@@ -23,15 +23,16 @@ async function page (req, res) {
 async function webHookReceiver (req) {
     try {
         // TODO: implement security for github webhook
-        const push = JSON.parse(req.body.read)
-        console.log(push)
+        console.log("Webhook Req: " + req)
+        const push = JSON.parse(req.body)
+        console.log("Webhook body: " + push)
         const project = await Project.findOne({ services: { github: push.repository_id } })
         if (project) {
             project.categories.development.services.github.hookMessages.push({ event: push.event, action: push.action })
             if (project.categories.development.services.github.hookMessages.length > 10) { project.categories.development.services.github.hookMessages.shift() }
             project.markModified('categories.development.services')
             project.save()
-        } else console.log("Couldn't find a project with " + push.repository_id)
+        } else console.log("Webhook couldn't find a project with: " + push.repository_id)
     } catch (e) {
         console.log('Webhook error: ' + e)
     }
