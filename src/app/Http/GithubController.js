@@ -24,7 +24,7 @@ async function webHookReceiver (req) {
     try {
         // TODO: implement security for github webhook
         console.log("Webhook Req: " + req)
-        const push = JSON.parse(req.body)
+        const push = req.body
         console.log("Webhook body: " + push)
         const project = await Project.findOne({ services: { github: push.repository_id } })
         if (project) {
