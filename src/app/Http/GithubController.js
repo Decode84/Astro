@@ -24,6 +24,7 @@ async function webHookReceiver (req) {
     try {
         // TODO: implement security for github webhook
         // console.log(req.body)
+        console.log("Github id: " + req.body.repository.id)
         const project = await Project.findOne({ services: { github: req.body.repository.id } })
         if (project) {
             const body = req.body
@@ -58,7 +59,7 @@ async function webHookReceiver (req) {
             if (project.categories.development.services.github.hookMessages.length > 10) { project.categories.development.services.github.hookMessages.shift() }
             project.markModified('categories.development.services')
             project.save()
-        } else console.log("Webhook couldn't find a project with: " + req.body.repository_id)
+        } else console.log("Webhook couldn't find a project with: " + req.body.repository.id)
     } catch (e) {
         console.log('Webhook error: ' + e + "\n req.body:")
         console.log(req.body)
