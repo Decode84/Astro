@@ -7,7 +7,7 @@ const projectController = require('../app/Http/ProjectController')
 
 const trelloKey = 'e5b8e9efa5bf84e76b15d443eb9b5afc'
 
-class TrelloApi {
+const TrelloApi = {
     /**
      * @function trello
      * @description Redirects the user to the Trello authentication page.
@@ -17,7 +17,7 @@ class TrelloApi {
     async trello (req, res) {
         const returnUrl = 'http://localhost:4000/trello/callback'
         res.redirect('https://trello.com/1/authorize?return_url=' + returnUrl + '&callback_method=fragment&?expiration=30days&name=Project_Hub&response_type=fragment&scope=read,write,account&key=' + trelloKey)
-    }
+    },
 
     /**
      * @function recieveToken
@@ -39,7 +39,7 @@ class TrelloApi {
             token = req.query.token
 
             // Save token to database
-            const user = await userController.getUser(req.session.user._id)
+            const user = await userController.getUserById(req.session.user._id)
             user.authentications = {
                 ...user.authentications,
                 trello: {
@@ -62,7 +62,7 @@ class TrelloApi {
             await user.save()
             res.redirect('/project?projectId=' + req.query.projectId)
         }
-    }
+    },
 
     /**
      * @function newOrganization
@@ -77,7 +77,7 @@ class TrelloApi {
         // Check whether Trello is active for the project.
 
         const project = await projectController.getProjectById(projectId)
-        const user = await userController.getUser(userId)
+        const user = await userController.getUserById(userId)
 
         // Try to create the organization if trello is active for the project.
         try {
@@ -113,7 +113,7 @@ class TrelloApi {
         // Invite members of a project to the trello organization.
         const userlist = project.members
         for (let i = 0; i < userlist.length; i++) {
-            const euser = await userController.getUser(userlist[i])
+            const euser = await userController.getUserById(userlist[i])
             if (euser._id !== user._id) {
                 if (user.categories.planning.services.trello.token !== undefined) {
                     const url = 'https://api.trello.com/1/organizations/' + organizationId + '/members/' + euser.authentications.trello.memberId + '?type=normal' + '&key=' + trelloKey + '&token=' + user.authentications.trello.token
@@ -126,7 +126,7 @@ class TrelloApi {
                 }
             }
         }
-    }
+    },
 
     /**
      * @function newBoard
@@ -136,7 +136,7 @@ class TrelloApi {
      */
     async newBoard (name, projectId, userId) {
         const project = await projectController.getProjectById(projectId)
-        const user = await userController.getUser(userId)
+        const user = await userController.getUserById(userId)
         let response
         // try to create the board if trello is active for the project for a given organization.
         try {
@@ -168,7 +168,7 @@ class TrelloApi {
             console.log(e)
         }
         return json.id
-    }
+    },
 
     /**
      *
@@ -177,7 +177,7 @@ class TrelloApi {
      * @param {String} name The name of the list to be created.
      */
     async newList (userId, boardId, name) {
-        const user = await userController.getUser(userId)
+        const user = await userController.getUserById(userId)
 
         const url = 'https://api.trello.com/1/lists?name=' + name + '&idBoard=' + boardId + '&key=' + trelloKey + '&token=' + user.authentications.trello.token
         const response = await fetch(url, {
@@ -185,7 +185,7 @@ class TrelloApi {
         })
         const text = await response.text()
         JSON.parse(text)
-    }
+    },
 
     /**
      * @function listBoards
@@ -198,7 +198,7 @@ class TrelloApi {
             res.send(null)
         } else {
             const project = await projectController.getProjectById(req.query.projectId)
-            const user = await userController.getUser(req.session.user._id)
+            const user = await userController.getUserById(req.session.user._id)
             const organizationId = project.categories.planning.services.trello.organizationId
 
             let boards
@@ -217,7 +217,7 @@ class TrelloApi {
             }
             res.send(boards)
         }
-    }
+    },
 
     /**
      * @function listLists
@@ -245,7 +245,7 @@ class TrelloApi {
                 res.send(null)
             }
         }
-    }
+    },
 
     /**
      * @function newCard
@@ -268,7 +268,7 @@ class TrelloApi {
         } else {
             res.send('You do not have access to this project.')
         }
-    }
+    },
 
     /**
      * @function createCard
@@ -302,4 +302,4 @@ class TrelloApi {
     } */
 }
 
-module.exports = new TrelloApi()
+module.exports = TrelloApi
