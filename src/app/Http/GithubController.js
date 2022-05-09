@@ -23,17 +23,45 @@ async function page (req, res) {
 async function webHookReceiver (req) {
     try {
         // TODO: implement security for github webhook
-        console.log(req)
-        console.log(req.body)
-        const project = await Project.findOne({ services: { github: req.body.repository_id } })
+        // console.log(req.body)
+        const project = await Project.findOne({ services: { github: req.body.repository.id } })
         if (project) {
-            project.categories.development.services.github.hookMessages.push({ event: req.body.event, action: req.body.action })
+            const body = req.body
+            let message = {
+                user: { login: body.sender.login, id: body.sender.id, url: body.sender.html_url },
+                repository: body.repository.id
+            }
+            if (body.pull_request) {
+                const pull = body.pull_request
+                message.pull_request = {
+                    action: body.action,
+                    number: body.number,
+                    url: pull.html_url,
+                    title: pull.title,
+                    body: pull.body,
+                    head: pull.head.ref,
+                    base: pull.base.ref,
+                    commits: pull.commits,
+                    additions: pull.additions,
+                    deletions: pull.deletions,
+                    changed_files: pull.changed_files,
+                }
+            } else if (body.pusher) {
+                message.push = {
+                    ref: body.ref,
+                    message: body.head_commit.message,
+                    timestamp: body.head_commit.timestamp,
+                    url: body.head_commit.url
+                }
+            }
+            project.categories.development.services.github.hookMessages.push(message)
             if (project.categories.development.services.github.hookMessages.length > 10) { project.categories.development.services.github.hookMessages.shift() }
             project.markModified('categories.development.services')
             project.save()
         } else console.log("Webhook couldn't find a project with: " + req.body.repository_id)
     } catch (e) {
-        console.log('Webhook error: ' + e)
+        console.log('Webhook error: ' + e + "\n req.body:")
+        console.log(req.body)
     }
 }
 async function handleAuth (req, res) {
