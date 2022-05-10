@@ -4,6 +4,7 @@ const express = require('express')
 const flash = require('express-flash')
 const session = require('express-session')
 const expressEjsLayout = require('express-ejs-layouts')
+const nocache = require('nocache')
 
 require('dotenv').config({
     path: path.resolve(__dirname, '../.env')
@@ -24,6 +25,7 @@ app.use(expressEjsLayout)
 app.use(session(sess))
 app.use(flash())
 app.use(cors())
+app.use(nocache())
 
 // create req.body method
 app.use(express.json())
