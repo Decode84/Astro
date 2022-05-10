@@ -10,7 +10,7 @@ require('dotenv').config({
 })
 
 // Requirements
-const sess = require('./config/session')
+const sess = session(require('./config/session'))
 require('./database/mongo')
 
 // Initialize express
@@ -21,7 +21,7 @@ app.set('views', path.join(__dirname, '../src/resources/views'))
 app.set('view engine', 'ejs')
 app.use(expressEjsLayout)
 
-app.use(session(sess))
+app.use(sess)
 app.use(flash())
 app.use(cors())
 

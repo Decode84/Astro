@@ -31,7 +31,7 @@ const ProjectController = {
                 project: project,
                 projectMembers: memberNames,
                 user: req.session.user,
-                discordInfo: await DiscordCon.discordAuth(req, res)
+                discordInfo: await DiscordCon.discordWidget(req, res)
             })
         } else {
             res.render('404')
