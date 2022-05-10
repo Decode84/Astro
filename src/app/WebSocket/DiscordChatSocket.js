@@ -28,7 +28,7 @@ exports.StartDiscordWebSocket = function (server, session, bot) {
             // TODO: Get current project from url instead
             let currentProject = projects.find(project => project.projectID === session.user.projectIDs[0])
             if (!currentProject) {
-                currentProject = await OpenNewProject(bot, session)
+                currentProject = await OpenNewProject(bot, session, request)
                 projects.push(currentProject)
             }
             // push user to project such that it is subscribed to others messages
@@ -66,8 +66,8 @@ function originIsAllowed (origin) {
     // TODO: put logic here to detect whether the specified origin is allowed. (DOS security etc)
     return true
 }
-async function OpenNewProject (bot, session) {
-    const dbProject = await Project.findById(session.user.projectIDs[0]) // TODO: current project instead
+async function OpenNewProject (bot, session, request) {
+    const dbProject = await Project.findById(request.ressource)
     if (!(await dbProject)) {
         console.log('Websocket: failed to get project ' + session.user.projectIDs[0])
         return
