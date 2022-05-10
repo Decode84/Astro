@@ -1,83 +1,64 @@
-/* eslint-disable no-undef */ /*
-const projectController = require('../../src/app/Http/ProjectController')
-const Project = require('../../src/app/Models/Project')
+/* eslint-disable no-undef */
+const chai = require('chai')
 const User = require('../../src/app/Models/User')
-const assert = require('assert')
+const sinon = require('sinon')
+const sinonChai = require('sinon-chai')
+const Project = require('../../src/app/Models/Project')
 
-let newUser
+const ProjectController = require('../../src/app/Http/ProjectController')
 
-beforeEach((done) => {
-    // Create a new user
-    newUser = new User({
-        name: 'Test User',
-        username: 'testuser',
-        email: 'test@test.test',
-        password: 'test',
-        date: Date.now(),
-        services: {},
-        projectIDs: [],
-        authentications: {}
-    })
-    newUser.save()
-        .then(() => done())
-})
+const assert = chai.assert
+chai.use(sinonChai)
 
-describe('Creating a project', () => {
-    it('Creates a new project', (done) => {
-        User.findOne({ username: 'testuser' })
-            .then(user => {
-                projectController.newProject('Test Project', user._id)
-                    .then(projectId => {
-                        Project.findById(projectId)
-                            .then(project => {
-                                assert(project.name === 'Test Project')
-                                assert(project.members.includes(user._id.toString()))
-                                done()
-                            })
-                    })
-            })
-    })
+let user
+let project
 
-    /*
-
-    it('Creating a project with no name does not get saved', (done) => {
-        User.findOne({ username: 'testuser' })
-            .then(user => {
-                projectController.newProject('', user._id)
-                    .then(projectId => {
-                        Project.findById(projectId)
-                            .then(project => {
-                                assert(project === null, 'A project with no name has been created.')
-                                done()
-                            })
-                    })
-            })
-    }) *//*
-})
-
-describe('Read all projects in a user', () => {
+describe('ProjectController', () => {
     beforeEach((done) => {
-        User.findOne({ username: 'testuser' })
-            .then(user => {
-                projectController.newProject('Test Project', user._id)
-                    .then(results => {
-                        return results
-                    })
-                projectController.newProject('Test Project 2', user._id)
-                    .then(done())
-            })
+        user = new User({
+            name: 'testProjUser',
+            username: 'testProjuser',
+            email: 'test@test.test',
+            password: '$2b$10$tNYovXfIfiqlbaxWUnFaAeWSE1/gsQIgW3NSNZbVEKEDYn7iF/oe2'
+        })
+        user.save()
+            .then(() => done())
     })
+    describe('newProject function', () => {
+        let req, res
+        beforeEach(() => {
+            // The request that has the input the function needs.
+            req = {
+                body: {
+                    emails: [
+                        'test@test.test'
+                    ],
+                    projectName: 'uniqueProjectName',
+                    duration: {
+                        startTime: new Date(2022, 1, 1),
+                        endTime: new Date(2022, 1, 2)
+                    }
+                }
+            }
 
-    it('Read the projects', () => {
-        User.findOne({ username: 'testuser' })
-            .then(user => {
-                projectController.getAllProjects(user._id.toString())
-                    .then(projects => {
-                        assert(projects[0].name === 'Test Project')
-                        assert(projects[1].name === 'Test Project 2')
-                        done()
-                    })
-            })
+            res = {
+                aurl: '',
+                redirect: function (url) {
+                    Project.findOne({ name: 'uniqueProjectName' })
+                        .then(project => {
+                            assert.equal(project.name, 'uniqueProjectName')
+                            assert.equal(this.aurl + project._id.toString(), url)
+                            this.done()
+                        })
+                }
+            }
+        })
+
+        it('should create a new project in the database', (done) => {
+            res.done = done
+            res.aurl = '/project/'
+
+            ProjectController.newProject(req, res)
+        })
     })
 })
-*/
