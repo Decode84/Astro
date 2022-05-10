@@ -10,7 +10,7 @@
     "build:css": "postcss src/resources/css/tailwind.css -o public/assets/output.css",
     "generate:key": "node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\"",
     "build:doc": "node_modules/.bin/jsdoc --configure jsdoc.json --verbose",
-    "test": "mocha --recursive"
+    "test": "mocha --recursive --exit"
   },
   "author": "P2",
   "license": "ISC",
@@ -40,7 +40,6 @@
     "express-rate-limit": "^6.3.0",
     "express-session": "^1.17.2",
     "helmet": "^5.0.2",
-    "mocha": "^9.2.2",
     "mongoose": "^6.2.5",
     "nodemailer": "^6.7.3",
     "octokit": "^1.7.1",
@@ -51,15 +50,21 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.2",
+    "chai": "^4.3.6",
     "eslint": "^7.32.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.2.0",
     "jsdoc": "^3.6.10",
+    "mocha": "^9.2.2",
     "nodemon": "^2.0.15",
     "postcss": "^8.4.8",
+    "sinon": "^13.0.2",
+    "sinon-chai": "^3.7.0",
     "standard": "^16.0.4",
+    "supertest": "^6.2.3",
+    "supertest-session": "^4.1.0",
     "tailwindcss": "^3.0.23"
   }
 }

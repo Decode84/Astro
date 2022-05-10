@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+/* eslint-disable no-undef */ /*
 const projectController = require('../../src/app/Http/ProjectController')
 const Project = require('../../src/app/Models/Project')
 const User = require('../../src/app/Models/User')
@@ -6,7 +6,7 @@ const assert = require('assert')
 
 let newUser
 
-beforeEach(() => {
+beforeEach((done) => {
     // Create a new user
     newUser = new User({
         name: 'Test User',
@@ -52,7 +52,7 @@ describe('Creating a project', () => {
                             })
                     })
             })
-    }) */
+    }) *//*
 })
 
 describe('Read all projects in a user', () => {
@@ -80,3 +80,4 @@ describe('Read all projects in a user', () => {
             })
     })
 })
+*/

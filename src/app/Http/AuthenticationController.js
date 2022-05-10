@@ -100,7 +100,7 @@ class AuthenticationController {
 
         User.findOne({ $or: [{ username }, { email }] }).then((user) => {
             if (user) {
-                req.flash('registerMessage', 'User allready exists')
+                req.flash('registerMessage', 'User already exists')
                 res.redirect('/register')
                 return
             }

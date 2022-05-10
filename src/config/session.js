@@ -5,7 +5,7 @@ require('../database/mongo')
 const sess = {
     secret: process.env.SECRET_KEY,
     saveUninitialized: false, // don't create session until something stored
-    resave: false, // don't save session if unmodified
+    resave: true, // don't save session if unmodified
     // rolling: true, //Reset the cookie Max-Age on every request
     cookie: {
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
