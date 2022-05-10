@@ -92,7 +92,8 @@ async function OpenNewProject (bot, session, request, projectID) {
     currentProject.collector.on('collect', m => {
         // There's already filter on the collector
         const message = { username: m.author.username, message: m.content, discord: true }
-        currentProject.latestMessages.shift().push(message)
+        currentProject.latestMessages.shift()
+        currentProject.latestMessages.push(message)
         for (const user of currentProject.connections) {
             user.sendUTF(JSON.stringify(message))
         }
