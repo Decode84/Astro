@@ -105,4 +105,66 @@ describe('AuthenticationController', () => {
             AuthenticationController.authenticate(req, res)
         })
     })
+    describe('signup function', () => {
+        let req, res
+        beforeEach(() => {
+            req = {
+                body: {
+                    name: 'signupUser',
+                    username: 'signupuser',
+                    email: 'sign@sign.sign',
+                    password: 'signupPassword',
+                    passwordConfirmation: 'signupPassword'
+                },
+                message: '',
+                flash: function (type, message) {
+                    this.message = message
+                },
+                session: {
+                    user: ''
+                }
+            }
+            res = {
+                aurl: '',
+                redirect: function (url) {
+                    assert.equal(url, this.aurl)
+                    this.done()
+                }
+            }
+        })
+
+        it('should redirect to projects if signup is correct', function (done) {
+            // Arrange
+            res.aurl = '/projects'
+            res.done = done
+
+            res.redirect = function (url) {
+                assert.equal(url, this.aurl)
+                User.findOne({ username: 'signupuser' })
+                    .then(user => {
+                        assert.equal(user.username, 'signupuser')
+                        done()
+                    })
+            }
+
+            // Act
+            AuthenticationController.signup(req, res)
+        })
+
+        it('should flash User already exists if the user already exists', function (done) {
+            // Arrange
+            res.aurl = '/register'
+            res.done = done
+            req.body.username = 'testAuthuser'
+
+            res.redirect = function (url) {
+                assert.equal(url, this.aurl)
+                assert.equal(req.message, 'User already exists')
+                done()
+            }
+
+            // Act
+            AuthenticationController.signup(req, res)
+        })
+    })
 })
