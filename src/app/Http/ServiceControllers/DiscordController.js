@@ -22,11 +22,11 @@ exports.discordAuth = async (req, res) => {
     if (code) {
         await handleAuth(req, code)
     }
-    let ServerInviteLink = ''
     const project = await Project.findById(TEMP_currentproject)
     await project
-    if (project.categories.messaging.services.discord)
-        ServerInviteLink = project.categories.messaging.services.discord.inviteLink
+    let ServerInviteLink = project?.categories?.messaging?.services?.discord?.inviteLink
+    if (!ServerInviteLink)
+        ServerInviteLink = ''
     return {
         AuthLink: AuthLink,
         InviteBotLink: InviteBotLink,

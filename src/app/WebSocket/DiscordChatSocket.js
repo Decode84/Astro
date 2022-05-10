@@ -67,7 +67,7 @@ function originIsAllowed (origin) {
     return true
 }
 async function OpenNewProject (bot, session) {
-    const dbProject = await Project.findById(session.user.projectIDs[0])
+    const dbProject = await Project.findById(session.user.projectIDs[0]) // TODO: current project instead
     if (!(await dbProject)) {
         console.log('Websocket: failed to get project ' + session.user.projectIDs[0])
         return
