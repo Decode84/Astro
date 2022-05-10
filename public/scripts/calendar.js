@@ -34,9 +34,10 @@ function formatDate(date) {
     return [year, month, day].join('-')
 }
 
-async function getEventsArray() {
+async function getEventsArray () {
     const eventArray = []
-    const response = await fetch('/get-events')
+    const projectId = document.URL.split('/').at(-1)
+    const response = await fetch(`/get-events/${projectId}`)
     const events = await response.json()
     events.forEach((event) => {
         eventArray.push({
@@ -71,7 +72,8 @@ async function submitEventBtnClicked() {
         name: name
     }
 
-    await fetch('/add-event', {
+    const projectId = document.URL.split('/').at(-1)
+    await fetch(`/add-event/${projectId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)

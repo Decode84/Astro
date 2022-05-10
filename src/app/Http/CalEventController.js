@@ -1,9 +1,7 @@
 const Project = require('../Models/Project')
 
-const tempProject = '624bfb0bb56cd83f0c16e346'
-
 async function addEventToDb(req, res) {
-    const project = await Project.findById(tempProject)
+    const project = await Project.findById(req.params.id)
 
     const event = {
         name: req.body.name,
@@ -17,7 +15,7 @@ async function addEventToDb(req, res) {
 }
 
 async function getEventsFromDb(req, res) {
-    const project = await Project.findById(tempProject)
+    const project = await Project.findById(req.params.id)
     res.json(project.events)
 }
 

@@ -34,7 +34,11 @@ const projectSchema = new Schema({
         name: String,
         start: Date,
         end: Date
-    }]
+    }],
+    duration: {
+        startTime: Date,
+        endTime: Date
+    }
 }, { strict: false })
 
 const projectModel = mongo.model('project', projectSchema)

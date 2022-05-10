@@ -1,45 +1,31 @@
 const ProjectModel = require('../Models/Project')
-const Project = require('../Models/Project')
 const userCon = require('./UserController')
-const uid = require('uid-safe')
 const User = require('../Models/User')
 const DiscordCon = require('./ServiceControllers/DiscordController')
 
-// ! Included for debugging purposes.
-const authenticationController = require('./AuthenticationController')
 
-/**
- * @function Shows a list of all the users projects
- * @param {*} req
- * @param {*} res
- */
-function showProjects(req, res) {
-    if (req.method === 'POST') {
-        delProject(req.body.projectId)
-        res.redirect('projects/')
-    } else {
-        getAllProjects(req.session.user._id).then(projects => {
-            res.render('projects/overview', {
-                projects: projects,
-                user: req.session.user
-            })
-        })
-    }
-}
-
-/**
- * @function Shows a single projects page
- * @param {*} req
- * @param {*} res
- */
-async function showProject (req, res) {
-    getProjectById(req.params.id).then(async (project) => {
+const ProjectController = {
+    /// GETS //////////////////////////////////
+    /**
+     * @description show a single project page
+     * @param {*} req
+     * @param {*} res
+     */
+    showProject: async (req, res) => {
+        const project = await ProjectController.getProjectById(req.params.id)
         if (project) {
             let memberNames = await Promise.all(project.members.map(async id => {
-                const user = await userCon.getUser(id)
+                const user = await userCon.getUserById(id)
                 return user && user.username
             }))
             memberNames = memberNames.filter(member => member)
+
+            const userId = req.session.user._id.toString()
+            const userInProject = await ProjectController.isUserInProject(project, userId)
+            if (!userInProject) {
+                res.render('404')
+                return
+            }
 
             res.render('project/project', {
                 project: project,
@@ -50,290 +36,261 @@ async function showProject (req, res) {
         } else {
             res.render('404')
         }
-    })
-}
+    },
 
-/**
- * @function Displays the create project page, and creates a new project if the user submits the form.
- * @param {*} req
- * @param {*} res
- */
-function createProject(req, res) {
-    if (req.method === 'POST') {
-        const projectName = req.body.projectName
-        const invitedUsers = req.body.emails
-        const UserID = req.session.user._id
-
-        newProject(projectName, UserID).then(projectId => {
-            if (invitedUsers !== null) {
-                // Add the project to the user's project list.
-                invitedUsers.forEach(user => {
-                    User.find({ email: user }).then(user => {
-                        addUserToProject(projectId, user[0]._id)
-                    })
-                })
-            }
+    /**
+     * @description Shows a list of all the users projects
+     * @param {*} req
+     * @param {*} res
+     */
+    showProjects: async (req, res) => {
+        const projects = await ProjectController.getAllProjects(req.session.user._id)
+        res.render('projects/overview', {
+            projects: projects,
+            user: req.session.user
         })
-        res.redirect('/projects/')
-    } else {
-        res.render('projects/createProject')
-    }
-}
+    },
 
-/**
- * @function Edit name and invited users of a project.
- * @param {*} req
- * @param {*} res
- */
-async function editProject(req, res) {
-    // const projectId = mongoose.Types.ObjectId(url.split('=').pop())
-    const projectId = req.body.projectID
+    /**
+     * @description Displays the create project page, and creates a new project if the user submits the form.
+     * @param {*} req
+     * @param {*} res
+     */
+    showCreateProject: async (req, res) => {
+        res.render('projects/createProject', { userEmail: req.session.user.email })
+    },
 
-    if (req.method === 'GET') {
-        getProjectById(req.query.projectId).then(async (project) => {
-            const projectObj = project
-            const projectMembers = []
+    /**
+     * @description Edit name and invited users of a project.
+     * @param {*} req
+     * @param {*} res
+     */
+    showEditProject: async (req, res) => {
+        const project = await ProjectController.getProjectById(req.params.id)
+        if (project) {
+            let memberEmails = await Promise.all(project.members.map(async id => {
+                const user = await userCon.getUserById(id)
+                return user && user.email
+            }))
+            memberEmails = memberEmails.filter(member => member)
 
-            for (const member of project.members) {
-                console.log(member)
-                const user = await userCon.getUser(member)
-                projectMembers.push(user.email)
+            const userId = req.session.user._id.toString()
+            const userInProject = await ProjectController.isUserInProject(project, userId)
+            if (!userInProject) {
+                res.render('404')
+                return
             }
 
-            console.log('members of project ' + projectMembers)
             res.render('projects/editProject', {
-                project: projectObj,
-                projectMembers: projectMembers,
+                project: project,
+                projectMembers: memberEmails,
                 user: req.session.user
             })
+        }
+    },
+
+    /// POSTS //////////////////////////////////
+
+    /**
+     * @description The function will remove a project from the database. It will also remove the project from the user's project list.
+     * The function runs asynchronously. There is no return value.
+     * @param {string} projectId The id of the project to be removed.
+     */
+    delProject: async (req, res) => {
+        const { projectId } = req.body
+
+        // Get the list of users in the project.
+        const project = await ProjectController.getProjectById(projectId)
+
+        // Remove the project from the user's project list.
+        project.members.forEach(async (member) => {
+            const user = await userCon.getUserById(member)
+            if (user) {
+                await ProjectController.removeProjectFromUser(projectId, user._id)
+            }
         })
-    }
 
-    if (req.method === 'POST') {
-        const projectName = req.body.projectName
-        const invitedUsers = req.body.emails
+        // Remove the project from the database.
+        await ProjectModel.deleteOne({ _id: projectId })
+        res.redirect('/projects')
+    },
 
-        if (req.body.edit === 'true') {
-            // updateProject(projectId, projectName, invitedUsers)
-            updateProject(projectId, projectName, invitedUsers)
-            res.redirect('/projects/')
+    /**
+     * @description Update a project's name and invited users in the database
+     * @param {Object} projectID
+     * @param {String} projectName
+     * @param {Array} invitedUsers
+     */
+    updateProject: async (req, res) => {
+        const { projectId, emails, projectName, duration } = req.body
+
+        const project = await ProjectController.getProjectById(projectId)
+        if (project) {
+            let usersSupposed = await Promise.all(emails.map(async email => await userCon.getUserByEmail(email)))
+            let usersActually = await Promise.all(project.members.map(async id => await userCon.getUserById(id)))
+            usersSupposed = usersSupposed.filter(member => member)
+            usersActually = usersActually.filter(member => member)
+
+            for await (const userActually of usersActually) {
+                await ProjectController.removeProjectFromUser(project._id, userActually._id)
+            }
+            for await (const userSupposed of usersSupposed) {
+                await ProjectController.addProjectToUser(project._id, userSupposed._id)
+            }
+
+            project.name = projectName
+            project.members = usersSupposed.map(user => user._id)
+            project.duration = { ...duration }
         }
-    }
-}
-
-/**
- * @function Gets a project by id.
- * @param {String} id
- * @returns {Promise<Project>} The project.
- */
-async function getProjectById(id) {
-    try {
-        const project = await Project.findById(id)
-        return project
-    } catch (error) {
-        console.log(error)
-    }
-}
-
-/**
- * @function Gets a list of all user's projects.
- * @returns {Promise<Array<Project>>} An array of projects.
- */
-async function getAllProjects (UserID) {
-    try {
-        const userProjects = []
-        const user = await User.findById(UserID)
-
-        for (const projectID of user.projectIDs) {
-            const project = await getProjectById(projectID)
-            userProjects.push(project)
-        }
-      
-        return userProjects
-    } catch (error) {
-        console.log(error)
-    }
-}
-
-/**
- * @function Creates a new project in the database and adds it to the user's project list.
- * @param {String} projectName The name of the project.
- * @param {String} UserID The id of the user who created the project.
- * @returns {Promise<projectId>} The id of the project.
- */
-async function newProject(projectName, UserID) {
-    // This function will also not provide authentication. Therefore, a function should handle that before this function is called.
-    // TODO: Create a UI for the user to create a new project.
-    // TODO: Save the project id to a user database.
-
-    // Generate a new project id and save it to the database.
-    const project = new ProjectModel({ name: projectName })
-
-    // Add initial user to the service.
-    project.members.push(UserID)
-
-    // Add the project to the user's project list.
-    userCon.getUser(UserID).then(user => {
-        user.projectIDs.push(project._id)
-        user.save()
-    })
-
-    // Save the project to the database.
-    await project.save()
-    return project._id
-}
-
-/**
- * @function Update a project's name and invited users in the database
- * @param {Object} projectID
- * @param {String} projectName
- * @param {Array} invitedUsers
- */
-async function updateProject(projectID, projectName, invitedUsers) {
-    // Get the project
-    const project = await getProjectById(projectID)
-
-    // Update the project
-    project.name = projectName
-
-    console.log('invited users: ' + invitedUsers)
-    if (invitedUsers.length < project.members.length) {
-        // Remove users from the project
-        for (const member of project.members) {
-            // Get user from emails
-            await User.find({ _id: member }).then(user => {
-                if (!invitedUsers.includes(user[0].email)) {
-                    // Remove user from project
-                    removeUserFromProject(project._id, user[0]._id)
-                }
-            })
-        }
-    } else if (invitedUsers.length > project.members.length) {
-        // Add users to the project
-        for (const member of invitedUsers) {
-            // Get user from emails
-            await User.find({ email: member }).then(user => {
-                if (!project.members.includes(user[0]._id)) {
-                    // Add user to project
-                    addUserToProject(projectID, user[0]._id)
-                }
-            })
-        }
-    } else {
-        console.log('No new members')
         await project.save()
-    }
+        res.redirect('back')
+    },
 
-    // Save the project to the database
-    await project.save()
-}
+    /**
+     * @description Removes a user from a project.
+     * @param {String} projectId
+     * @param {String} UserId
+     */
+    leaveProject: async (req, res) => {
+        const { userId, projectId } = req.body
+        const project = await ProjectController.getProjectById(projectId)
 
-/**
- * @function The function will remove a project from the database. It will also remove the project from the user's project list.
- * The function runs asynchronously. There is no return value.
- * @param {string} projectId The id of the project to be removed.
- */
-async function delProject (projectId) {
-    // TODO: Call the remove user function. When it is made.
+        project.members.forEach(async (member, i, obj) => {
+            if (member === userId) {
+                // Remove user
+                obj.splice(i, 1)
 
-    // Get the list of users in the project.
-    const project = await getProjectById(projectId)
-    const users = project.members
+                // Remove the project from the user's project list
+                await ProjectController.removeProjectFromUser(projectId, userId)
 
-    // Remove the project from the user's project list.
-    for (let i = 0; i < users.length; i++) {
-        userCon.getUser(users[i]).then(user => {
-            user.projectIDs.splice(user.projectIDs.indexOf(projectId), 1)
-            user.save()
+                //  TODO delete project if no users remains
+            } else {
+                console.log('User is not a member of ProjectController project.')
+            }
         })
-    }
+        // Save the project
+        await project.save()
+        res.redirect('/projects')
+    },
 
-    // Remove the project from the database.
-    await Project.deleteOne({ _id: projectId })
-}
+    /**
+     * @description Creates a new project in the database and adds it to the user's project list.
+     * @param {String} projectName The name of the project.
+     * @param {String} UserID The id of the user who created the project.
+     * @returns {Promise<projectId>} The id of the project.
+     */
+    newProject: async (req, res) => {
+        const { emails, projectName, duration } = req.body
 
-/**
- * @function Adds a user to a project.
- * @param {String} projectId
- * @param {String} UserId
- */
-async function addUserToProject(projectId, UserId) {
-    // Get the project
-    const project = await getProjectById(projectId)
+        const project = new ProjectModel({ name: projectName })
 
-    // Add the user to the project
-    for (let i = 0; i < project.members.length; i++) {
-        if (project.members[i] !== UserId) {
-            // Add user
-            project.members.push(UserId)
+        let users = await Promise.all(emails.map(async email => await userCon.getUserByEmail(email)))
+        users = users.filter(member => member)
 
-            // Add the project to the user's project list
-            userCon.getUser(UserId).then(user => {
-                user.projectIDs.push(project._id)
-                user.save()
-            })
+        users.forEach(async user => await ProjectController.addProjectToUser(project._id, user._id))
+        project.members = users.map(user => user._id)
+        project.duration = { ...duration }
 
-            // Save the project
-            await project.save()
-        } else {
-            console.log('User is already a member of this project.')
+        await project.save()
+        res.redirect(`/project/${project._id}`)
+    },
+
+    /// HELPERS //////////////////////////////////
+
+    /**
+     * @description Removes a user from a project.
+     * @param {String} projectId
+     * @param {String} UserId
+     */
+    removeProjectFromUser: async (projectId, userId) => {
+        const user = await userCon.getUserById(userId)
+        if (user) {
+            user.projectIDs.splice(user.projectIDs.indexOf(projectId), 1)
+            await user.save()
         }
-    }
-}
+    },
 
-/**
- * @function Removes a user from a project.
- * @param {String} projectId
- * @param {String} UserId
- */
-async function removeUserFromProject(projectId, UserId) {
-    // Get the project
-    const project = await getProjectById(projectId)
-    console.log('projectId : ' + projectId)
-
-    for (let i = 0; i < project.members.length; i++) {
-        if (project.members[i] == UserId) {
-            // Remove user
-            project.members.splice(i, 1)
-
-            // Remove the project from the user's project list
-            userCon.getUser(UserId).then(user => {
-                user.projectIDs.splice(user.projectIDs.indexOf(projectId), 1)
-                user.save()
-            })
-        } else {
-            console.log('User is not a member of this project.')
+    /**
+     * @description Adds a user to a project.
+     * @param {String} projectId
+     * @param {String} UserId
+     */
+    addProjectToUser: async (projectId, userId) => {
+        const user = await userCon.getUserById(userId)
+        if (user) {
+            user.projectIDs.push(projectId)
+            await user.save()
         }
+    },
+
+    /**
+     * @description Gets a project by id.
+     * @param {String} id
+     * @returns {Promise<Project>} The project.
+     */
+    getProjectById: async (id) => {
+        try {
+            const project = await ProjectModel.findById(id)
+            return project
+        } catch (error) {
+            console.log(error)
+        }
+    },
+
+    /**
+     * @description Gets a list of all user's projects.
+     * @returns {Promise<Array<Project>>} An array of projects.
+     */
+    getAllProjects: async (UserID) => {
+        try {
+            const userProjects = []
+            const user = await User.findById(UserID)
+            for (const projectID of user.projectIDs) {
+                const project = await ProjectController.getProjectById(projectID)
+                userProjects.push(project)
+            }
+            return userProjects
+        } catch (error) {
+            console.log(error)
+        }
+    },
+
+    /**
+     * @description Adds a service to the project.
+     * @param {String} projectId The id of the project.
+     * @param {String} serviceCategory The category of which the service is in.
+     * @param {String} serviceId The id of the service to be added.
+     */
+    addServiceToProject: async (projectId, serviceCategory, serviceId) => {
+        // Get the project
+        const project = await ProjectController.getProjectById(projectId)
+        // Create new service object
+        project.categories[serviceCategory].services = { ...project.categories[serviceCategory].services, [serviceId]: { state: 'active' } }
+
+        await project.save()
+    },
+
+    /**
+     * @description checks if user belongs to project
+     * @param {String} projectId The id of the project.
+     * @param {String} serviceCategory The category of which the service is in.
+     * @param {String} serviceId The id of the service to be added.
+     */
+    isUserInProject: async (project, userId) => {
+        let memberIds = await Promise.all(project.members.map(async id => {
+            const user = await userCon.getUserById(id)
+            return user && user._id.toString()
+        }))
+        memberIds = project.members.filter(member => member)
+
+        let matched = false
+        memberIds.forEach(member => {
+            if (userId === member) {
+                matched = true
+            }
+        })
+        return matched
     }
-    // Save the project
-    await project.save()
 }
 
-/**
- * @function Adds a service to the project.
- * @param {String} projectId The id of the project.
- * @param {String} serviceCategory The category of which the service is in.
- * @param {String} serviceId The id of the service to be added.
- */
-async function addServiceToProject(projectId, serviceCategory, serviceId) {
-    // Get the project
-    const project = await getProjectById(projectId)
-    // Create new service object
-    project.categories[serviceCategory].services = { ...project.categories[serviceCategory].services, [serviceId]: { state: 'active' } }
-
-    await project.save()
-}
-
-// Modules to export for testing purposes.
-module.exports = {
-    showProjects,
-    showProject,
-    createProject,
-    delProject,
-    editProject,
-    newProject,
-    getProjectById,
-    getAllProjects,
-    addUserToProject,
-    removeUserFromProject
-}
+module.exports = ProjectController

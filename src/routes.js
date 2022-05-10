@@ -11,7 +11,6 @@ const calEventCon = require('./app/Http/CalEventController')
 
 const { createAccountLimit, loginLimit, mailLimit } = require('./app/Middleware/Rate')
 const { authenticateValidation, registerValidation } = require('./app/Validation/AuthValidation')
-
 /**
  * This web file is the router used to describe the correspondence
  * between the URL and the controller that will perform the action.
@@ -34,15 +33,15 @@ router.post('/updatepass', authCon.updatePass)
 
 // Project overview GET
 router.get('/projects', middleware.authLogin, projectCon.showProjects)
-router.get('/create-project', middleware.authLogin, projectCon.createProject)
+router.get('/create-project', middleware.authLogin, projectCon.showCreateProject)
 router.get('/project/:id', middleware.authLogin, projectCon.showProject)
-router.get('/edit', middleware.authLogin, projectCon.editProject)
+router.get('/edit-project/:id', middleware.authLogin, projectCon.showEditProject)
 
 // Project overview POST
-router.post('/create-project', middleware.authLogin, projectCon.createProject)
-router.post('/projects', middleware.authLogin, projectCon.showProjects)
-router.post('/project', middleware.authLogin, projectCon.showProject)
-router.post('/edit', middleware.authLogin, projectCon.editProject)
+router.post('/create-project', middleware.authLogin, projectCon.newProject)
+router.post('/edit-project', middleware.authLogin, projectCon.updateProject)
+router.post('/leave-project', middleware.authLogin, projectCon.leaveProject)
+router.post('/delete-project', middleware.authLogin, projectCon.delProject)
 
 // Admin (TODO: check for role)
 router.get('/admin/board', middleware.authLogin, adminCon.showBoard)
@@ -66,8 +65,8 @@ router.get('/api/github', githubAPI.page)
 router.post('/api/github/webhook', githubAPI.webHookReceiver)
 
 // Calendar events
-router.post('/add-event', calEventCon.addEventToDb)
-router.get('/get-events', calEventCon.getEventsFromDb)
+router.post('/add-event/:id', calEventCon.addEventToDb)
+router.get('/get-events/:id', calEventCon.getEventsFromDb)
 
 //  The 404 Route (ALWAYS Keep this as the last route)
 router.get('*', (req, res) => res.status(404).render('404'))
