@@ -4,6 +4,7 @@ const express = require('express')
 const flash = require('express-flash')
 const session = require('express-session')
 const expressEjsLayout = require('express-ejs-layouts')
+const nocache = require('nocache')
 
 require('dotenv').config({
     path: path.resolve(__dirname, '../.env')
@@ -30,6 +31,8 @@ app.use(express.json())
 app.use(express.urlencoded({
     extended: true
 }))
+
+app.use(nocache())
 
 // Routes path
 app.use('/', express.static('public'), require('./routes'))
