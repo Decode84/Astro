@@ -48,7 +48,6 @@ router.get('/admin/board', middleware.authLogin, adminCon.showBoard)
 
 // Discord
 router.get('/discord', discordCon.discordAuth)
-router.post('/discord', discordCon.discordAuth)
 
 // Trello
 router.get('/trello', middleware.authLogin, TrelloAPI.trello)
