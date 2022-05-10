@@ -1,22 +1,26 @@
 const User = require('../Models/User')
 const Project = require('../Models/Project')
 const gitHub = require('../../github/githubApi')
+const { setupProject } = require('../../github/githubApi');
 const authLink = 'https://github.com/login/oauth/authorize?client_id=7864fe4bf9aed444e764&scope=repo'
 const TEMP_currentproject = '627380b04dd41fde76c9bf66' // TODO: use URL instead
 
 async function page (req, res) {
     if (req.session.user) {
-        if (req.query.code) await handleAuth(req, res)
-        const project = await Project.findById(TEMP_currentproject)
-        if (project.categories.development.services && project.categories.development.services.github) {
-            const github = project.categories.development.services.github
-            res.render('project/githubtemp', {
-                githubName: github.name,
-                gitHubLink: github.htmlUrl,
-                gitHubMessages: github.hookMessages
-            })
-            return
-        }
+        const user = User.findById(req.session.user._id)
+        if (user.services.github)
+        {
+            const project = await Project.findById(TEMP_currentproject)
+            if (project.categories.development.services && project.categories.development.services.github) {
+                const github = project.categories.development.services.github
+                res.render('project/githubtemp', {
+                    githubName: github.name,
+                    gitHubLink: github.htmlUrl,
+                    gitHubMessages: github.hookMessages
+                })
+                return
+            }
+        } else if (req.query.code) await handleAuth(req, res)
     }
     res.render('project/githubtemp', { AuthLink: authLink })
 }
@@ -74,7 +78,7 @@ async function handleAuth (req, res) {
         })
         console.log(userAuth)
         await putUserInDB(userAuth, req.session.user.username)
-        await gitHub.setupProject(userAuth, req.session.user, TEMP_currentproject)
+        await setupProject(userAuth, req.session.user, TEMP_currentproject)
         // TODO: Handle case where project with that name exists
     } catch (e) {
         console.log('Failed discord auth: ' + e)
