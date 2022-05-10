@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 const mongoose = require('mongoose')
+const Project = require('../src/app/Models/Project')
 const path = require('path')
 
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
@@ -14,6 +15,12 @@ mongoose.connection
 
 beforeEach((done) => {
     mongoose.connection.collections.users.drop(() => {
+        done()
+    })
+})
+
+beforeEach((done) => {
+    mongoose.connection.collections.projects.drop(() => {
         done()
     })
 })

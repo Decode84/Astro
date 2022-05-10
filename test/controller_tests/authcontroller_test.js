@@ -1,13 +1,10 @@
 /* eslint-disable no-undef */
 const chai = require('chai')
-const mongoose = require('mongoose')
 const User = require('../../src/app/Models/User')
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 
 const AuthenticationController = require('../../src/app/Http/AuthenticationController')
-const { promiseImpl } = require('ejs')
-const { exit } = require('process')
 
 const assert = chai.assert
 chai.use(sinonChai)
@@ -27,33 +24,36 @@ beforeEach(() => {
 
 describe('AuthenticationController', () => {
     describe('authenticate function', () => {
+        let req, res
+        beforeEach(() => {
         // The request that has the input the function needs.
-        const req = {
-            body: {
-                username: 'testAuthuser',
-                password: 'testPassword'
-            },
-            message: '',
-            flash: function (type, message) {
-                this.body.message = message
-            },
-            session: {
-                user: '',
-                regenerate: function (callback) {
-                    callback()
+            req = {
+                body: {
+                    username: 'testAuthuser',
+                    password: 'testPassword'
+                },
+                message: '',
+                flash: function (type, message) {
+                    this.body.message = message
+                },
+                session: {
+                    user: '',
+                    regenerate: function (callback) {
+                        callback()
+                    }
                 }
             }
-        }
 
-        // The response that has the output the function should return.
+            // The response that has the output the function should return.
 
-        const res = {
-            aurl: '',
-            redirect: function (url) {
-                assert.equal(url, this.aurl)
-                this.done()
+            res = {
+                aurl: '',
+                redirect: function (url) {
+                    assert.equal(url, this.aurl)
+                    this.done()
+                }
             }
-        }
+        })
 
         const sandbox = sinon.createSandbox()
 
@@ -89,6 +89,20 @@ describe('AuthenticationController', () => {
             // Act
             AuthenticationController.authenticate(req, res)
         })
-        it('should redirect to login if the user does not exist', () => {})
+        it('should redirect to login if the user does not exist', function (done) {
+            console.log(req.body.password)
+            // Arrange
+            res.aurl = '/login'
+            res.done = done
+            req.body.username = 'wrongUser'
+            res.redirect = function (url) {
+                assert.equal(url, this.aurl)
+                assert.equal(req.body.message, 'User does not exists')
+                done()
+            }
+
+            // Act
+            AuthenticationController.authenticate(req, res)
+        })
     })
 })
