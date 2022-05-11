@@ -1,10 +1,9 @@
-<section class="bg-white m-auto w-3/5 p-6 rounded-lg" id="overlay">
-    <form action="/trello/createCard/<%= projectId %>" class="">
+<section class="bg-white m-auto p-6 rounded-lg drop-shadow-sm" id="overlay">
+    <h2 class="text-lg pb-3">Create new card</h2>
+    <form action="/trello/createCard/<%= project.id %>" class="">
         <input id="projectIdInput" type="hidden" name="projectId" value="{{projectId}}">
-        <section class="flex justify-center mb-2">
-            <input class="w-2/5 mr-1 rounded-md" type="text" name="cardName" placeholder="Card Name" required>
-            <input class="w-2/5 ml-1 rounded-md" type="text" name="cardDescription" placeholder="Card Description">
-        </section>
+        <input class="mr-1 my-1 rounded-md w-full" type="text" name="cardName" placeholder="Card Name" required>
+        <textarea type="text" name="cardDescription" placeholder="Card Description" class="w-full resize-none mt-1 rounded-md focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"></textarea>
         <select name="board" id="board-select" class="form-control my-1 p-2 rounded-md" style="width: 100%;">
             <option id="select-option" value="" class="rounded-md">Select a board</option>
         </select>

@@ -151,6 +151,7 @@ const TrelloApi = {
     newBoard: async (name, projectId, userId) => {
         const project = await projectController.getProjectById(projectId)
         const user = await userController.getUserById(userId)
+
         let response
         // try to create the board if trello is active for the project for a given organization.
         try {
@@ -181,7 +182,6 @@ const TrelloApi = {
         } catch (e) {
             console.log(e)
         }
-        return json.id
     },
 
     /**
@@ -306,6 +306,16 @@ const TrelloApi = {
         res.redirect('/project/' + req.params.id) // ! Might change later don't know where to put the user.
     },
 
+    createBoard: async (req, res) => {
+        const userId = req.session.user._id
+        const boardName = req.query.boardName
+        const projectId = req.params.id
+
+        await TrelloApi.newBoard(boardName, projectId, userId)
+
+        res.redirect('/project/' + projectId)
+    },
+
     /**
      *
      * @param {String} name The name of the organization to create.
@@ -321,7 +331,7 @@ const TrelloApi = {
         await TrelloApi.newOrganization(name, userId, projectId)
         await TrelloApi.newBoard('SCRUM', projectId, userId)
 
-        res.redirect('/project/' + req.params.id)
+        res.redirect('/project/' + projectId)
     }
 }
 

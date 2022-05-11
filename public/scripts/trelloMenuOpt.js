@@ -1,4 +1,4 @@
-
+/*
 window.onload = () => {
     const children = document.getElementById('options').children
     for (const child of children) {
@@ -43,4 +43,4 @@ function colorActiveTabBtn(btns) {
     for (const btn of btns) {
         btn.classList.remove('bg-gray-100')
     }
-}
+}*/

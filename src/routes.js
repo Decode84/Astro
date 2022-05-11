@@ -55,6 +55,7 @@ router.get('/trello/:id', middleware.authLogin, TrelloAPI.trello)
 router.get('/trello/callback/:id', middleware.authLogin, TrelloAPI.recieveToken)
 router.get('/trello/newCard/:id', middleware.authLogin, TrelloAPI.newCard)
 router.get('/trello/createCard/:id', middleware.authLogin, TrelloAPI.createCard)
+router.get('/trello/createBoard/:id', middleware.authLogin, TrelloAPI.createBoard)
 router.get('/trello/setup/:id', middleware.authLogin, TrelloAPI.setupTrello)
 router.get('/trello/activate/:id', middleware.authLogin, TrelloAPI.activateTrello)
 

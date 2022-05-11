@@ -1,6 +1,7 @@
 <section class="bg-white rounded-lg w-full drop-shadow-sm px-4 py-3 mb-3">
     <h2 class="text-lg pb-3">Trello</h2>
 
+    <h3>Setup</h3>
     <% if (project.categories.planning.services === undefined) {%>
     <section id="notActivated" class="flex flex-row pb-1">
         <p>Activate Trello</p>
@@ -23,19 +24,6 @@
                 <p>Setup Trello project + board</p>
                 <button class="ml-auto">
                     <a href="/trello/setup/<%= project._id %>" class="rounded-md text-white px-4" style="background-color: var(--acc-color);">Setup</a>
-                </button>
-            </section>
-            <p>Step 3:</p>
-            <section class="flex flex-row pb-2">
-                <p>Create new board</p>
-                <button class="ml-auto">
-                    <a href="/trello/setup/<%= project._id %>" class="rounded-md text-white px-4" style="background-color: var(--acc-color);">Create board</a>
-                </button>
-            </section>
-            <section class="flex flex-row pb-2">
-                <p>Create new card</p>
-                <button class="ml-auto">
-                    <a href="/trello/newCard/<%= project._id %>" class="rounded-md text-white px-4" style="background-color: var(--acc-color);">Create card</a>
                 </button>
             </section>
         </section>
