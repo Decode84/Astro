@@ -5,34 +5,37 @@
     <section id="notActivated" class="flex flex-row pb-1">
         <p>Activate Trello</p>
         <button class="rounded-md text-white ml-auto px-4" style="background-color: var(--acc-color);">
-            <a href="/trello/activate/<%= project._id %>" target="_blank">Activate</a>
+            <a href="/trello/activate/<%= project._id %>">Activate</a>
         </button>
     </section>
     <% } else { %> 
     <section id="activated">
-        <section class="flex flex-row pb-1">
-            <p>Link to your Trello</p>
-            <button class="rounded-md text-white ml-auto px-4" style="background-color: var(--acc-color);">
-                <a href="/trello" target="_blank">Link</a>
-            </button>
-        </section>
-        <section class="flex flex-row pb-1">
-            <p>Setup Trello project + board</p>
-            <button class="rounded-md text-white ml-auto px-4" style="background-color: var(--acc-color);">
-                <a href="/trello/setup/<%= project._id %>">Setup</a>
-            </button>
-        </section>
-        <section id="options">
-            <section class="flex flex-row pb-1">
-                <p>Create new board</p>
-                <button class="rounded-md text-white ml-auto px-4" style="background-color: var(--acc-color);">
-                    <a href="/trello" target="_blank">Create board</a>
+        <section class="pb-1">
+            <p>Step 1:</p>
+            <section class="flex flex-row pb-2">
+                <p>Link to your Trello</p>
+                <button class="ml-auto">
+                    <a href="/trello/<%= project._id %>" class="rounded-md text-white px-4" style="background-color: var(--acc-color);">Link</a>
                 </button>
             </section>
-            <section class="flex flex-row pb-1">
+            <p>Step 2:</p>
+            <section class="flex flex-row pb-2">
+                <p>Setup Trello project + board</p>
+                <button class="ml-auto">
+                    <a href="/trello/setup/<%= project._id %>" class="rounded-md text-white px-4" style="background-color: var(--acc-color);">Setup</a>
+                </button>
+            </section>
+            <p>Step 3:</p>
+            <section class="flex flex-row pb-2">
+                <p>Create new board</p>
+                <button class="ml-auto">
+                    <a href="/trello/setup/<%= project._id %>" class="rounded-md text-white px-4" style="background-color: var(--acc-color);">Create board</a>
+                </button>
+            </section>
+            <section class="flex flex-row pb-2">
                 <p>Create new card</p>
-                <button class="rounded-md text-white ml-auto px-4" style="background-color: var(--acc-color);">
-                    <a href="/trello" target="_blank">Create card</a>
+                <button class="ml-auto">
+                    <a href="/trello/newCard/<%= project._id %>" class="rounded-md text-white px-4" style="background-color: var(--acc-color);">Create card</a>
                 </button>
             </section>
         </section>

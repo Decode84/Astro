@@ -51,16 +51,16 @@ router.get('/discord', discordCon.discordAuth)
 router.post('/discord', discordCon.discordAuth)
 
 // Trello
-router.get('/trello', middleware.authLogin, TrelloAPI.trello)
-router.get('/trello/callback', middleware.authLogin, TrelloAPI.recieveToken)
-router.get('/trello/newCard', middleware.authLogin, TrelloAPI.newCard)
-router.get('/trello/createCard', middleware.authLogin, TrelloAPI.createCard)
+router.get('/trello/:id', middleware.authLogin, TrelloAPI.trello)
+router.get('/trello/callback/:id', middleware.authLogin, TrelloAPI.recieveToken)
+router.get('/trello/newCard/:id', middleware.authLogin, TrelloAPI.newCard)
+router.get('/trello/createCard/:id', middleware.authLogin, TrelloAPI.createCard)
 router.get('/trello/setup/:id', middleware.authLogin, TrelloAPI.setupTrello)
 router.get('/trello/activate/:id', middleware.authLogin, TrelloAPI.activateTrello)
 
 // Trello API
-router.get('/api/trello/boards', TrelloAPI.listBoards)
-router.get('/api/trello/lists', TrelloAPI.listLists)
+router.get('/api/trello/boards/:id', TrelloAPI.listBoards)
+router.get('/api/trello/lists/:id', TrelloAPI.listLists)
 
 // Github API
 router.get('/api/github', githubAPI.page)

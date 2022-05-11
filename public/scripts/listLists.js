@@ -15,7 +15,7 @@ async function main() {
         option.text = "Loading...";
 
         // Get the lists in the selected board
-        let url = document.location.origin + '/api/trello/lists' + document.location.search + '&boardId=' + select_board.value;
+        let url = document.location.origin + '/api/trello/lists/' + document.location.href.split('/').pop() + '?boardId=' + select_board.value;
         let response = await fetch(url, {
             method: 'GET',
             });

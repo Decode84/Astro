@@ -1,17 +1,19 @@
-<div id="overlay" style="position: fixed;">
-    <form action="/trello/createCard">
+<section class="bg-white m-auto w-3/5 p-6 rounded-lg" id="overlay">
+    <form action="/trello/createCard/<%= projectId %>" class="">
         <input id="projectIdInput" type="hidden" name="projectId" value="{{projectId}}">
-        <input type="text" name="cardName" placeholder="Card Name" required>
-        <input type="text" name="cardDescription" placeholder="Card Description">
-        <select name="board" id="board-select" class="form-control" style="width: 100%;">
-            <option id="select-option" value="">Select a board</option>
+        <section class="flex justify-center mb-2">
+            <input class="w-2/5 mr-1 rounded-md" type="text" name="cardName" placeholder="Card Name" required>
+            <input class="w-2/5 ml-1 rounded-md" type="text" name="cardDescription" placeholder="Card Description">
+        </section>
+        <select name="board" id="board-select" class="form-control my-1 p-2 rounded-md" style="width: 100%;">
+            <option id="select-option" value="" class="rounded-md">Select a board</option>
         </select>
-        <select name="list" id="list-select" class="form-control" style="width: 100%;">
-            <option id="liststate" value="">No board selected</option>
+        <select name="list" id="list-select" class="form-control my-1 p-2 rounded-md" style="width: 100%;">
+            <option id="liststate" value="" class="rounded-md">No board selected</option>
         </select>
-        <input type="submit" class="btn btn-primary" value="Create Card" id="create-card-btn">
+        <input type="submit" class="px-3.5 py-2 mt-2 text-white cursor-pointer font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" style="background-color: var(--acc-color)" value="Create Card" id="create-card-btn">
     </form>
-</div>
+</section>
 
 <script src="/scripts/listBoards.js"></script>
 <script src="/scripts/listLists.js"></script>

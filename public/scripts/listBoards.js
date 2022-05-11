@@ -14,7 +14,7 @@ async function main() {
  */
 async function getBoards() {
     // Compose the url
-    let url = document.location.origin + '/api/trello/boards' + document.location.search;
+    let url = document.location.origin + '/api/trello/boards/' + document.location.href.split('/').pop();
     let response = await fetch(url);                 // Send the request and await for the response
     if (response.status === 200) {
         let text = await response.text();
@@ -56,5 +56,6 @@ async function displayBoards(boards) {
     inputProjectId = document.getElementById('projectIdInput');
     inputProjectId.value = new URL(document.location.href).searchParams.get('projectId');
 
+    console.log(inputProjectId.value)
 }
 main();
