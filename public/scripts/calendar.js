@@ -5,7 +5,6 @@ const calendar = new Calendar({
     monthDisplayType: 'long',
     primaryColor: 'var(--acc-color)',
     headerBackgroundColor: 'var(--pri-color)',
-    headerColor: 'var(--acc-color)',
     calendarSize: 'small',
     borderRadius: '0.5rem',
     layoutModifiers: ['month-left-align'],

@@ -4,7 +4,7 @@
     </div>
 </header>
 <main class="content-evenly flex items-center justify-center" style="height: calc(100vh - var(--header-h))">
-    <div class="w-96">
+    <div style="width: var(--form-w)">
         <% if (message.toString() !=="" ) { %>
             <%- include('./_partial/infoBox', { message: message}); %>
                 <% } %>
