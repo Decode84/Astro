@@ -1,62 +1,68 @@
-<section class="m-auto w-2/5 pt-6">
-    <form action="edit_project" method="post" id="editProjForm" class="w-96 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
-                Project name
-            </label>
-            <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="projectName" id="projectName" type="text" placeholder="Name" value="<%= project.name %>" required>
-        </div>
-
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2">
-                Duration start
-            </label>
-            <input id="durationStart" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:outline-none focus:shadow-outline" type="date" value="<%= project.duration.startTime.toISOString().split('T')[0] %>" required>
-        </div>
-
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2">
-                Duration end
-            </label>
-            <input id="durationEnd" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:outline-none focus:shadow-outline" type="date" value="<%= project.duration.endTime.toISOString().split('T')[0] %>" required>
-        </div>
-
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
-        Invite members 
-        </label>
-        <div class="mb-6 flex justify-between">
-            <div>
-                <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" id="inviteInput" type="email" placeholder="bdsm69@student.aau.dk">
+<header class="flex flex-row" style="min-width: var(--min-window-w); height: var(--header-h)">
+    <%- include('./_partial/header'); %>
+</header>
+<main class="content-evenly flex items-center justify-center" style="height: calc(100vh - var(--header-h))">
+    <div style="width: var(--form-w)">
+        <form action="edit_project" method="post" id="editProjForm" class="p-8 mx-auto border-t-8 shadow-md rounded-md" style="background-color: var(--pri-color);border-color: var(--acc-color)">
+            <h1 class="text-2xl text-center font-bold">Edit project</h1>
+            <div class="my-4">
+                <label class="block text-sm font-bold mb-2" for="username">
+                    Project name
+                </label>
+                <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="projectName" id="projectName" type="text" placeholder="Name" value="<%= project.name %>" required>
             </div>
-            <input class="w-24 ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold px-3.5 cursor-pointer rounded focus:outline-none focus:shadow-outline" type="button" id="inviteMember" value="Invite">
-        </div>
 
-        <div id="invited" class="mb-6">
-            <label id="labelInvMembers" class="block text-gray-700 text-sm font-bold mb-2">
-                Invited members
+            <div class="mb-4">
+                <label class="block text-sm font-bold mb-2">
+                    Duration start
+                </label>
+                <input id="durationStart" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:outline-none focus:shadow-outline" type="date" value="<%= project.duration.startTime.toISOString().split('T')[0] %>" required>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-bold mb-2">
+                    Duration end
+                </label>
+                <input id="durationEnd" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:outline-none focus:shadow-outline" type="date" value="<%= project.duration.endTime.toISOString().split('T')[0] %>" required>
+            </div>
+
+            <label class="block text-sm font-bold mb-2" for="password">
+                Invite members
             </label>
-            <% projectMembers.forEach((member) => { %>
-                <div class="flex items-center justify-between py-2">
-                    <p class="inv-member w-10/12">
-                        <%= member %>
-                    </p>
-                    <input onclick="removeSelf(this)" class="remove-user w-24 px-3.5 bg-blue-500 hover:bg-blue-700 text-white font-bold cursor-pointer rounded focus:outline-none focus:shadow-outline" type="button" id="removeMember" value="Remove">
+            <div class="mb-6 flex justify-between">
+                <div>
+                    <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" id="inviteInput" type="email" placeholder="bdsm69@student.aau.dk">
                 </div>
-            <% }); %>
-            
-        </div>
+                <input class="w-24 ml-2 hover:bg-blue-700 text-white font-bold px-3.5 cursor-pointer rounded focus:outline-none focus:shadow-outline" type="button" id="inviteMember" value="Invite" style="background-color: var(--acc-color)">
+            </div>
 
-        <div class="flex items-center justify-between">
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-                Update Project
-            </button>
-            <a class="w-24 text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline" href="/projects">
-                Cancel
-            </a>
-        </div>
-    </form>
-</section>
+            <div id="invited" class="mb-6">
+                <label id="labelInvMembers" class="block text-sm font-bold mb-2">
+                    Invited members
+                </label>
+                <% projectMembers.forEach((member)=> { %>
+                    <div class="flex items-center justify-between py-2">
+                        <p class="inv-member flex flex-1 mr-2 truncate">
+                            <%= member %>
+                        </p>
+                        <input onclick="removeSelf(this)" class="remove-user w-24 px-3.5 hover:bg-blue-700 text-white font-bold cursor-pointer rounded focus:outline-none focus:shadow-outline" type="button" id="removeMember" value="Remove" style="background-color: var(--acc-color)">
+                    </div>
+                    <% }); %>
 
+            </div>
+
+            <div class="flex items-center justify-between">
+                <button class="hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" style="background-color: var(--acc-color)">
+                    Update Project
+                </button>
+                <a class="w-24 text-center hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline" href="/projects" style="background-color: var(--acc-color)">
+                    Cancel
+                </a>
+            </div>
+        </form>
+        </section>
+    </div>
+</main>
 <script>
     document.getElementById('durationStart').max = new Date().toISOString().split("T")[0];
     document.getElementById('durationEnd').min = new Date().toISOString().split("T")[0];
@@ -69,14 +75,14 @@
         const emails = [...invited].map(member => member.innerHTML.trim());
 
         console.log('emails: ', emails);
-        
+
         let response = await fetch('/edit-project', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                projectId : document.URL.split('/').at(-1),
+                projectId: document.URL.split('/').at(-1),
                 projectName: document.getElementById('projectName').value,
                 emails: emails,
                 duration: {
@@ -91,7 +97,7 @@
                 alert('Something went wrong trying to edit the project');
             }
         });
-        
+
     };
 
     // add email to array and displays it in the invited members section
@@ -104,7 +110,7 @@
 
             div.setAttribute('class', 'flex items-center justify-between py-2')
 
-            remove.setAttribute('class', 'remove-user w-24 px-3.5 bg-blue-500 hover:bg-blue-700 text-white font-bold cursor-pointer rounded focus:outline-none focus:shadow-outline')
+            remove.setAttribute('class', 'remove-user w-24 px-3.5 hover:bg-blue-700 text-white font-bold cursor-pointer rounded focus:outline-none focus:shadow-outline')
             remove.setAttribute('type', 'button')
             remove.setAttribute('style', 'background-color: var(--acc-color)')
             remove.setAttribute('value', 'Remove')

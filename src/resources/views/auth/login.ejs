@@ -4,12 +4,12 @@
     </div>
 </header>
 <main class="content-evenly flex items-center justify-center" style="height: calc(100vh - var(--header-h))">
-    <div class="w-96">
+    <div style="width: var(--form-w)">
         <% if (message.toString() !=="" ) { %>
             <%- include('./_partial/infoBox', { message: message}); %>
                 <% } %>
                     <form action="/authenticate" method="post" class="p-8 mx-auto border-t-8 shadow-md rounded-md" style="background-color: var(--pri-color);border-color: var(--acc-color)">
-                        <h1 class="text-2xl text-gray-800 text-center font-bold">Login to Project Hub</h1>
+                        <h1 class="text-2xl text-center font-bold">Login to Project Hub</h1>
 
                         <label class="text text-left block mb-2 mt-4" for="username">Username</label>
                         <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="username" id="username" required />
