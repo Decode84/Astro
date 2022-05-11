@@ -16,7 +16,7 @@ updateAvailableEvents(calendar)
 setInterval(updateAvailableEvents, 2000, calendar)
 upperCaseMonth(calendar)
 
-async function updateAvailableEvents(calendar) {
+async function updateAvailableEvents (calendar) {
     calendar.setEventsData(await getEventsArray())
     upperCaseMonth(calendar)
 }
@@ -36,10 +36,21 @@ function formatDate(date) {
 async function getEventsArray () {
     const eventArray = []
     const projectId = document.URL.split('/').at(-1)
-    const response = await fetch(`/get-events/${projectId}`)
+
+    const data = {
+        projectId: projectId
+    }
+
+    const response = await fetch('/get-events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+
     const events = await response.json()
     events.forEach((event) => {
         eventArray.push({
+            id: event._id.toString(),
             name: event.name,
             start: event.start,
             end: event.end
@@ -66,13 +77,14 @@ async function submitEventBtnClicked() {
     const name = document
         .getElementById('name').value
 
+    const projectId = document.URL.split('/').at(-1)
     const data = {
+        projectId: projectId,
         time: time,
         name: name
     }
 
-    const projectId = document.URL.split('/').at(-1)
-    await fetch(`/add-event/${projectId}`, {
+    await fetch('/add-event', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -88,7 +100,7 @@ async function submitEventBtnClicked() {
     updateAvailableEvents(calendar)
 }
 
-function cancelEventBtnClicked() {
+function cancelEventBtnClicked () {
     document
         .getElementById('submit-event-btn-container')
         .classList.add('hidden')
@@ -97,18 +109,47 @@ function cancelEventBtnClicked() {
         .classList.remove('hidden')
 }
 
-function updateEventList(events) {
+function updateEventList (events) {
     const calEventsContainer = document.getElementById('cal-events-container')
     const calEvents = document.getElementById('cal-events')
+
     if (events.length > 0) {
+        const eventOriginalTemplate = document.getElementById('event-template').cloneNode(true)
         calEventsContainer.classList.remove('hidden')
         calEvents.innerHTML = ''
-        events.forEach((element) => {
-            const d = new Date(element.start)
+
+        events.forEach((event) => {
+            const eventTemplate = eventOriginalTemplate.cloneNode(true)
+            eventTemplate.classList.remove('hidden')
+
+            const d = new Date(event.start)
             const dString = `${('0' + d.getHours()).slice(-2)}:${('0' + d.getMinutes()).slice(-2)}`
-            calEvents.innerHTML += `<p class="truncate ...">${dString} - ${element.name}</p>`
+            eventTemplate.querySelector('.event-time').innerHTML = dString
+            eventTemplate.querySelector('.event-name').innerHTML = event.name
+            eventTemplate.setAttribute('id', event.id)
+            calEvents.appendChild(eventTemplate)
+            eventTemplate.querySelector('.event-delete').addEventListener('click', async (e) => await deleteEventBtnClicked(e.currentTarget), false)
         })
+        calEvents.appendChild(eventOriginalTemplate)
     } else {
         calEventsContainer.classList.add('hidden')
     }
+}
+
+async function deleteEventBtnClicked (e) {
+    const projectId = document.URL.split('/').at(-1)
+    const eventId = e.parentElement.getAttribute('id')
+
+    const data = {
+        projectId: projectId,
+        eventId: eventId
+    }
+
+    await fetch('/del-event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+
+    await updateAvailableEvents(calendar)
 }

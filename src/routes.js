@@ -62,8 +62,9 @@ router.get('/api/github', middleware.authLogin, githubAPI.page)
 router.post('/api/github/webhook', middleware.authLogin, githubAPI.webHookReceiver)
 
 // Calendar events
-router.post('/add-event/:id', middleware.authLogin, calEventCon.addEventToDb)
-router.get('/get-events/:id', middleware.authLogin, calEventCon.getEventsFromDb)
+router.post('/add-event', middleware.authLogin, calEventCon.addEventToDb)
+router.post('/get-events', middleware.authLogin, calEventCon.getEventsFromDb)
+router.post('/del-event', middleware.authLogin, calEventCon.delEventFromDb)
 
 //  The 404 Route (ALWAYS Keep this as the last route)
 router.get('*', (req, res) => res.status(404).render('404'))
