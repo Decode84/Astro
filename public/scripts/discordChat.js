@@ -5,18 +5,31 @@ try { // Primarily only for the first line in case WSS is not running
 
     // Receive message
     socket.onmessage = function (event) {
-        // TODO: Make this look nicer and more discordy
         const div = document.createElement('div')
+        const user = document.createElement('p')
+        const content = document.createElement('p')
         const message = JSON.parse(event.data)
-        // message.discord: Boolean - true if it's discord, false if other WS
-        div.append(message.username + ': ' + message.message)
+
+        div.append(user)
+        div.append(content)
+
+        div.classList.add('flex')
+        user.classList.add('text-blue-500', 'font-semibold', 'text-sm', 'p-1')
+        content.classList.add('text-black', 'text-left', 'text-sm', 'p-1', 'leading-relaxed')
+
+        user.innerText = message.username + ': '
+        content.innerText = message.message
+
         input.before(div)
         input.scrollIntoView()
     }
+
     // Send message
-    input.addEventListener('change', () => {
-        socket.send(input.value)
-        input.value = ''
+    input.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            socket.send(input.value)
+            input.value = ''
+        }
     })
     socket.onclose = (event) => {
         // TODO: remove chat if its not linked properly
