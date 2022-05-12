@@ -56,9 +56,6 @@ describe('AuthenticationController', () => {
 
         const sandbox = sinon.createSandbox()
 
-        beforeEach(() => {
-
-        })
         afterEach(function () {
             sinon.restore()
             sandbox.restore()
