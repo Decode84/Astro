@@ -23,10 +23,10 @@
                         <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="email" id="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,62}$" required />
 
                         <label class="text text-left block mb-2 mt-4" for="password">Password</label>
-                        <input type="password" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="password" id="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required />
+                        <input type="password" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="password" id="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Minimum 8 bogstaver og tal, og maksimum 32" minlength="8" maxlength="32" required />
 
                         <label class="text text-left block mb-2 mt-4" for="passwordConfirmation">Password Confirmation</label>
-                        <input type="password" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="passwordConfirmation" id="passwordConfirmation" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required />
+                        <input type="password" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="passwordConfirmation" id="passwordConfirmation" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Minimum 8 bogstaver og tal, og maksimum 32" minlength="8" maxlength="32" required />
 
                         <a class="hover:text-indigo-600 block mt-6 text-sm" href="/login">Already have an account?</a>
 
