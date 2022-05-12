@@ -9,21 +9,21 @@
                 <label class="block text-sm font-bold mb-2" for="username">
                     Project name
                 </label>
-                <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="projectName" id="projectName" type="text" placeholder="Name" value="<%= project.name %>" required>
+                <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:border-blue-400 focus:outline-none focus:ring-blue-400" name="projectName" id="projectName" type="text" placeholder="Name" value="<%= project.name %>" required>
             </div>
 
             <div class="mb-4">
                 <label class="block text-sm font-bold mb-2">
                     Duration start
                 </label>
-                <input id="durationStart" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:outline-none focus:shadow-outline" type="date" value="<%= project.duration.startTime.toISOString().split('T')[0] %>" required>
+                <input id="durationStart" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:border-blue-400 focus:outline-none focus:ring-blue-400" type="date" value="<%= project.duration.startTime.toISOString().split('T')[0] %>" required>
             </div>
 
             <div class="mb-4">
                 <label class="block text-sm font-bold mb-2">
                     Duration end
                 </label>
-                <input id="durationEnd" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:outline-none focus:shadow-outline" type="date" value="<%= project.duration.endTime.toISOString().split('T')[0] %>" required>
+                <input id="durationEnd" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:border-blue-400 focus:outline-none focus:ring-blue-400" type="date" value="<%= project.duration.endTime.toISOString().split('T')[0] %>" required>
             </div>
 
             <label class="block text-sm font-bold mb-2" for="password">
@@ -31,9 +31,9 @@
             </label>
             <div class="mb-6 flex justify-between">
                 <div>
-                    <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" id="inviteInput" type="email" placeholder="bdsm69@student.aau.dk">
+                    <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:border-blue-400 focus:outline-none focus:ring-blue-400" id="inviteInput" type="email" placeholder="bdsm69@student.aau.dk">
                 </div>
-                <input class="w-24 ml-2 hover:bg-blue-700 text-white font-bold px-3.5 cursor-pointer rounded focus:outline-none focus:shadow-outline" type="button" id="inviteMember" value="Invite" style="background-color: var(--acc-color)">
+                <input class="w-24 ml-2 hover:bg-blue-700 text-white font-bold px-3.5 cursor-pointer rounded focus:border-blue-400 focus:outline-none focus:ring-blue-400" type="button" id="inviteMember" value="Invite" style="background-color: var(--acc-color)">
             </div>
 
             <div id="invited" class="mb-6">
