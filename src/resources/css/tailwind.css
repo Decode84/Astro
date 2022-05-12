@@ -26,7 +26,30 @@
     color: var(--txt-color);
 }
 
-/* Calendar overwrite css below */
+/* Custom scrollbars ****************************************/
+
+/* width */
+::-webkit-scrollbar {
+    width: 3px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: #bbb;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #888;
+}
+
+/* Calendar overwrite css below *****************************************/
 
 .calendar__month,
 .calendar__year {
