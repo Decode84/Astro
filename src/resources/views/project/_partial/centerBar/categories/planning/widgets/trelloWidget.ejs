@@ -1,7 +1,7 @@
 <section class="bg-white rounded-lg w-full drop-shadow-sm px-4 py-3 mb-3">
-    <h2 class="text-lg pb-3">Trello</h2>
-
-    <h3>Setup</h3>
+    <h2 class="text-lg pb-1">Trello</h2>
+    <hr>
+    <h3 class="text-md pb-1 pt-3">Setup</h3>
     <% if (project.categories.planning.services === undefined) {%>
     <section id="notActivated" class="flex flex-row pb-1">
         <p>Activate Trello</p>
@@ -27,8 +27,32 @@
                 </button>
             </section>
         </section>
+        <section>
+            <hr>
+            <h3 class="pb-2 pt-3">Functionality</h3>
+            <section class="flex flex-row pb-2">
+                <p>Create new trello board</p>
+                <button id="boardBtn" class="ml-auto rounded-md text-white px-4" style="background-color: var(--acc-color);">Create Board</button>
+            </section>
+            <section class="flex flex-row pb-2">
+                <p>Create new trello card</p>
+                <button id="cardBtn" class="ml-auto rounded-md text-white px-4" style="background-color: var(--acc-color);">Create Card</button>
+            </section>
+
+            <section id="boardModal">
+                <section class="pt-2">
+                    <%- include('../../../../../../trello/newBoard'); %>
+                </section>
+            </section>
+            <section id="cardModal">
+                <section class="pt-2">
+                    <%- include('../../../../../../trello/newCard'); %>
+                </section>
+            </section>
+        </section>
+        <hr>
     </section>
     <% } %>
 </section>
 
-<script src="/public/scripts/trelloMenuOpt.js"></script>
+<script src="/scripts/trelloMenuOpt.js"></script>

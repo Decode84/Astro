@@ -1,11 +1,4 @@
 <div id="planning-widget" class="hidden">
     <%- include('./widgets/trelloWidget'); %>
     <!-- add more widgets -->
-
-    <% if (project.categories.planning.services === undefined) {%>
-    <% console.log('service undefined'); %>
-    <% } else { %>
-    <%- include('../../../../../trello/newBoard'); %>
-    <%- include('../../../../../trello/newCard'); %>
-    <% } %>
 </div>

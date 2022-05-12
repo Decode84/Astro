@@ -1,46 +1,40 @@
-/*
-window.onload = () => {
-    const children = document.getElementById('options').children
-    for (const child of children) {
-        const tabTitle = child.querySelector('p').innerHTML
+// Get the modals
+const boardModal = document.getElementById('boardModal')
+const cardModal = document.getElementById('cardModal')
 
-        child.addEventListener('click', () => {
-            setActiveCategory(tabTitle)
-            colorActiveTabBtn(children)
-            child.classList.add('bg-gray-100')
-        })
+// Get the buttons that opens the modal
+const boardBtn = document.getElementById('boardBtn')
+const cardBtn = document.getElementById('cardBtn')
+
+// Get the button that closes the modal
+const boardClose = document.getElementById('boardClose')
+const cardClose = document.getElementById('cardClose')
+
+boardModal.style.display = 'none'
+cardModal.style.display = 'none'
+
+// When the user clicks on the button, open the modal
+boardBtn.addEventListener('click', () => {
+    boardModal.style.display = 'block'
+})
+cardBtn.addEventListener('click', () => {
+    cardModal.style.display = 'block'
+})
+
+boardClose.addEventListener('click', () => {
+    boardModal.style.display = 'none'
+})
+cardClose.addEventListener('click', () => {
+    cardModal.style.display = 'none'
+})
+
+// When the user clicks on <span> (x), close the modal
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function (event) {
+    if (event.target === boardModal) {
+        boardModal.style.display = 'none'
+    } else if (event.target === cardModal) {
+        cardModal.style.display = 'none'
     }
 }
-
-function setActiveCategory (name) {
-    if (name === 'Create new board') {
-        disableAllCategoryTabsBut('planning-widget')
-    } else if (name === 'Communication') {
-        disableAllCategoryTabsBut('communication-widget')
-    } else if (name === 'Writing') {
-        disableAllCategoryTabsBut('writing-widget')
-    } else if (name === 'Version control') {
-        disableAllCategoryTabsBut('version-control-widget')
-    } else if (name === 'UML/Tools') {
-        disableAllCategoryTabsBut('uml-tools-widget')
-    } else if (name === 'File sharing') {
-        disableAllCategoryTabsBut('file-sharing-widget')
-    }
-}
-
-function disableAllCategoryTabsBut(id) {
-    const widgetContainers = document.getElementById('dynamic').children
-    for (const widgetContainer of widgetContainers) {
-        if (widgetContainer.id === id) {
-            widgetContainer.classList.remove('hidden')
-        } else {
-            widgetContainer.classList.add('hidden')
-        }
-    }
-}
-
-function colorActiveTabBtn(btns) {
-    for (const btn of btns) {
-        btn.classList.remove('bg-gray-100')
-    }
-}*/
