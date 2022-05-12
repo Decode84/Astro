@@ -9,30 +9,34 @@
             <p id="info"></p>
             <script type="text/javascript" src="/scripts/discordAuth.js"></script>
         </div>
-    <% }%>
-    <% if (!discordInfo.ServerInviteLink) { %>
-        <div class="flex flex-row pb-1">
-            <p class="inline">Create discord server for project</p>
-            <button class="rounded-md text-white ml-auto w-20" style="background-color: var(--acc-color);">
-                <a href="https://discord.new/dQCDNNwCPuhE" target="_blank">Create</a>
-            </button>
-        </div>
-        <div class="flex flex-row pb-1">
-            <p class="inline">Invite bot to discord server</p>
-            <button class="rounded-md text-white ml-auto w-20" style="background-color: var(--acc-color);">
-                <a href="https://discord.com/api/oauth2/authorize?client_id=959004457205637131&permissions=537119937&scope=bot%20applications.commands" target="_blank">Invite</a>
-            </button>
-        </div>
-    <% } else{ %>
-        <div class="flex flex-row pb-2">
-            <p class="inline">Open your discord server</p>
-            <button class="rounded-md text-white ml-auto w-20 items-center" style="background-color: var(--acc-color);">
-                <a href="<%- discordInfo.ServerInviteLink%>" target="_blank">Open</a>
-            </button>
-        </div>
-        <div id="chat" class="px-4 py-2 rounded-md bg-[#FAFAFA]">
-            <input id="input" placeholder="Type message" class="border-2 py-1 p-2 mt-3 border-gray-200 bg-gray-50 w-full rounded-md" />
-            <script type="text/javascript" src="/scripts/discordChat.js"></script>
-        </div>
-    <% } %>
+
+        <% }%>
+            <% if (!discordInfo.ServerInviteLink) { %>
+                <div class="flex flex-row pb-1">
+                    <p class="inline">Create discord server for project</p>
+                    <button class="rounded-md text-white ml-auto w-20" style="background-color: var(--acc-color);">
+                        <a href="https://discord.new/dQCDNNwCPuhE" target="_blank">Create</a>
+                    </button>
+                </div>
+                <div class="flex flex-row pb-1">
+                    <p class="inline">Invite bot to discord server</p>
+                    <button class="rounded-md text-white ml-auto w-20" style="background-color: var(--acc-color);">
+                        <a href="https://discord.com/api/oauth2/authorize?client_id=959004457205637131&permissions=537119937&scope=bot%20applications.commands" target="_blank">Invite</a>
+                    </button>
+                </div>
+                <% } else{ %>
+                    <div class="flex flex-row pb-1">
+                        <p class="inline">Open your discord server</p>
+                        <button class="rounded-md text-white ml-auto w-20" style="background-color: var(--acc-color);">
+                            <a href="<%- discordInfo.ServerInviteLink%>" target="_blank">Open</a>
+                        </button>
+                    </div>
+
+
+                    <%- include('../../_partial/infoMsg', { message: "Type '/link' in the Discord channel you wish to communicate through" }); %>
+                        <div id="chat">
+                            <input id="input" placeholder="Type message" class="border-2 py-1 p-2 mt-3 border-gray-200 bg-gray-50 w-full rounded-md" />
+                            <script type="text/javascript" src="/scripts/discordChat.js"></script>
+                        </div>
+                        <% } %>
 </div>
