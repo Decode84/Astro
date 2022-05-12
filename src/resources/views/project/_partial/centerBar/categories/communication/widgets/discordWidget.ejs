@@ -1,7 +1,7 @@
 <div class="bg-white rounded-lg w-full drop-shadow-sm px-4 py-3 mb-3">
     <h2 class="text-lg pb-3">Discord</h2>
     <% if (discordInfo.AuthLink) { %>
-        <div id="login-container" class="flex flex-row pb-1 hidden">
+        <div id="login-container" class="flex flex-row pb-1">
             <p class="inline">Link your Projecthub account with Discord</p>
             <button class="rounded-md text-white ml-auto w-20" style="background-color: var(--acc-color);">
                 <a id="login" href="<%- discordInfo.AuthLink%>">Link</a>
@@ -9,6 +9,7 @@
             <p id="info"></p>
             <script type="text/javascript" src="/scripts/discordAuth.js"></script>
         </div>
+
         <% }%>
             <% if (!discordInfo.ServerInviteLink) { %>
                 <div class="flex flex-row pb-1">

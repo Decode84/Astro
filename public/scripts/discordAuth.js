@@ -11,24 +11,22 @@ if (!code) {
     href += `&state=${btoa(randomString)}::` + url.pathname.substring(url.pathname.lastIndexOf('/') + 1)
     document.getElementById('login').href = href
     document.getElementById('login-container').classList.remove('hidden')
-}
-else {
+} else {
     // after auth
     if (localStorage.getItem('oauth-state') !== atob(decodeURIComponent(state))) {
         // May have been clickjacked
         document.getElementById('info').innerText = 'Failed to authenticate. Try again'
-    }
-    else {
+    } else {
         document.getElementById('info').innerText = 'Discord account linked'
     }
 }
 function generateRandomString () {
     let randomString = ''
     const randomNumber = Math.floor(Math.random() * 10)
-    
+
     for (let i = 0; i < 20 + randomNumber; i++) {
         randomString += String.fromCharCode(33 + Math.floor(Math.random() * 94))
     }
-    
+
     return randomString
 }
