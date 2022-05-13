@@ -56,6 +56,7 @@ router.get('/trello/createCard', middleware.authLogin, TrelloAPI.createCard)
 // Trello API
 router.get('/api/trello/boards', middleware.authLogin, TrelloAPI.listBoards)
 router.get('/api/trello/lists', middleware.authLogin, TrelloAPI.listLists)
+router.get('/api/trello/cards', middleware.authLogin, TrelloAPI.listCards)
 
 // Github API
 router.get('/api/github', middleware.authLogin, githubAPI.page)
