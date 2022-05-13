@@ -226,10 +226,11 @@ const TrelloApi = {
                 })
                 const text = await response.text()
                 boards = text
+                res.send(boards)
             } catch (e) {
                 res.send(null)
+                console.log(`Error: ${e}`)
             }
-            res.send(boards)
         }
     },
 
@@ -259,6 +260,33 @@ const TrelloApi = {
                 res.send(null)
             }
         }
+    },
+
+    /**
+     * @function listCards
+     * @description Returns all the cards in a given list.
+     * @param {*} req
+     * @param {*} res
+     */
+    listCards: async (req, res) => {
+        const listId = req.query.listId
+        const userId = req.session.user._id
+        const user = await userController.getUserById(userId)
+
+        let response
+        try {
+            const url = 'https://api.trello.com/1/lists/' + listId + '/cards?key=' + trelloKey + '&token=' + user.authentications.trello.token
+            response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json'
+                }
+            })
+        } catch (e) {
+            res.send(null)
+        }
+        const cards = await response.text()
+        res.send(cards)
     },
 
     /**

@@ -51,8 +51,8 @@ async function displayBoards (boards) {
         }
     }
 
-    const inputProjectId = document.getElementById('projectIdInput');
-    inputProjectId.value = new URL(document.location.href).searchParams.get('projectId');
+    const inputProjectId = document.getElementById('projectIdInput')
+    inputProjectId.value = new URL(document.location.href).searchParams.get('projectId')
 
     console.log(inputProjectId.value)
 }

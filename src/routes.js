@@ -60,8 +60,9 @@ router.get('/trello/setup/:id', middleware.authLogin, TrelloAPI.setupTrello)
 router.get('/trello/activate/:id', middleware.authLogin, TrelloAPI.activateTrello)
 
 // Trello API
-router.get('/api/trello/boards/:id', TrelloAPI.listBoards)
-router.get('/api/trello/lists/:id', TrelloAPI.listLists)
+router.get('/api/trello/boards/:id', middleware.authLogin, TrelloAPI.listBoards)
+router.get('/api/trello/lists/:id', middleware.authLogin, TrelloAPI.listLists)
+router.get('/api/trello/cards/:id', middleware.authLogin, TrelloAPI.listCards)
 
 // Github API
 router.get('/api/github', githubAPI.page)
