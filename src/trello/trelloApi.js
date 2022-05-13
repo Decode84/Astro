@@ -247,6 +247,31 @@ class TrelloApi {
         }
     }
 
+    async listCards (req, res) {
+        const listId = req.query.listId
+        const userId = req.session.user._id
+        const projectId = req.params.projectId
+        const project = await projectController.getProjectById(projectId)
+        const user = await userController.getUser(userId)
+        const organizationId = project.categories.planning.services.trello.organizationId
+
+        let cards
+        try {
+            const url = 'https://api.trello.com/1/lists/' + listId + '/cards?key=' + TrelloApi + '&token=' + user.authentications.trello.token
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json'
+                }
+            })
+            catch (e) {
+                res.send(null)
+            }
+            const text = await response.text()
+            console.log(text)
+        }
+    }
+
     /**
      * @function newCard
      * @description Renders an html page that allows the user to create a new card.
