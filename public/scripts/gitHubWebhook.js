@@ -17,31 +17,34 @@ async function readMessages() {
             user.setAttribute('style', '')
                 const userLink = document.createElement('a')
                 userLink.setAttribute('href', message.user.url)
-                userlink.innerText = message.user.login
+                userLink.setAttribute('target', '_blank')
+                userLink.innerText = message.user.login + ':'
             user.append(userLink)
-            user.innerText += ': ' + message.push ? 'push' : 'Pull Request ' + message.pull_request.action
         div.append(user)
             const content = document.createElement('p')
             content.setAttribute('class', 'flex flex-1 text-sm break-word p-1')
-            if (message.push) {
-                const pushLink = document.createElement('a')
-                pushLink.setAttribute('href', message.push.url)
-                pushLink.innerHTML = 'Pushed ' + message.push.ref + ' with the message: ' + message.push.message
-                content.append(pushLink)
-            } else if (message.pull_request) {
-                const prLink = document.createElement('a')
-                prLink.setAttribute('href', message.pull_request.url)
-                prLink.innerHTML = message.pull_request.head + ' -> ' + message.pull_request.base
-                content.append(prLink)
-                const pull = document.createElement('h3')
-                pull.innerText = message.pull_request.title
-                content.append(pull)
-                const pullBody = document.createElement('p')
-                pullBody.innerText = message.pull_request.body
-                content.append(pullBody)
-            }
+        if (message.push) {
+            const pushLink = document.createElement('a')
+            pushLink.setAttribute('href', message.push.url)
+            pushLink.setAttribute('target', '_blank')
+            pushLink.innerHTML = 'Pushed ' + message.push.ref + ' with the message: ' + message.push.message
+            content.append(pushLink)
+        } else if (message.pull_request) {
+            const prLink = document.createElement('a')
+            prLink.setAttribute('href', message.pull_request.url)
+            prLink.innerHTML = message.pull_request.action + ' pull request for ' +
+                message.pull_request.head + ' -> ' + message.pull_request.base + ': ' + message.pull_request.title +
+                '<br>' + message.pull_request.body
+            content.append(prLink)
+        }
         div.append(content)
+            const date = document.createElement('p')
+            content.setAttribute('class', 'flex flex-1 text-sm break-word p-1 text-sm')
+            const convertedDate = new Date(message.timestamp)
+            date.innerText = convertedDate.toLocaleString()
+        div.append(date)
         
+    
         webhookDashboard.append(div)
         div.scrollIntoView()
     }

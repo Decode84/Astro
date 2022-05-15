@@ -2,7 +2,6 @@
 
 const githubUrl = new URL(window.location)
 const githubCode = githubUrl.searchParams.get('code') // SUysVwZaIztTpdkvVzNe6RCZn3fRqC
-console.log("awdawd")
 // before auth
 if (!githubCode) {
     const randomString = generateRandomString()
