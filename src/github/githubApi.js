@@ -11,10 +11,9 @@ const auth = createOAuthAppAuth({
     clientSecret: appSecret
 })
 
-async function setupProject (userAuthenticationFromWebFlow, user, projectID) {
-    const project = await Project.findById(projectID)
+async function setupProject (githubToken, project) {
     const octokit = new Octokit({
-        auth: userAuthenticationFromWebFlow.token
+        auth: githubToken
     })
     // https://docs.github.com/en/rest/repos/repos#create-a-repository-for-the-authenticated-user
     const resp = await octokit.request('POST /user/repos', {
@@ -25,23 +24,44 @@ async function setupProject (userAuthenticationFromWebFlow, user, projectID) {
         has_projects: true,
         has_wiki: true
     })
-    console.log(resp.data)
-    await putGitHubInDB(project, resp.data)
-    await createWebHook(resp.data.hooks_url, octokit)
+    if (resp.status === 201) {
+        await putGitHubInDB(project, resp.data, githubToken)
+        await createWebHook(resp.data.hooks_url, octokit)
+    } else console.log("Error creating project for github")
 }
-async function putGitHubInDB (project, data) {
+async function addUserToProject(userToken, project) {
+    const user = new Octokit({
+        auth: userToken
+    })
+    const { data } = await user.request("/user");
+    const github = project.categories.development.services.github
+    const owner = new Octokit({
+        auth: github.ownerToken
+    })
+    const url = github.url.split('com')[1] + '/collaborators/' + data.name
+    try {
+        const resp = await owner.request('PUT ' + url)
+        if (resp.ok)
+            console.log("added " + data.name + " to project")
+    } catch (e) {
+        console.log('failed to add github user. They might already be linked to the project')
+    }
+}
+async function putGitHubInDB (project, data, githubToken) {
     const github = {
         id: data.id,
         name: data.name,
+        ownerToken: githubToken,
         url: data.url,
         htmlUrl: data.html_url,
         webHook: data.hooks_url,
-        hookMessages: []
+        hookMessages: [],
+        members: [ githubToken ]
     }
     // Update DB
     project.categories.development.services = { ...project.categories.development.services, github }
     project.markModified('categories.development.services')
-    project.save()
+    await project.save()
 }
 async function createWebHook (hookUrl, octokit) {
     await octokit.request('POST ' + hookUrl.split('com')[1], {
@@ -57,4 +77,4 @@ async function createWebHook (hookUrl, octokit) {
         }
     })
 }
-module.exports = { auth, setupProject }
+module.exports = { auth, setupProject, addUserToProject }
