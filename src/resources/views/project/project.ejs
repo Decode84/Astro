@@ -5,7 +5,7 @@
 
 <main class="flex flex-row" style="min-width: var(--min-window-w); height: calc(100vh - var(--header-h))">
   <!-- Navigation bar  -->
-  <div class="pb-5 pl-5 overflow-y-auto" style="width: var(--left-col-w); background-color: var(--sec-color);">
+  <div class="pb-5 overflow-y-auto" style="width: var(--left-col-w); background-color: var(--sec-color);">
     <%- include('./_partial/leftBar/navigation'); %>
   </div>
 
@@ -15,7 +15,7 @@
   </div>
 
   <!-- Static widgets  -->
-  <div class="p-5 pt-0 flex flex-col w-full overflow-y-auto" style="width: var(--right-col-w); background-color: var(--sec-color)">
+  <div class="p-5 pr-0 pt-0 flex flex-col w-full overflow-y-auto" style="width: var(--right-col-w); background-color: var(--sec-color)">
     <%- include('./_partial/rightBar/static'); %>
   </div>
 </main>

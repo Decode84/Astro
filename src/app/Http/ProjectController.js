@@ -3,7 +3,6 @@ const userCon = require('./UserController')
 const User = require('../Models/User')
 const DiscordCon = require('./ServiceControllers/DiscordController')
 
-
 const ProjectController = {
     /// GETS //////////////////////////////////
     /**
@@ -57,7 +56,10 @@ const ProjectController = {
      * @param {*} res
      */
     showCreateProject: async (req, res) => {
-        res.render('projects/createProject', { userEmail: req.session.user.email })
+        res.render('projects/createProject', {
+            userEmail: req.session.user.email,
+            user: req.session.user
+        })
     },
 
     /**

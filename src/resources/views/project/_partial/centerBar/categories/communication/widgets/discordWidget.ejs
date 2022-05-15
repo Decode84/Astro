@@ -1,38 +1,43 @@
 <div class="bg-white rounded-lg w-full drop-shadow-sm px-4 py-3 mb-3">
     <h2 class="text-lg pb-3">Discord</h2>
     <% if (discordInfo.AuthLink) { %>
-        <div id="login-container" class="flex flex-row pb-1 hidden">
+        <div id="login-container" class="flex flex-row pb-1">
             <p class="inline">Link your Projecthub account with Discord</p>
-            <button class="rounded-md text-white ml-auto w-20" style="background-color: var(--acc-color);">
+            <button class="rounded-md ml-auto w-20 shadow-sm" style="background-color: var(--sec-color);">
                 <a id="login" href="<%- discordInfo.AuthLink%>">Link</a>
             </button>
             <p id="info"></p>
             <script type="text/javascript" src="/scripts/discordAuth.js"></script>
         </div>
-    <% }%>
-    <% if (!discordInfo.ServerInviteLink) { %>
-        <div class="flex flex-row pb-1">
-            <p class="inline">Create discord server for project</p>
-            <button class="rounded-md text-white ml-auto w-20" style="background-color: var(--acc-color);">
-                <a href="https://discord.new/dQCDNNwCPuhE" target="_blank">Create</a>
-            </button>
-        </div>
-        <div class="flex flex-row pb-1">
-            <p class="inline">Invite bot to discord server</p>
-            <button class="rounded-md text-white ml-auto w-20" style="background-color: var(--acc-color);">
-                <a href="https://discord.com/api/oauth2/authorize?client_id=959004457205637131&permissions=537119937&scope=bot%20applications.commands" target="_blank">Invite</a>
-            </button>
-        </div>
-    <% } else{ %>
-        <div class="flex flex-row pb-1">
-            <p class="inline">Open your discord server</p>
-            <button class="rounded-md text-white ml-auto w-20" style="background-color: var(--acc-color);">
-                <a href="<%- discordInfo.ServerInviteLink%>" target="_blank">Open</a>
-            </button>
-        </div>
-        <div id="chat">
-            <input id="input" placeholder="Type message" class="border-2 py-1 p-2 mt-3 border-gray-200 bg-gray-50 w-full rounded-md" />
-            <script type="text/javascript" src="/scripts/discordChat.js"></script>
-        </div>
-    <% } %>
+
+        <% }%>
+            <% if (!discordInfo.ServerInviteLink) { %>
+                <div class="flex flex-row pb-1">
+                    <p class="inline">Create discord server for project</p>
+                    <button class="rounded-md ml-auto w-20 shadow-sm" style="background-color: var(--sec-color);">
+                        <a href="https://discord.new/dQCDNNwCPuhE" target="_blank">Create</a>
+                    </button>
+                </div>
+                <div class="flex flex-row pb-1">
+                    <p class="inline">Invite bot to discord server</p>
+                    <button class="rounded-md ml-auto w-20 shadow-sm" style="background-color: var(--sec-color);">
+                        <a href="https://discord.com/api/oauth2/authorize?client_id=959004457205637131&permissions=537119937&scope=bot%20applications.commands" target="_blank">Invite</a>
+                    </button>
+                </div>
+                <% } else{ %>
+                    <div class="flex flex-row pb-1">
+                        <p class="inline">Open your discord server</p>
+                        <button class="rounded-md ml-auto w-20 shadow-sm" style="background-color: var(--sec-color);">
+                            <a href="<%- discordInfo.ServerInviteLink%>" target="_blank">Open</a>
+                        </button>
+                    </div>
+
+
+                    <%- include('../../_partial/infoMsg', { message: "Type '/link' in the Discord channel you wish to communicate through" }); %>
+                        <div id="chat">
+                            <div id="message-container" class="h-60 overflow-y-auto"></div>
+                            <input id="input" placeholder="Type message" class="border-2 py-1 p-2 mt-3 border-gray-200 bg-gray-50 w-full rounded-md" />
+                            <script type="text/javascript" src="/scripts/discordChat.js"></script>
+                        </div>
+                        <% } %>
 </div>

@@ -11,18 +11,17 @@ chai.use(sinonChai)
 
 let user
 
-beforeEach(() => {
-    user = new User({
-        name: 'testAuthUser',
-        username: 'testAuthuser',
-        email: 'test@test.test',
-        password: '$2b$10$tNYovXfIfiqlbaxWUnFaAeWSE1/gsQIgW3NSNZbVEKEDYn7iF/oe2'
-    })
-    user.save()
-        .then(() => done())
-})
-
 describe('AuthenticationController', () => {
+    beforeEach((done) => {
+        user = new User({
+            name: 'testAuthUser',
+            username: 'testAuthuser',
+            email: 'test@test.test',
+            password: '$2b$10$tNYovXfIfiqlbaxWUnFaAeWSE1/gsQIgW3NSNZbVEKEDYn7iF/oe2'
+        })
+        user.save()
+            .then(() => done())
+    })
     describe('authenticate function', () => {
         let req, res
         beforeEach(() => {
@@ -57,9 +56,6 @@ describe('AuthenticationController', () => {
 
         const sandbox = sinon.createSandbox()
 
-        beforeEach(() => {
-
-        })
         afterEach(function () {
             sinon.restore()
             sandbox.restore()

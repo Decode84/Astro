@@ -1,57 +1,63 @@
-<section class="m-auto w-2/5 pt-6">
-    <form method="post" id="createProjForm" class="w-96 bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4">
-        <input id="userEmail" type="hidden" value=<%= userEmail%>>
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
-                Project
-            </label>
-            <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:outline-none focus:shadow-outline" name="projectName" id="projectName" type="text" placeholder="Name">
-        </div>
-
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2">
-                Duration start
-            </label>
-            <input id="durationStart" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:outline-none focus:shadow-outline" type="date" required>
-        </div>
-
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2">
-                Duration end
-            </label>
-            <input id="durationEnd" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:outline-none focus:shadow-outline" type="date" required>
-        </div>
-
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
-            Add members
-        </label>
-        <label class="block text-gray-700 text-sm font-bold mb-2">
-        <div class="mb-6 flex justify-between">
-            <div class="flex flex-1">
-                <input class="border-2 py-1 p-2 mr-2 border-gray-200 bg-gray-50 w-full rounded-md focus:outline-none focus:shadow-outline" id="inviteInput" type="email" placeholder="bd69sm@student.aau.dk">
+<header class="flex flex-row" style="min-width: var(--min-window-w); height: var(--header-h)">
+    <%- include('./_partial/header'); %>
+</header>
+<main class="pb-8 content-evenly flex items-center justify-center" style="min-height: calc(100vh - var(--header-h))">
+    <div style="width: var(--form-w)">
+        <form method="post" id="createProjForm" class="p-8 mx-auto border-t-8 shadow-md rounded-md" style="background-color: var(--pri-color);border-color: var(--acc-color)">
+            <h1 class="text-2xl text-center font-bold">Create project</h1>
+            <input id="userEmail" type="hidden" value=<%=userEmail%>>
+            <div class="my-4">
+                <label class="block text-sm font-bold mb-2" for="username">
+                    Project
+                </label>
+                <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:border-blue-400 focus:outline-none focus:ring-blue-400" name="projectName" id="projectName" type="text" placeholder="Name">
             </div>
-            <button class="px-3.5 w-24 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" style="background-color: var(--acc-color)" type="button" id="inviteMember">
-                Invite
-            </button>
-        </div>
 
-        <div id="invited" class="hidden mb-6">
-            <label id="labelInvMembers" class="text-gray-700 text-sm font-bold mb-2">
-                Members to be invited
+            <div class="mb-4">
+                <label class="block text-sm font-bold mb-2">
+                    Duration start
+                </label>
+                <input id="durationStart" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:border-blue-400 focus:outline-none focus:ring-blue-400" type="date" required>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-bold mb-2">
+                    Duration end
+                </label>
+                <input id="durationEnd" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:border-blue-400 focus:outline-none focus:ring-blue-400" type="date" required>
+            </div>
+
+            <label class="block text-sm font-bold mb-2" for="password">
+                Add members
             </label>
+            <label class="block text-sm font-bold mb-2">
+                <div class="mb-6 flex justify-between">
+                    <div class="flex flex-1">
+                        <input class="border-2 py-1 p-2 mr-2 border-gray-200 bg-gray-50 w-full rounded-md focus:border-blue-400 focus:outline-none focus:ring-blue-400" id="inviteInput" type="email" placeholder="bd69sm@student.aau.dk">
+                    </div>
+                    <button class="px-3.5 w-24 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" style="background-color: var(--acc-color)" type="button" id="inviteMember">
+                        Invite
+                    </button>
+                </div>
 
-        </div>
+                <div id="invited" class="hidden mb-6">
+                    <label id="labelInvMembers" class="text-sm font-bold mb-2">
+                        Members to be invited
+                    </label>
 
-        <div class="flex items-center justify-between">
-            <button class="px-3.5 py-2 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" style="background-color: var(--acc-color)" type="submit">
-                Create Project
-            </button>
-            <a class="w-24 text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline" href="/projects">
-                Cancel
-            </a>
-        </div>
-    </form>
-</section>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <button class="px-3.5 py-2 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" style="background-color: var(--acc-color)" type="submit">
+                        Create Project
+                    </button>
+                    <a class="w-24 text-center hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline" href="/projects" style="background-color: var(--acc-color)">
+                        Cancel
+                    </a>
+                </div>
+        </form>
+    </div>
+</main>
 
 
 <script>
@@ -65,7 +71,7 @@
         const emails = [...invited].map(member => member.innerHTML.trim())
         const userEmail = document.getElementById('userEmail').value
         emails.push(userEmail)
-        
+
         let response = await fetch('/create-project', {
             method: 'POST',
             headers: {
@@ -100,13 +106,13 @@
 
             div.setAttribute('class', 'flex items-center justify-between py-2')
 
-            remove.setAttribute('class', 'remove-user w-24 px-3.5 bg-blue-500 hover:bg-blue-700 text-white font-bold cursor-pointer rounded focus:outline-none focus:shadow-outline')
+            remove.setAttribute('class', 'remove-user w-24 px-3.5 py-0.5 bg-blue-500 hover:bg-blue-700 text-white font-bold cursor-pointer rounded focus:outline-none focus:shadow-outline')
             remove.setAttribute('type', 'button')
             remove.setAttribute('style', 'background-color: var(--acc-color)')
             remove.setAttribute('value', 'Remove')
             remove.addEventListener('click', (e) => removeSelf(e.target));
 
-            invited.setAttribute('class', 'inv-member flex flex-1 mr-2 truncate')
+            invited.setAttribute('class', 'font-medium inv-member flex flex-1 mr-2 truncate')
             invited.innerHTML = email;
             invited.setAttribute('id', 'invited')
 
@@ -117,7 +123,7 @@
             document.getElementById("inviteInput").value = "";
         }
     })
-    
+
     function removeSelf(target) {
         target.parentElement.remove();
         if (document.querySelectorAll('.inv-member').length == 0) {
