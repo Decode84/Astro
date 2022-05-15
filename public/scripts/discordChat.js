@@ -20,7 +20,6 @@ try { // Primarily only for the first line in case WSS is not running
         content.setAttribute('class', 'flex flex-1 text-sm break-word p-1')
 
         user.innerText = message.username + ': '
-        console.log(event)
         content.innerText = message.message
 
         messageContainer.append(div)

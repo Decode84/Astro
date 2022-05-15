@@ -4,7 +4,7 @@ const projectCon = require('./app/Http/ProjectController')
 const discordCon = require('./app/Http/ServiceControllers/DiscordController')
 const homeCon = require('./app/Http/HomeController')
 const TrelloAPI = require('./trello/trelloApi')
-const githubAPI = require('./app/Http/GithubController')
+const githubController = require('./app/Http/ServiceControllers/GithubController')
 const middleware = require('./app/Middleware/Authorization')
 const calEventCon = require('./app/Http/CalEventController')
 
@@ -58,8 +58,9 @@ router.get('/api/trello/boards', middleware.authLogin, TrelloAPI.listBoards)
 router.get('/api/trello/lists', middleware.authLogin, TrelloAPI.listLists)
 
 // Github API
-router.get('/api/github', middleware.authLogin, githubAPI.page)
-router.post('/api/github/webhook', middleware.authLogin, githubAPI.webHookReceiver)
+router.get('/api/github', middleware.authLogin, githubController.authReq)
+router.post('/api/github/webhook', githubController.webHookReceiver)
+router.get('/api/github/webhook', middleware.authLogin, githubController.webHookProvider)
 
 // Calendar events
 router.post('/add-event', middleware.authLogin, calEventCon.addEventToDb)

@@ -1,28 +1,38 @@
-const User = require('../Models/User')
-const Project = require('../Models/Project')
-const gitHub = require('../../github/githubApi')
-const { setupProject } = require('../../github/githubApi');
+const User = require('../../Models/User')
+const Project = require('../../Models/Project')
+const { setupProject, addUserToProject, auth } = require('../../../github/githubApi');
 const authLink = 'https://github.com/login/oauth/authorize?client_id=7864fe4bf9aed444e764&scope=repo'
-const TEMP_currentproject = '627380b04dd41fde76c9bf66' // TODO: use URL instead
 
-async function page (req, res) {
-    if (req.session.user) {
-        const user = User.findById(req.session.user._id)
-        if (user.services.github)
-        {
-            const project = await Project.findById(TEMP_currentproject)
-            if (project.categories.development.services && project.categories.development.services.github) {
-                const github = project.categories.development.services.github
-                res.render('project/githubtemp', {
-                    githubName: github.name,
-                    gitHubLink: github.htmlUrl,
-                    gitHubMessages: github.hookMessages
-                })
-                return
-            }
-        } else if (req.query.code) await handleAuth(req, res)
+async function widget (req, res) {
+    const user = await User.findById(req.session.user._id)
+    if (!user.services?.github) {
+        return { AuthLink: authLink }
+    } else {
+        const project = await Project.findById(req.params.id)
+        if (!project.categories?.development?.services?.github) {
+            // Create project
+            await setupProject(user.services.github, project)
+            // TODO: Handle case where project with that name exists
+        }
+        const github = project.categories.development.services.github
+        if (!github.members.includes('' + user.services.github)) {
+            // User hasn't been added to project yet
+            await addUserToProject(user.services.github, project)
+        }
+        return {
+            githubName: github.name,
+            gitHubLink: github.htmlUrl,
+            gitHubMessages: github.hookMessages
+        }
     }
-    res.render('project/githubtemp', { AuthLink: authLink })
+}
+async function authReq (req, res) {
+    const code = req.query.code
+    const state = req.query.state.split('::')
+    if (code) {
+        await handleAuth(req, code)
+    }
+    res.redirect('/project/' + state[1])
 }
 async function webHookReceiver (req) {
     try {
@@ -34,7 +44,7 @@ async function webHookReceiver (req) {
             const body = req.body
             let message = {
                 user: { login: body.sender.login, id: body.sender.id, url: body.sender.html_url },
-                repository: body.repository.id
+                repository: body.repository.name
             }
             if (body.pull_request) {
                 const pull = body.pull_request
@@ -69,30 +79,33 @@ async function webHookReceiver (req) {
         console.log(req.body)
     }
 }
+async function webHookProvider (req, res) {
+    if (!(req.session.user && req.query.projectID))
+        return
+    const project = await Project.findOne({ _id: req.query.projectID, members: req.session.user._id })
+    if (!project)
+        return
+    console.log(project.name)
+    if (project.categories.development?.services?.github?.hookMessages)
+        res.json(project.categories.development.services.github.hookMessages)
+}
 async function handleAuth (req, res) {
     try {
-        const userAuth = await gitHub.auth({
+        const userAuth = await auth({
             type: 'oauth-user',
             code: req.query.code,
             state: req.query.state
         })
-        console.log(userAuth)
         await putUserInDB(userAuth, req.session.user.username)
-        await setupProject(userAuth, req.session.user, TEMP_currentproject)
-        // TODO: Handle case where project with that name exists
     } catch (e) {
-        console.log('Failed discord auth: ' + e)
+        console.log('Failed github auth: ' + e)
     }
 }
-
 async function putUserInDB (auth, username) {
     const user = await User.findOne({ username: username })
-    user.services = {
-        ...user.services,
-        github: { clientId: auth.clientId, clientSecret: auth.clientSecret, token: auth.token }
-    }
+    user.services = { ...user.services, github: auth.token }
     await user.save()
     console.log(`Sucessfully linked ${username} with github account ${auth.clientId}`)
 }
 
-module.exports = { page, webHookReceiver }
+module.exports = { widget, webHookReceiver, webHookProvider, authReq }
