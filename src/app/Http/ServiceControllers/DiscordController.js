@@ -14,6 +14,8 @@ const AuthLink = 'https://discord.com/api/oauth2/authorize?client_id=95900445720
  * @function Handling of the discord service
  */
 exports.discordWidget = async (req, res) => {
+    if (!secret)
+        return null
     const project = await Project.findById(req.params.id)
     let auth = AuthLink
     if (req.session.user.services?.discord)
