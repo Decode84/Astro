@@ -12,7 +12,7 @@ class MailController {
                 pass: process.env.MAIL_KEY
             }
         })
-
+        console.log(mail)
         const mailOptions = {
             from: 'ProjectHub.AAU@gmail.com',
             to: email,
