@@ -6,10 +6,11 @@ const githubCode = githubUrl.searchParams.get('code') // SUysVwZaIztTpdkvVzNe6RC
 if (!githubCode) {
     const randomString = generateRandomString()
     localStorage.setItem('oauth-state', randomString)
-
-    document.getElementById('githubLogin').href += `&state=${btoa(randomString)}::`
-        + githubUrl.pathname.substring(githubUrl.pathname.lastIndexOf('/') + 1)
-
+    let githref = document.getElementById('githubLogin').href
+    githref = githref.replace('localhost%3A4000', encodeURIComponent(githubUrl.host))
+    githref += `&state=${btoa(randomString)}::` + githubUrl.pathname.substring(githubUrl.pathname.lastIndexOf('/') + 1)
+    document.getElementById('githubLogin').href = githref
+    
     document.getElementById('githubLogin').style.display = 'block'
 }
 else {
