@@ -6,7 +6,7 @@
     </div>
 </header>
 <main class="pb-8 content-evenly flex items-center justify-center" style="min-height: calc(100vh - var(--header-h))">
-    <<div style="width: var(--form-w)">
+    <div style="width: var(--form-w)">
         <% if (message.toString() !=="" ) { %>
             <%- include('./_partial/infoBox', { message: message}); %>
                 <% } %>
@@ -26,5 +26,5 @@
                             <button class="py-2 px-4 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" style="background-color: var(--acc-color)" id="submit" type="submit">Update password</button>
                         </div>
                     </form>
-                    </div>
+    </div>
 </main>

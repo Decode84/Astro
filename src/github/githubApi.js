@@ -30,6 +30,7 @@ async function setupProject (githubToken, project) {
     } else console.log("Error creating project for github")
 }
 async function addUserToProject(userToken, project) {
+    console.log('Trying to add user to project')
     const user = new Octokit({
         auth: userToken
     })
