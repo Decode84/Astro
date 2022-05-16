@@ -1,22 +1,37 @@
 try { // Primarily only for the first line in case WSS is not running
-    const socket = new WebSocket('ws://localhost:4000/')
+    const socket = new WebSocket('ws://localhost:4000' + window.location.pathname)
+    const messageContainer = document.getElementById('message-container')
     const input = document.getElementById('input')
     input.focus() // move cursor
 
     // Receive message
     socket.onmessage = function (event) {
-        // TODO: Make this look nicer and more discordy
         const div = document.createElement('div')
+        const user = document.createElement('p')
+        const content = document.createElement('p')
         const message = JSON.parse(event.data)
-        // message.discord: Boolean - true if it's discord, false if other WS
-        div.append(message.username + ': ' + message.message)
-        input.before(div)
-        input.scrollIntoView()
+
+        div.append(user)
+        div.append(content)
+
+        div.setAttribute('class', 'flex w-full flex-row')
+        user.setAttribute('class', 'text-right w-24 font-semibold text-sm p-1 truncate ...')
+        user.setAttribute('style', '')
+        content.setAttribute('class', 'flex flex-1 text-sm break-word p-1')
+
+        user.innerText = message.username + ': '
+        content.innerText = message.message
+
+        messageContainer.append(div)
+        div.scrollIntoView()
     }
+
     // Send message
-    input.addEventListener('change', () => {
-        socket.send(input.value)
-        input.value = ''
+    input.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            socket.send(input.value)
+            input.value = ''
+        }
     })
     socket.onclose = (event) => {
         // TODO: remove chat if its not linked properly

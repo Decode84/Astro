@@ -6,7 +6,7 @@
       let elapsedDaySpan = (new Date()).getTime() - project.duration.startTime.getTime()
       elapsedDaySpan = Math.ceil(elapsedDaySpan / (1000 * 3600 * 24))
       let percentage = (elapsedDaySpan / totalDaySpan * 100).toFixed(2)
-      if (percentage > 100) percentage == 100
+      if (percentage > 100) percentage = 100
       percentage += "%"
       const title = percentage + ' | ' + (totalDaySpan - elapsedDaySpan) + ' day(s) left'
     %>

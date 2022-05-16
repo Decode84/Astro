@@ -1,11 +1,10 @@
 const router = require('express').Router()
 const authCon = require('./app/Http/AuthenticationController')
-const adminCon = require('./app/Http/Admin/AdminController')
 const projectCon = require('./app/Http/ProjectController')
 const discordCon = require('./app/Http/ServiceControllers/DiscordController')
 const homeCon = require('./app/Http/HomeController')
 const TrelloAPI = require('./trello/trelloApi')
-const githubAPI = require('./app/Http/GithubController')
+const githubController = require('./app/Http/ServiceControllers/GithubController')
 const middleware = require('./app/Middleware/Authorization')
 const calEventCon = require('./app/Http/CalEventController')
 
@@ -20,11 +19,13 @@ const { authenticateValidation, registerValidation } = require('./app/Validation
 router.get('/', homeCon.showHome)
 router.get('/home', homeCon.showHome)
 
-// Authentication
+// Authentication GET
 router.get('/login', authCon.showLogin)
 router.get('/register', authCon.showRegister)
 router.get('/forgot', authCon.showForgot)
 router.get('/reset', authCon.showReset)
+
+// Authentication POST
 router.post('/authenticate', loginLimit, authenticateValidation, authCon.authenticate)
 router.post('/signup', createAccountLimit, registerValidation, authCon.signup)
 router.post('/logout', middleware.authLogin, authCon.logout)
@@ -43,12 +44,8 @@ router.post('/edit-project', middleware.authLogin, projectCon.updateProject)
 router.post('/leave-project', middleware.authLogin, projectCon.leaveProject)
 router.post('/delete-project', middleware.authLogin, projectCon.delProject)
 
-// Admin (TODO: check for role)
-router.get('/admin/board', middleware.authLogin, adminCon.showBoard)
-
 // Discord
-router.get('/discord', discordCon.discordAuth)
-router.post('/discord', discordCon.discordAuth)
+router.get('/discord', middleware.authLogin, discordCon.discordAuth)
 
 // Trello
 router.get('/trello', middleware.authLogin, TrelloAPI.trello)
@@ -57,16 +54,18 @@ router.get('/trello/newCard', middleware.authLogin, TrelloAPI.newCard)
 router.get('/trello/createCard', middleware.authLogin, TrelloAPI.createCard)
 
 // Trello API
-router.get('/api/trello/boards', TrelloAPI.listBoards)
-router.get('/api/trello/lists', TrelloAPI.listLists)
+router.get('/api/trello/boards', middleware.authLogin, TrelloAPI.listBoards)
+router.get('/api/trello/lists', middleware.authLogin, TrelloAPI.listLists)
 
 // Github API
-router.get('/api/github', githubAPI.page)
-router.post('/api/github/webhook', githubAPI.webHookReceiver)
+router.get('/api/github', middleware.authLogin, githubController.authReq)
+router.post('/api/github/webhook', githubController.webHookReceiver)
+router.get('/api/github/webhook', middleware.authLogin, githubController.webHookProvider)
 
 // Calendar events
-router.post('/add-event/:id', calEventCon.addEventToDb)
-router.get('/get-events/:id', calEventCon.getEventsFromDb)
+router.post('/add-event', middleware.authLogin, calEventCon.addEventToDb)
+router.post('/get-events', middleware.authLogin, calEventCon.getEventsFromDb)
+router.post('/del-event', middleware.authLogin, calEventCon.delEventFromDb)
 
 //  The 404 Route (ALWAYS Keep this as the last route)
 router.get('*', (req, res) => res.status(404).render('404'))

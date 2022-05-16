@@ -9,29 +9,30 @@ const secret = process.env.DISCORD_APPLICATION_SECRET
 
 const authRedirect = 'http://localhost:4000/discord'
 const AuthLink = 'https://discord.com/api/oauth2/authorize?client_id=959004457205637131&redirect_uri=http%3A%2F%2Flocalhost%3A4000%2Fdiscord&response_type=code&scope=identify%20email'
-const InviteBotLink = 'https://discord.com/api/oauth2/authorize?client_id=959004457205637131&permissions=537119937&scope=bot%20applications.commands'
-const CreateServerLink = 'https://discord.new/dQCDNNwCPuhE'
 
 /**
  * @function Handling of the discord service
  */
+exports.discordWidget = async (req, res) => {
+    const project = await Project.findById(req.params.id)
+    let auth = AuthLink
+    if (req.session.user.services?.discord)
+        auth = ''
+    let ServerInviteLink = project?.categories?.messaging?.services?.discord?.inviteLink
+    if (!ServerInviteLink)
+        ServerInviteLink = ''
+    return {
+        AuthLink: auth,
+        ServerInviteLink: ServerInviteLink
+    }
+}
 exports.discordAuth = async (req, res) => {
     const code = req.query.code
+    const state = req.query.state.split('::')
     if (code) {
         await handleAuth(req, code)
     }
-    let ServerInviteLink = ''
-    const project = await Project.findById(req.params.id)
-    await project
-    if (project.categories.messaging.services) {
-        ServerInviteLink = project.categories.messaging.services.discord.inviteLink
-    }
-    return {
-        AuthLink: AuthLink,
-        InviteBotLink: InviteBotLink,
-        CreateServerLink: CreateServerLink,
-        ServerInviteLink: ServerInviteLink
-    }
+    res.redirect('/project/' + state[1])
 }
 
 /**
@@ -54,7 +55,6 @@ async function handleAuth (req, code) {
             console.log('failed to link user with discord because of invalid token')
             return
         }
-        console.log(discordUser)
         putUserInDB(discordUser, req)
     } catch (error) {
         console.error(error)
@@ -110,4 +110,5 @@ function putUserInDB (discordUser, req) {
         user.save()
         console.log(`Sucessfully linked ${username} with discord account ${discordUser.username} (${discordUser.id})`)
     })
+    req.session.user.services.discord = discordUser.id
 }

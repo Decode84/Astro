@@ -11,9 +11,9 @@ const { MessageActionRow, MessageButton } = require('discord.js')
  */
 async function Link (guild, client, interaction = null, channel = null) {
     const id = client.id
-    const userInDB = await User.findOne({ services: { discord: id } }, 'projectIDs')
+    const userInDB = await User.findOne({ 'services.discord': id }, 'projectIDs')
     if (!userInDB) {
-        console.log('couldnt find user')
+        console.log('couldnt find user with id: ' + id)
         return
     }
     const projects = userInDB.projectIDs
