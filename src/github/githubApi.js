@@ -42,9 +42,9 @@ async function addUserToProject(userToken, project) {
     const url = github.url.split('com')[1] + '/collaborators/' + data.name
     try {
         await owner.request('PUT ' + url)
-        const { data } = await user.request('GET /user/repository_invitations', {})
-        console.log(data)
-        const invitationId = getInvitationId(data, github.id)
+        const invitations = await user.request('GET /user/repository_invitations', {})
+        console.log(invitations.data)
+        const invitationId = getInvitationId(invitations.data, github.id)
         console.log(invitationId)
         const accept = await user.request('PATCH /user/repository_invitations/{invitation_id}', {
             invitation_id: invitationId
