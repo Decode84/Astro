@@ -2,7 +2,7 @@
     <h2 class="text-lg">Trello</h2>
     <hr class="py-1">
     <h3 class="pb-1 text-md font-semibold">Setup</h3>
-    <% if (project.categories.planning.services===undefined) {%>
+    <% if (!(project?.categories?.planning?.services)) {%>
         <section id="notActivated" class="flex flex-row pb-1">
             <p>Activate Trello</p>
             <button class="rounded-md ml-auto w-20 shadow-sm" style="background-color: var(--sec-color);">
@@ -20,12 +20,21 @@
                         </button>
                     </section>
                     <p>Step 2:</p>
-                    <section class="flex flex-row pb-2">
-                        <p>Setup Trello project + board</p>
-                        <button class="rounded-md ml-auto w-20 shadow-sm" style="background-color: var(--sec-color);">
-                            <a href="/trello/setup/<%= project._id %>">Setup</a>
-                        </button>
-                    </section>
+                    <% if (!(project?.categories?.planning?.services?.trello?.organizationId)) {%>
+                        <section class="flex flex-row pb-2">
+                            <p>Setup Trello project + board</p>
+                            <button class="rounded-md ml-auto w-20 shadow-sm" style="background-color: var(--sec-color);">
+                                <a href="/trello/setup/<%= project._id %>">Setup</a>
+                            </button>
+                        </section>
+                        <% } else {%>
+                            <section class="flex flex-row pb-2">
+                                <p>Join trello project</p>
+                                <button class="rounded-md ml-auto w-20 shadow-sm" style="background-color: var(--sec-color);">
+                                    <a href="/trello/addMemberToOrg/<%= project._id %>">Join</a>
+                                </button>
+                            </section>
+                            <% } %>
                 </section>
                 <section>
                     <hr>
@@ -74,5 +83,3 @@
 </section>
 
 <script src="/scripts/trelloMenuOpt.js"></script>
-<script src="/scripts/listBoards.js"></script>
-<script src="/scripts/listLists.js"></script>

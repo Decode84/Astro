@@ -13,7 +13,14 @@ const calendar = new Calendar({
 
 calendar.monthChanged = () => upperCaseMonth(calendar)
 updateAvailableEvents(calendar)
-setInterval(updateAvailableEvents, 2000, calendar)
+const update_events = setInterval(() => {
+    try{
+        updateAvailableEvents(calendar)
+    } 
+    catch(error){
+        console.log(error);
+        clearInterval(update_events)
+}}, 2000, calendar)
 upperCaseMonth(calendar)
 
 async function updateAvailableEvents (calendar) {

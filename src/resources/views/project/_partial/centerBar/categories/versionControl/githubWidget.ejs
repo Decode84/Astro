@@ -2,18 +2,24 @@
     <h2 class="text-lg pb-3">Github</h2>
     <hr class="py-1">
     <% if (githubInfo.AuthLink) { %>
-        <p>Hello welcome to the github auth page. First login with github to use the github service.</p>
-        <a style="color:blue;" id="githubLogin" class="hidden" href="<%- githubInfo.AuthLink %>">Github Auth</a>
+        <section class="bg-white rounded-lg w-full drop-shadow-sm px-4 py-3 mb-3">
+            <h2 class="text-lg pb-3">Github</h2>
+            <div class="flex flex-row pb-1 items-center">
+                <p class="inline pr-7">Login with Github to use the Github service</p>
+                <a id="githubLogin" class="rounded-md ml-auto text-center hidden w-20 shadow-sm bg-gray-100 hover:bg-gray-200" href="<%- githubInfo.AuthLink %>">Github Auth</a>
+            </div>
+        </section>
         <p id="githubInfo"></p>
         <script type="text/javascript" src="/scripts/githubAuth.js"></script>
         <% } else { %>
-            <h3> Linked to
-                <a style=" color:blue;" target="_blank" href="<%- githubInfo.gitHubLink %>">
-                    <%- githubInfo.githubName %>
-                </a> GitHub project
-            </h3>
-            <p>Latest updates in github: </p>
-            <div id="webhook-dashboard"></div>
+            <section class="bg-white rounded-lg w-full px-4 py-3 mb-3">
+                <h3> Linked to <a style="color:blue;" target="_blank" href="<%- githubInfo.gitHubLink %>">
+                        <%- githubInfo.githubName %>
+                    </a> GitHub project</h3>
+                <p>Latest updates in Github: </p>
+                <div id="webhook-dashboard" class="max-h-60 overflow-y-auto mt-3">
+                </div>
+            </section>
             <script type="text/javascript" src="/scripts/gitHubWebhook.js"></script>
             <% } %>
 </div>

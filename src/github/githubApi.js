@@ -30,6 +30,7 @@ async function setupProject (githubToken, project) {
     } else console.log("Error creating project for github")
 }
 async function addUserToProject(userToken, project) {
+    console.log('Trying to add user to project')
     const user = new Octokit({
         auth: userToken
     })
@@ -38,11 +39,20 @@ async function addUserToProject(userToken, project) {
     const owner = new Octokit({
         auth: github.ownerToken
     })
-    const url = github.url.split('com')[1] + '/collaborators/' + data.name
+    const url = github.url.split('com')[1] + '/collaborators/' + data.login
     try {
-        const resp = await owner.request('PUT ' + url)
-        if (resp.ok)
-            console.log("added " + data.name + " to project")
+        await owner.request('PUT ' + url)
+        const invitations = await user.request('GET /user/repository_invitations', {})
+        console.log(invitations.data)
+        const invitationId = getInvitationId(invitations.data, github.id)
+        console.log(invitationId)
+        const accept = await user.request('PATCH /user/repository_invitations/{invitation_id}', {
+            invitation_id: invitationId
+        })
+        console.log(accept)
+        project.categories.development.services.github.members.push(userToken)
+        await project.save()
+        console.log("added " + data.name + " to project")
     } catch (e) {
         console.log('failed to add github user. They might already be linked to the project')
     }
@@ -76,5 +86,12 @@ async function createWebHook (hookUrl, octokit) {
             insecure_ssl: '0'
         }
     })
+}
+function getInvitationId(data, githubid) {
+    for (const invitation of data) {
+        if (invitation.repository.id === githubid)
+            return invitation.id
+    }
+    return null
 }
 module.exports = { auth, setupProject, addUserToProject }
