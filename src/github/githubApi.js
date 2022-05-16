@@ -30,6 +30,7 @@ async function setupProject (githubToken, project) {
     } else console.log("Error creating project for github")
 }
 async function addUserToProject(userToken, project) {
+    console.log('Trying to add user to project')
     const user = new Octokit({
         auth: userToken
     })
@@ -41,8 +42,9 @@ async function addUserToProject(userToken, project) {
     const url = github.url.split('com')[1] + '/collaborators/' + data.name
     try {
         const resp = await owner.request('PUT ' + url)
-        if (resp.ok)
-            console.log("added " + data.name + " to project")
+        console.log("github: added " + data.name + " to project")
+        project.categories.development.services.github.members.push(userToken)
+        await project.save()
     } catch (e) {
         console.log('failed to add github user. They might already be linked to the project')
     }
