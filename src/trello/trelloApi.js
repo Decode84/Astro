@@ -137,14 +137,13 @@ const TrelloApi = {
         const token = user.authentications.trello.token
 
         const url = 'https://api.trello.com/1/organizations/' + organizationId + '/members/' + user.authentications.memberId + '?type=admin' + '?key=' + trelloKey + '&token=' + token
-        const response = await fetch(url, {
+        await fetch(url, {
             method: 'PUT',
             headers: {
                 Accept: 'application/json'
             }
         })
-        const text = response.text()
-        res.send(text)
+        res.redirect('/project/' + projectId)
     },
 
     /**
