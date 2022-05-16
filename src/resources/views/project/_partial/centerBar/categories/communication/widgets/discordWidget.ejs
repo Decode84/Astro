@@ -38,7 +38,7 @@
                         <%- include('../../_partial/infoMsg', { message: "Type '/link' in the Discord channel you wish to communicate through" }); %>
                             <div id="chat">
                                 <div id="message-container" class="h-60 overflow-y-auto"></div>
-                                <input id="input" placeholder="Type message" class="border-2 py-1 p-2 mt-3 border-gray-200 bg-gray-50 w-full rounded-md" />
+                                <input id="input" placeholder="Type message" class="mt-2 cursor-pointer font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" />
                                 <script type="text/javascript" src="/scripts/discordChat.js"></script>
                             </div>
                             <% } %>
