@@ -3,7 +3,6 @@ require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const appID = process.env.GITHUB_APP_ID
 const appSecret = process.env.GITHUB_APP_SECRET
 const { Octokit } = require('octokit')
-const Project = require('../app/Models/Project')
 const { createOAuthAppAuth } = require('@octokit/auth-oauth-app')
 const auth = createOAuthAppAuth({
     clientType: 'oauth-app',
@@ -43,16 +42,13 @@ async function addUserToProject(userToken, project) {
     try {
         await owner.request('PUT ' + url)
         const invitations = await user.request('GET /user/repository_invitations', {})
-        console.log(invitations.data)
         const invitationId = getInvitationId(invitations.data, github.id)
-        console.log(invitationId)
-        const accept = await user.request('PATCH /user/repository_invitations/{invitation_id}', {
+        await user.request('PATCH /user/repository_invitations/{invitation_id}', {
             invitation_id: invitationId
         })
-        console.log(accept)
         project.categories.development.services.github.members.push(userToken)
         await project.save()
-        console.log("added " + data.name + " to project")
+        console.log("added " + data.name + " to github " + project.name)
     } catch (e) {
         console.log('failed to add github user. They might already be linked to the project')
     }
