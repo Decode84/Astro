@@ -2,6 +2,7 @@ const ProjectModel = require('../Models/Project')
 const userCon = require('./UserController')
 const User = require('../Models/User')
 const DiscordCon = require('./ServiceControllers/DiscordController')
+const githubController = require ('./ServiceControllers/GithubController')
 
 const ProjectController = {
     /// GETS //////////////////////////////////
@@ -25,12 +26,15 @@ const ProjectController = {
                 res.render('404')
                 return
             }
-
+            const discordInfo = DiscordCon.discordWidget(req, res)
+            const githubInfo = githubController.widget(req, res)
+            
             res.render('project/project', {
                 project: project,
                 projectMembers: memberNames,
                 user: req.session.user,
-                discordInfo: await DiscordCon.discordWidget(req, res)
+                discordInfo: await discordInfo,
+                githubInfo: await githubInfo
             })
         } else {
             res.render('404')

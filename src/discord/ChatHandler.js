@@ -12,7 +12,7 @@ async function addChatCollector (client, guildID, channelID) {
 async function readLatestMessages (client, guildID, channelID) {
     const guild = await client.guilds.cache.get(guildID)
     const channel = await guild.channels.cache.get(channelID)
-    const messages = await channel.messages.fetch({ limit: 10 })
+    const messages = await channel.messages.fetch({ limit: 100 })
     return messages.reverse()
 }
 
