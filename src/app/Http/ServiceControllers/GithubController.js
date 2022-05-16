@@ -38,13 +38,13 @@ async function webHookReceiver (req) {
     try {
         // TODO: implement security for github webhook
         // console.log(req.body)
-        console.log("Github id: " + req.body.repository.id)
         const project = await Project.findOne({ 'categories.development.services.github.id': req.body.repository.id })
         if (project) {
             const body = req.body
             let message = {
                 user: { login: body.sender.login, id: body.sender.id, url: body.sender.html_url },
-                repository: body.repository.name
+                repository: body.repository.name,
+                timestamp: body.repository.updated_at
             }
             if (body.pull_request) {
                 const pull = body.pull_request
@@ -65,7 +65,6 @@ async function webHookReceiver (req) {
                 message.push = {
                     ref: body.ref,
                     message: body.head_commit.message,
-                    timestamp: body.head_commit.timestamp,
                     url: body.head_commit.url
                 }
             }
@@ -76,7 +75,7 @@ async function webHookReceiver (req) {
         } else console.log("Webhook couldn't find a project with: " + req.body.repository.id)
     } catch (e) {
         console.log('Webhook error: ' + e + "\n req.body:")
-        console.log(req.body)
+        // console.log(req.body)
     }
 }
 async function webHookProvider (req, res) {
@@ -85,7 +84,6 @@ async function webHookProvider (req, res) {
     const project = await Project.findOne({ _id: req.query.projectID, members: req.session.user._id })
     if (!project)
         return
-    console.log(project.name)
     if (project.categories.development?.services?.github?.hookMessages)
         res.json(project.categories.development.services.github.hookMessages)
 }
