@@ -1,7 +1,7 @@
 const User = require('../../Models/User')
 const Project = require('../../Models/Project')
 const { setupProject, addUserToProject, auth } = require('../../../github/githubApi');
-const authLink = 'https://github.com/login/oauth/authorize?client_id=7864fe4bf9aed444e764&scope=repo'
+const authLink = 'https://github.com/login/oauth/authorize?client_id=7864fe4bf9aed444e764&scope=repo%20repo:invite'
 
 async function widget (req, res) {
     const user = await User.findById(req.session.user._id)
