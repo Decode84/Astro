@@ -20,12 +20,21 @@
                         </button>
                     </section>
                     <p>Step 2:</p>
-                    <section class="flex flex-row pb-2">
-                        <p>Setup Trello project + board</p>
-                        <button class="rounded-md ml-auto w-20 shadow-sm" style="background-color: var(--sec-color);">
-                            <a href="/trello/setup/<%= project._id %>">Setup</a>
-                        </button>
-                    </section>
+                    <% if (project?.categories?.planning?.services?.trello?.organizationId) {%>
+                        <section class="flex flex-row pb-2">
+                            <p>Setup Trello project + board</p>
+                            <button class="rounded-md ml-auto w-20 shadow-sm" style="background-color: var(--sec-color);">
+                                <a href="/trello/setup/<%= project._id %>">Setup</a>
+                            </button>
+                        </section>
+                    <% } else {%>
+                        <section class="flex flex-row pb-2">
+                            <p>Join trello project</p>
+                            <button class="rounded-md ml-auto w-20 shadow-sm" style="background-color: var(--sec-color);">
+                                <a href="/trello/addMemberToOrg/<%= project._id %>">Join</a>
+                            </button>
+                        </section>
+                    <% } %>
                 </section>
                 <section>
                     <hr>
