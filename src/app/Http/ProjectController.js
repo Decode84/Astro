@@ -26,14 +26,14 @@ const ProjectController = {
                 res.render('404')
                 return
             }
-            //const discordInfo = discordCon.discordWidget(req, res)
+            const discordInfo = discordCon.discordWidget(req, res)
             const githubInfo = githubCon.widget(req, res)
             
             res.render('project/project', {
                 project: project,
                 projectMembers: memberNames,
                 user: req.session.user,
-                //discordInfo: await discordInfo,
+                discordInfo: await discordInfo,
                 githubInfo: await githubInfo
             })
         } else {

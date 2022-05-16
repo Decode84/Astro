@@ -117,7 +117,7 @@ function updateEventList (events) {
         const eventOriginalTemplate = document.getElementById('event-template').cloneNode(true)
         calEventsContainer.classList.remove('hidden')
         calEvents.innerHTML = ''
-
+        events.sort((a, b) => new Date(a.start) - new Date(b.start))
         events.forEach((event) => {
             const eventTemplate = eventOriginalTemplate.cloneNode(true)
             eventTemplate.classList.remove('hidden')
