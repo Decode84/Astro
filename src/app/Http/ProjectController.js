@@ -265,7 +265,6 @@ const ProjectController = {
         // Get the project
         const project = await ProjectController.getProjectById(projectId)
 
-        console.log('le projext' + project)
         // Create new service object
         project.categories[serviceCategory].services = { ...project.categories[serviceCategory].services, [serviceId]: { state: 'active' } }
         

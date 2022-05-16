@@ -111,7 +111,6 @@ async function getTrelloCards (listId) {
             return null
         }
         const json = JSON.parse(text)
-        console.log(json)
         return json                                  // Return the cards if the response is 200
     } else {
         return null                                  // Return null if the response is not 200
@@ -142,8 +141,6 @@ async function displayTrelloBoardsLink (boards) {
     }
     const inputProjectId = document.getElementById('projectIdInput')
     inputProjectId.value = new URL(document.location.href).searchParams.get('projectId')
-
-    console.log(inputProjectId.value)
 }
 
 /**
@@ -170,8 +167,6 @@ async function displayTrelloBoards (boards) {
 
     const inputProjectId = document.getElementById('projectIdInput')
     inputProjectId.value = new URL(document.location.href).searchParams.get('projectId')
-
-    console.log(inputProjectId.value)
 }
 
 /**
@@ -184,7 +179,6 @@ async function displayTrelloLists (lists) {
     for (let i = 0; i < lists.length; i++) {
         const listBtn = document.createElement('button')
         listBtn.innerHTML = lists[i].name
-        listBtn.setAttribute('id', 'list-' + i)
         listBtn.setAttribute('class', 'mx-auto my-1 rounded-md text-white px-12 py-2 bg-blue-700 hover:bg-blue-500 cursor-pointer focus:bg-blue-500')
         listSection.append(listBtn)
         listBtn.addEventListener('click', async function () {
@@ -206,13 +200,16 @@ async function displayTrelloListCards (cards) {
 
     if (cards.length === 0) {
         if (noCards.innerHTML === '') {
-            listCard.forEach(function (card) {
+            listCard.forEach((card) => {
                 card.remove()
             })
             noCards.style.display = 'block'
             noCards.innerHTML = 'No cards found'
         }
     } else {
+        listCard.forEach((card) => {
+            card.remove()
+        })
         for (let i = 0; i < cards.length; i++) {
             const card = document.createElement('a')
             const cardName = document.createElement('h4')

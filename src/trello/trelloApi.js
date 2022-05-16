@@ -18,7 +18,8 @@ const TrelloApi = {
      * @param {*} res
      */
     activateTrello: async (req, res) => {
-        await projectController.addServiceToProject(req.params.id, 'planning', 'trello')
+        await ProjectController.addServiceToProject(req.params.id, 'planning', 'trello')
+        console.log('Did this really get triggered?')
         res.redirect('/project/' + req.params.id)
     },
 
@@ -213,9 +214,8 @@ const TrelloApi = {
         } else {
             const project = await projectController.getProjectById(req.params.id)
             const user = await userController.getUserById(req.session.user._id)
-            const organizationId = project.categories.planning.services.trello.organizationId
+            const organizationId = project?.categories?.planning?.services?.trello?.organizationId
 
-            let boards
             try {
                 const url = 'https://api.trello.com/1/organizations/' + organizationId + '/boards?key=' + trelloKey + '&token=' + user.authentications.trello.token
                 const response = await fetch(url, {
@@ -225,7 +225,7 @@ const TrelloApi = {
                     }
                 })
                 const text = await response.text()
-                boards = text
+                const boards = text
                 res.send(boards)
             } catch (e) {
                 res.send(null)
