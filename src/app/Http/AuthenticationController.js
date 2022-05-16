@@ -150,7 +150,7 @@ class AuthenticationController {
             }
 
             const token = randtoken.generate(20)
-            const sent = mailCon.sendEmail(email, token)
+            const sent = mailCon.sendResetEmail(email, token, req.headers.host)
 
             if (sent !== '0') {
                 user.token = token

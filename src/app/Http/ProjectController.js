@@ -1,8 +1,8 @@
 const ProjectModel = require('../Models/Project')
+const UserModel = require('../Models/User')
 const userCon = require('./UserController')
-const User = require('../Models/User')
-const DiscordCon = require('./ServiceControllers/DiscordController')
-const githubController = require ('./ServiceControllers/GithubController')
+const discordCon = require('./ServiceControllers/DiscordController')
+const githubCon = require('./ServiceControllers/GithubController')
 
 const ProjectController = {
     /// GETS //////////////////////////////////
@@ -26,8 +26,8 @@ const ProjectController = {
                 res.render('404')
                 return
             }
-            const discordInfo = DiscordCon.discordWidget(req, res)
-            const githubInfo = githubController.widget(req, res)
+            const discordInfo = discordCon.discordWidget(req, res)
+            const githubInfo = githubCon.widget(req, res)
             
             res.render('project/project', {
                 project: project,
@@ -250,7 +250,7 @@ const ProjectController = {
     getAllProjects: async (UserID) => {
         try {
             const userProjects = []
-            const user = await User.findById(UserID)
+            const user = await UserModel.findById(UserID)
             for (const projectID of user.projectIDs) {
                 const project = await ProjectController.getProjectById(projectID)
                 userProjects.push(project)

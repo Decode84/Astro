@@ -38,7 +38,7 @@ app.use('/', express.static('public'), require('./routes'))
 const PORT = process.env.PRI_SERVER_PORT || process.env.SEC_SERVER_PORT
 const server = app.listen(PORT, (err) => {
     if (err) console.log(err)
-    console.log(`Homepage hosted here: http://localhost:${PORT}/`)
+    console.log('ProjectHub is up and running')
 })
 
 // Run Discord Bot and WebSocket
