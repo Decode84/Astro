@@ -39,7 +39,7 @@ async function addUserToProject(userToken, project) {
     const owner = new Octokit({
         auth: github.ownerToken
     })
-    const url = github.url.split('com')[1] + '/collaborators/' + data.name
+    const url = github.url.split('com')[1] + '/collaborators/' + data.login
     try {
         await owner.request('PUT ' + url)
         const invitations = await user.request('GET /user/repository_invitations', {})
