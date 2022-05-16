@@ -1,7 +1,7 @@
-<section class="bg-white rounded-lg w-full drop-shadow-sm px-4 py-3 mb-3">
-    <h2 class="text-lg pb-1">Trello</h2>
-    <hr>
-    <h3 class="text-lg pb-1 pt-3">Setup</h3>
+<section class="bg-white rounded-lg w-full drop-shadow-sm px-4 pt-3 pb-3">
+    <h2 class="text-lg">Trello</h2>
+    <hr class="py-1">
+    <h3 class="pb-1 text-md font-semibold">Setup</h3>
     <% if (project.categories.planning.services===undefined) {%>
         <section id="notActivated" class="flex flex-row pb-1">
             <p>Activate Trello</p>
@@ -10,7 +10,7 @@
             </button>
         </section>
         <% } else { %>
-            <section id="activated" class="pb-5">
+            <section id="activated">
                 <section class="pb-1">
                     <p>Step 1:</p>
                     <section class="flex flex-row pb-2">
@@ -29,7 +29,7 @@
                 </section>
                 <section>
                     <hr>
-                    <h3 class="text-lg pb-2 pt-3">Functionality</h3>
+                    <h3 class="text-md font-semibold pb-2 pt-3">Functionality</h3>
                     <section class="flex flex-row pb-2">
                         <p>Create new trello board</p>
                         <button id="boardBtn" class="rounded-md ml-auto w-28 shadow-sm" style="background-color: var(--sec-color);">Create Board</button>
@@ -51,20 +51,23 @@
                     </section>
                 </section>
                 <hr>
-                <h3 class="text-lg pb-2 pt-3">Go to Trello board</h3>
-                <section id="boardSection" class="flex flex-wrap justify-center">
+                <h3 class="pb-1 text-md font-semibold pt-3">Go to Trello board</h3>
+                <section id="boardSection" class="flex flex-wrap justify-center pb-3">
 
                 </section>
                 <hr>
-                <h3 class="text-lg pb-2 pt-3">Card list</h3>
+                <h3 class="pb-1 text-md font-semibold pt-3">Card list</h3>
                 <section id="cardSection" class="flex flex-wrap justify-center">
                     <select id="list-board-select" name="trelloBoard" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md">
                         <option id="list-select-option" value="" class="rounded-md">Select a board</option>
                     </select>
-                    <section id="listBtns" name="trelloList" class="form-control m-1 p-2 rounded-md flex flex-wrap w-full">
+                    <section id="listBtns" name="trelloList" class="form-control m-1 p-2 rounded-md flex flex-wrap w-full justify-center">
                     </section>
-                    <section id="card-list" class="pt-3 w-full flex flex-wrap"></section>
-                    <p id="noCards" style="display: none;"></p>
+                    <section id="card-list" name="trelloList" class="form-control m-1 rounded-md flex flex-row w-full">
+                        <div id="cards-col-1" class="flex flex-col w-1/2 h-min pr-1"></div>
+                        <div id="cards-col-2" class="flex flex-col w-1/2 h-min pl-1"></div>
+                    </section>
+                    <p id="noCards" class="hidden">No cards</p>
                 </section>
             </section>
             <% } %>

@@ -133,7 +133,8 @@ async function displayTrelloBoardsLink (boards) {
             const boardSection = document.getElementById('boardSection')
             const board = document.createElement('a')
             board.innerHTML = boards[i].name
-            board.setAttribute('class', 'mx-1 my-1 rounded-md text-white text-center p-4 w-3/12 cursor-pointer bg-blue-700 hover:bg-blue-500')
+            board.setAttribute('class', 'rounded-md text-center mx-1 w-20 shadow-sm')
+            board.setAttribute('style', 'background-color: var(--sec-color);')
             board.setAttribute('href', boards[i].url)
             board.setAttribute('target', '_blank')
             boardSection.append(board)
@@ -179,7 +180,8 @@ async function displayTrelloLists (lists) {
     for (let i = 0; i < lists.length; i++) {
         const listBtn = document.createElement('button')
         listBtn.innerHTML = lists[i].name
-        listBtn.setAttribute('class', 'mx-auto my-1 rounded-md text-white px-12 py-2 bg-blue-700 hover:bg-blue-500 cursor-pointer focus:bg-blue-500')
+        listBtn.setAttribute('class', 'active:bg-violet-700 rounded-md text-center mx-1 w-20 shadow-sm')
+        listBtn.setAttribute('style', 'background-color: var(--sec-color);')
         listSection.append(listBtn)
         listBtn.addEventListener('click', async function () {
             const cards = await getTrelloCards(lists[i].id)
@@ -194,43 +196,44 @@ async function displayTrelloLists (lists) {
  * @param {Array<Object} cards
  */
 async function displayTrelloListCards (cards) {
-    const cardList = document.getElementById('card-list')
+    const cardsCol1 = document.getElementById('cards-col-1')
+    const cardsCol2 = document.getElementById('cards-col-2')
     const noCards = document.getElementById('noCards')
-    const listCard = document.querySelectorAll('.list-card')
 
-    if (cards.length === 0) {
-        if (noCards.innerHTML === '') {
-            listCard.forEach((card) => {
-                card.remove()
-            })
-            noCards.style.display = 'block'
-            noCards.innerHTML = 'No cards found'
-        }
-    } else {
-        listCard.forEach((card) => {
-            card.remove()
-        })
-        for (let i = 0; i < cards.length; i++) {
-            const card = document.createElement('a')
+    cardsCol1.innerHTML = ''
+    cardsCol2.innerHTML = ''
+
+    if (cards.length > 0) {
+        noCards.classList.add('hidden')
+        cards.forEach(card => {
+            const cardElem = document.createElement('a')
             const cardName = document.createElement('h4')
             const cardDesc = document.createElement('p')
             const hr = document.createElement('hr')
 
-            card.setAttribute('class', 'list-card block rounded-md my-1 mx-auto p-2 w-5/12 bg-gray-100 hover:bg-gray-300 cursor-pointer')
-            card.setAttribute('href', cards[i].url)
-            card.setAttribute('target', '_blank')
+            cardElem.setAttribute('class', 'rounded-md p-2 mb-2 cursor-pointer')
+            cardElem.setAttribute('style', 'background-color: var(--sec-color)')
+            cardElem.setAttribute('href', card.url)
+            cardElem.setAttribute('target', '_blank')
 
-            cardName.innerHTML = cards[i].name
-            cardName.setAttribute('class', 'text-xl')
+            cardName.innerHTML = card.name
+            cardName.setAttribute('class', 'text-xl truncate ...')
+            cardDesc.innerHTML = card.desc
+            cardDesc.setAttribute('class', 'break-words ...')
+            cardElem.append(cardName)
+            if (card.desc) {
+                cardElem.append(hr)
+            }
+            cardElem.append(cardDesc)
 
-            cardDesc.innerHTML = 'Description: <br>' + cards[i].desc
-            // cardDesc.setAttribute('class', 'text-white')
-
-            noCards.innerHTML = ''
-
-            card.append(cardName, hr, cardDesc)
-            cardList.append(card)
-        }
+            if (cardsCol1.clientHeight > cardsCol2.clientHeight) {
+                cardsCol2.append(cardElem)
+            } else {
+                cardsCol1.append(cardElem)
+            }
+        })
+    } else {
+        noCards.classList.remove('hidden')
     }
 }
 
