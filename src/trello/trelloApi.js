@@ -124,23 +124,27 @@ const TrelloApi = {
         } catch (e) {
             console.log(e)
         }
+    },
 
-        // Invite members of a project to the trello organization.
-        const userlist = project.members
-        for (let i = 0; i < userlist.length; i++) {
-            const euser = await userController.getUserById(userlist[i])
-            if (euser._id !== user._id) {
-                if (user.authentications.trello.token !== undefined) {
-                    const url = 'https://api.trello.com/1/organizations/' + organizationId + '/members/' + euser.authentications.trello.memberId + '?type=normal' + '&key=' + trelloKey + '&token=' + user.authentications.trello.token
-                    await fetch(url, {
-                        method: 'PUT',
-                        headers: {
-                            Accept: 'application/json'
-                        }
-                    })
-                }
+    addMemberToOrganisation: async (req, res) => {
+        const projectId = req.params.id
+        const userId = req.session.user._id
+
+        const project = await ProjectController.getOrganizationId(projectId)
+        const organizationId = project.categories.planning.services.trello.organizationId
+
+        const user = await userController.getUserById(userId)
+        const token = user.authentications.trello.token
+
+        const url = 'https://api.trello.com/1/organizations/' + organizationId + '/members/' + user.authentications.memberId + '?type=admin' + '?key=' + trelloKey + '&token=' + token
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json'
             }
-        }
+        })
+        const text = response.text()
+        res.send(text)
     },
 
     /**
