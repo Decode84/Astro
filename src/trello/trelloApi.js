@@ -216,7 +216,7 @@ const TrelloApi = {
             const user = await userController.getUserById(req.session.user._id)
             const organizationId = project?.categories?.planning?.services?.trello?.organizationId
 
-            try {
+            if (organizationId) {
                 const url = 'https://api.trello.com/1/organizations/' + organizationId + '/boards?key=' + trelloKey + '&token=' + user.authentications.trello.token
                 const response = await fetch(url, {
                     method: 'GET',
@@ -227,9 +227,8 @@ const TrelloApi = {
                 const text = await response.text()
                 const boards = text
                 res.send(boards)
-            } catch (e) {
+            } else {
                 res.send(null)
-                console.log(`Error: ${e}`)
             }
         }
     },
