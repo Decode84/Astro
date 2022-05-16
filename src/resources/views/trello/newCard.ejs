@@ -1,16 +1,19 @@
-<section class="bg-white m-auto p-6 rounded-lg drop-shadow-sm" id="overlay">
+<section class="m-auto p-3 rounded-lg mb-3 drop-shadow-sm" style="background-color: var(--sec-color);" id="overlay">
     <h2 class="text-lg pb-3">Create new card</h2>
     <form action="/trello/createCard/<%= project.id %>" class="">
         <input id="projectIdInput" type="hidden" name="projectId" value="{{projectId}}">
-        <input class="mr-1 my-1 rounded-md w-full" type="text" name="cardName" placeholder="Card Name" required>
-        <textarea type="text" name="cardDescription" placeholder="Card Description" class="w-full resize-none mt-1 rounded-md focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"></textarea>
-        <select name="board" id="board-select" class="form-control my-1 p-2 rounded-md" style="width: 100%;">
+        <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" type="text" name="cardName" placeholder="Card Name" required>
+        <textarea type="text" name="cardDescription" placeholder="Card Description" class="resize-none mt-1 border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md"></textarea>
+        <select name="board" id="board-select" class="border-2 mt-1 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md">
             <option id="select-option" value="" class="rounded-md">Select a board</option>
         </select>
-        <select id="list-select" name="list" class="form-control my-1 p-2 rounded-md" style="width: 100%;">
+        <select id="list-select" name="list" class="border-2 mt-1 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md">
             <option id="liststate" value="" class="rounded-md">No board selected</option>
         </select>
-        <input type="submit" class="px-3.5 py-2 mt-2 text-white cursor-pointer font-semibold rounded-md bg-blue-700 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" value="Create Card" id="create-card-btn">
-        <input type="button" class="px-3.5 py-2 mt-2 text-white cursor-pointer font-semibold rounded-md bg-blue-700 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" value="Cancel" id="cardClose">
+        <div class="flex flex-row w-full">
+            <input type="button" class="mt-2 cursor-pointer font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" value="Cancel" id="cardClose">
+            <input type="submit" class="ml-auto mt-2 cursor-pointer font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" value="Create" id="create-card-btn">
+        </div>
     </form>
 </section>
+<script src="/scripts/listLists.js"></script>

@@ -66,8 +66,6 @@ describe('AuthenticationController', () => {
             res.aurl = '/projects'
             res.done = done
 
-            console.log(res.aurl)
-
             // Act
             AuthenticationController.authenticate(req, res)
         })
@@ -86,7 +84,6 @@ describe('AuthenticationController', () => {
             AuthenticationController.authenticate(req, res)
         })
         it('should redirect to login if the user does not exist', function (done) {
-            console.log(req.body.password)
             // Arrange
             res.aurl = '/login'
             res.done = done
