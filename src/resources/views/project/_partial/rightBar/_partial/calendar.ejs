@@ -2,7 +2,17 @@
 
 <div id="cal-events-container" class="py-3 px-5 mt-3 text-lg rounded-lg mb-0.5 bg-white drop-shadow-sm">
   <h2>Events</h2>
-  <div id="cal-events"></div>
+  <div id="cal-events">
+    <div id="event-template" class="hidden flex flex-row items-center">
+      <p class="event-time mr-1"></p>
+      <p class="event-name truncate ..."></p>
+      <button class="event-delete ml-auto">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="rgb(255, 100, 100)" stroke-width="1">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+      </button>
+    </div>
+  </div>
 </div>
 
 <div id="add-event-btn-container" class="py-3 px-5 mt-3 rounded-lg flex flex-row items-center bg-white drop-shadow-sm">

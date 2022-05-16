@@ -1,10 +1,12 @@
 <header class="flex flex-row" style="min-width: var(--min-window-w); height: var(--header-h)">
-    <div class="pl-2 py-4 flex flex-row items-center" style="width: var(--left-col-w);">
-        <%- include('../project/_partial/header/_partial/logo'); %>
+    <div class="py-4 flex flex-row items-center" style="width: var(--left-col-w);">
+        <div>
+            <%- include('../project/_partial/header/_partial/logo'); %>
+        </div>
     </div>
 </header>
-<main class="content-evenly flex justify-center" style="height: calc(110vh - var(--header-h))">
-    <div class="w-96">
+<main class="pb-8 content-evenly flex justify-center" style="min-height: calc(110vh - var(--header-h))">
+    <div style="width: var(--form-w)">
         <% if (message.toString() !=="" ) { %>
             <%- include('./_partial/infoBox', { message: message}); %>
                 <% } %>
@@ -12,19 +14,21 @@
                         <h1 class="text-2xl text-center font-bold">Register your account</h1>
 
                         <label class="text text-left block mb-2 mt-4" for="name">Name</label>
-                        <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="name" id="name" required />
+                        <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:border-blue-400 focus:outline-none focus:ring-blue-400" name="name" id="name" required />
 
                         <label class="text text-left block mb-2 mt-4" for="username">Username</label>
-                        <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="username" id="username" required />
+                        <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:border-blue-400 focus:outline-none focus:ring-blue-400" name="username" id="username" required />
 
                         <label class="text text-left block mb-2 mt-4" for="emailaddress">Email</label>
-                        <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="email" id="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,62}$" required />
+                        <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:border-blue-400 focus:outline-none focus:ring-blue-400" name="email" id="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,62}$" required />
 
                         <label class="text text-left block mb-2 mt-4" for="password">Password</label>
-                        <input type="password" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="password" id="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required />
+                        <input type="password" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="password" id="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Minimum 8 bogstaver og tal, og maksimum 32" minlength="8" maxlength="32" required />
+                        <p class="mt-2 text-sm text-gray-500" id="password-description">Minimum 8 bogstaver og tal.</p>
 
                         <label class="text text-left block mb-2 mt-4" for="passwordConfirmation">Password Confirmation</label>
-                        <input type="password" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="passwordConfirmation" id="passwordConfirmation" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required />
+                        <input type="password" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="passwordConfirmation" id="passwordConfirmation" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Minimum 8 bogstaver og tal, og maksimum 32" minlength="8" maxlength="32" required />
+                        <p class="mt-2 text-sm text-gray-500" id="password-description">Minimum 8 bogstaver og tal.</p>
 
                         <a class="hover:text-indigo-600 block mt-6 text-sm" href="/login">Already have an account?</a>
 

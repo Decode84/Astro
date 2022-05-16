@@ -1,0 +1,13 @@
+<% if (githubInfo.AuthLink) { %>
+    <p>Hello welcome to the github auth page. First login with github to use the github service.</p>
+    <a style="color:blue;" id="githubLogin" class="hidden" href="<%- githubInfo.AuthLink %>">Github Auth</a>
+    <p id="githubInfo"></p>
+    <script type="text/javascript" src="/scripts/githubAuth.js"></script>
+<% } else { %>
+    <h3> Welcome to <a style="color:blue;" target="_blank" href="<%- githubInfo.gitHubLink %>"><%- githubInfo.githubName %></a> GitHub project</h3>
+    <p>Latest updates in github: </p>
+    <div id="webhook-dashboard">
+
+    </div>
+    <script type="text/javascript" src="/scripts/gitHubWebhook.js"></script>
+<% } %>

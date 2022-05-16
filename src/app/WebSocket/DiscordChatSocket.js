@@ -24,11 +24,12 @@ exports.StartDiscordWebSocket = function (server, session, bot) {
                 request.reject(401, 'No session') // 401 Unauthorized
                 return
             }
+            const projectID = request.resource.substring(request.resource.lastIndexOf('/') + 1)
             const connection = request.accept(null, request.origin)
             // TODO: Get current project from url instead
-            let currentProject = projects.find(project => project.projectID === session.user.projectIDs[0])
+            let currentProject = projects.find(project => project.projectID === projectID)
             if (!currentProject) {
-                currentProject = await OpenNewProject(bot, session)
+                currentProject = await OpenNewProject(bot, session, request, projectID)
                 projects.push(currentProject)
             }
             // push user to project such that it is subscribed to others messages
@@ -46,7 +47,8 @@ exports.StartDiscordWebSocket = function (server, session, bot) {
                             continue */
                         const sendMessage = { username: session.user.username, message: message.utf8Data, discord: false }
                         user.sendUTF(JSON.stringify(sendMessage))
-                        currentProject.latestMessages.shift().push(sendMessage)
+                        currentProject.latestMessages.shift()
+                        currentProject.latestMessages.push(sendMessage)
                     }
                 }
             })
@@ -66,10 +68,10 @@ function originIsAllowed (origin) {
     // TODO: put logic here to detect whether the specified origin is allowed. (DOS security etc)
     return true
 }
-async function OpenNewProject (bot, session) {
-    const dbProject = await Project.findById(session.user.projectIDs[0])
+async function OpenNewProject (bot, session, request, projectID) {
+    const dbProject = await Project.findById(projectID)
     if (!(await dbProject)) {
-        console.log('Websocket: failed to get project ' + session.user.projectIDs[0])
+        console.log('Websocket: failed to get project ' + projectID)
         return
     }
     const discord = await dbProject.categories.messaging.services.discord
@@ -90,7 +92,8 @@ async function OpenNewProject (bot, session) {
     currentProject.collector.on('collect', m => {
         // There's already filter on the collector
         const message = { username: m.author.username, message: m.content, discord: true }
-        currentProject.latestMessages.shift().push(message)
+        currentProject.latestMessages.shift()
+        currentProject.latestMessages.push(message)
         for (const user of currentProject.connections) {
             user.sendUTF(JSON.stringify(message))
         }

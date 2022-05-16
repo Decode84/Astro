@@ -1,22 +1,39 @@
 const Project = require('../Models/Project')
 
-async function addEventToDb(req, res) {
-    const project = await Project.findById(req.params.id)
+async function addEventToDb (req, res) {
+    const { projectId, time, name } = req.body
+    const project = await Project.findById(projectId)
 
     const event = {
-        name: req.body.name,
-        start: req.body.time,
-        end: req.body.time
+        name: name,
+        start: time,
+        end: time
     }
 
     project.events.push(event)
-    project.save()
+    await project.save()
     res.redirect('back')
 }
 
-async function getEventsFromDb(req, res) {
-    const project = await Project.findById(req.params.id)
+async function getEventsFromDb (req, res) {
+    const { projectId } = req.body
+    const project = await Project.findById(projectId)
     res.json(project.events)
 }
 
-module.exports = { addEventToDb, getEventsFromDb }
+async function delEventFromDb (req, res) {
+    const { projectId, eventId } = req.body
+
+    const project = await Project.findById(projectId)
+
+    if (project) {
+        project.events = project.events.filter(event => event._id.toString() !== eventId)
+        await project.save()
+    } else {
+        console.log('project not found')
+    }
+
+    res.redirect('back')
+}
+
+module.exports = { addEventToDb, getEventsFromDb, delEventFromDb }

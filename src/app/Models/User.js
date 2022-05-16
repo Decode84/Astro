@@ -28,9 +28,6 @@ const UserSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    role: {
-        type: String
-    },
     services: Schema.Types.Mixed,
     projectIDs: [
         String
