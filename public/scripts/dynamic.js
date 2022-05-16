@@ -1,5 +1,5 @@
 window.onload = () => {
-    const startTab = 'Communication'
+    const startTab = 'Planning'
     setActiveCategory(startTab)
 
     const children = document.getElementById('categories').children

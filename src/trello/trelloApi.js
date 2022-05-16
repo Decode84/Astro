@@ -1,23 +1,38 @@
 const fetch = require('node-fetch')
 const userController = require('../app/Http/UserController')
 const projectController = require('../app/Http/ProjectController')
+const ProjectController = require('../app/Http/ProjectController')
+const { request } = require('express')
 // const { text } = require('express')
 // const response  = require('express')
 // const { send } = require('express/lib/response')
 
 const trelloKey = 'e5b8e9efa5bf84e76b15d443eb9b5afc'
 
-class TrelloApi {
+const TrelloApi = {
+
+    /**
+     * @function activateTrello
+     * @description Add trello as a service in the project.
+     * @param {*} req
+     * @param {*} res
+     */
+    activateTrello: async (req, res) => {
+        await ProjectController.addServiceToProject(req.params.id, 'planning', 'trello')
+        console.log('Did this really get triggered?')
+        res.redirect('/project/' + req.params.id)
+    },
+
     /**
      * @function trello
      * @description Redirects the user to the Trello authentication page.
      * @param {*} req
      * @param {*} res
      */
-    async trello (req, res) {
-        const returnUrl = 'http://localhost:4000/trello/callback'
+    trello: async (req, res) => {
+        const returnUrl = 'http://localhost:4000/trello/callback/' + req.params.id
         res.redirect('https://trello.com/1/authorize?return_url=' + returnUrl + '&callback_method=fragment&?expiration=30days&name=Project_Hub&response_type=fragment&scope=read,write,account&key=' + trelloKey)
-    }
+    },
 
     /**
      * @function recieveToken
@@ -25,7 +40,7 @@ class TrelloApi {
      * @param {*} req
      * @param {*} res
      */
-    async recieveToken (req, res) {
+    recieveToken: async (req, res) => {
         let token
 
         // If the token is undefined, then the user will execute the conversion script.
@@ -39,7 +54,7 @@ class TrelloApi {
             token = req.query.token
 
             // Save token to database
-            const user = await userController.getUser(req.session.user._id)
+            const user = await userController.getUserById(req.session.user._id)
             user.authentications = {
                 ...user.authentications,
                 trello: {
@@ -60,9 +75,9 @@ class TrelloApi {
 
             user.markModified('authentications')
             await user.save()
-            res.redirect('/project?projectId=' + req.query.projectId)
+            res.redirect('/project/' + req.params.id)
         }
-    }
+    },
 
     /**
      * @function newOrganization
@@ -71,13 +86,13 @@ class TrelloApi {
      * @param {String} userId The id of the user who is creating the organization.
      * @param {String} projectId The id of the project that the organization is being created for.
      */
-    async newOrganization (name, userId, projectId) {
+    newOrganization: async (name, userId, projectId) => {
         let organizationId
 
         // Check whether Trello is active for the project.
 
         const project = await projectController.getProjectById(projectId)
-        const user = await userController.getUser(userId)
+        const user = await userController.getUserById(userId)
 
         // Try to create the organization if trello is active for the project.
         try {
@@ -113,9 +128,9 @@ class TrelloApi {
         // Invite members of a project to the trello organization.
         const userlist = project.members
         for (let i = 0; i < userlist.length; i++) {
-            const euser = await userController.getUser(userlist[i])
+            const euser = await userController.getUserById(userlist[i])
             if (euser._id !== user._id) {
-                if (user.categories.planning.services.trello.token !== undefined) {
+                if (user.authentications.trello.token !== undefined) {
                     const url = 'https://api.trello.com/1/organizations/' + organizationId + '/members/' + euser.authentications.trello.memberId + '?type=normal' + '&key=' + trelloKey + '&token=' + user.authentications.trello.token
                     await fetch(url, {
                         method: 'PUT',
@@ -126,7 +141,7 @@ class TrelloApi {
                 }
             }
         }
-    }
+    },
 
     /**
      * @function newBoard
@@ -134,9 +149,10 @@ class TrelloApi {
      * @param {String} name The name of the board to be created.
      * @param {String} projectId The id of the project that the board is being created for.
      */
-    async newBoard (name, projectId, userId) {
+    newBoard: async (name, projectId, userId) => {
         const project = await projectController.getProjectById(projectId)
-        const user = await userController.getUser(userId)
+        const user = await userController.getUserById(userId)
+
         let response
         // try to create the board if trello is active for the project for a given organization.
         try {
@@ -167,8 +183,7 @@ class TrelloApi {
         } catch (e) {
             console.log(e)
         }
-        return json.id
-    }
+    },
 
     /**
      *
@@ -176,8 +191,8 @@ class TrelloApi {
      * @param {String} boardId The id of the board that the list is being created for.
      * @param {String} name The name of the list to be created.
      */
-    async newList (userId, boardId, name) {
-        const user = await userController.getUser(userId)
+    newList: async (userId, boardId, name) => {
+        const user = await userController.getUserById(userId)
 
         const url = 'https://api.trello.com/1/lists?name=' + name + '&idBoard=' + boardId + '&key=' + trelloKey + '&token=' + user.authentications.trello.token
         const response = await fetch(url, {
@@ -185,7 +200,7 @@ class TrelloApi {
         })
         const text = await response.text()
         JSON.parse(text)
-    }
+    },
 
     /**
      * @function listBoards
@@ -193,15 +208,14 @@ class TrelloApi {
      * @param {*} req
      * @param {*} res
      */
-    async listBoards (req, res) {
-        if (req.query.projectId === undefined) {
+    listBoards: async (req, res) => {
+        if (req.params.id === undefined) {
             res.send(null)
         } else {
-            const project = await projectController.getProjectById(req.query.projectId)
-            const user = await userController.getUser(req.session.user._id)
-            const organizationId = project.categories.planning.services.trello.organizationId
+            const project = await projectController.getProjectById(req.params.id)
+            const user = await userController.getUserById(req.session.user._id)
+            const organizationId = project?.categories?.planning?.services?.trello?.organizationId
 
-            let boards
             try {
                 const url = 'https://api.trello.com/1/organizations/' + organizationId + '/boards?key=' + trelloKey + '&token=' + user.authentications.trello.token
                 const response = await fetch(url, {
@@ -211,13 +225,14 @@ class TrelloApi {
                     }
                 })
                 const text = await response.text()
-                boards = text
+                const boards = text
+                res.send(boards)
             } catch (e) {
                 res.send(null)
+                console.log(`Error: ${e}`)
             }
-            res.send(boards)
         }
-    }
+    },
 
     /**
      * @function listLists
@@ -225,12 +240,12 @@ class TrelloApi {
      * @param {*} req
      * @param {*} res
      */
-    async listLists (req, res) {
-        if (req.query.projectId === undefined) {
+    listLists: async (req, res) => {
+        if (req.params.id === undefined) {
             res.send(null)
         } else {
             try {
-                const user = await userController.getUser(req.session.user._id)
+                const user = await userController.getUserById(req.session.user._id)
                 // Compose the url
                 const url = 'https://api.trello.com/1/boards/' + req.query.boardId + '/lists?key=' + trelloKey + '&token=' + user.authentications.trello.token
                 const response = await fetch(url, {
@@ -245,7 +260,34 @@ class TrelloApi {
                 res.send(null)
             }
         }
-    }
+    },
+
+    /**
+     * @function listCards
+     * @description Returns all the cards in a given list.
+     * @param {*} req
+     * @param {*} res
+     */
+    listCards: async (req, res) => {
+        const listId = req.query.listId
+        const userId = req.session.user._id
+        const user = await userController.getUserById(userId)
+
+        let response
+        try {
+            const url = 'https://api.trello.com/1/lists/' + listId + '/cards?key=' + trelloKey + '&token=' + user.authentications.trello.token
+            response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json'
+                }
+            })
+        } catch (e) {
+            res.send(null)
+        }
+        const cards = await response.text()
+        res.send(cards)
+    },
 
     /**
      * @function newCard
@@ -253,22 +295,24 @@ class TrelloApi {
      * @param {*} req
      * @param {*} res
      */
-    async newCard (req, res) {
-        const user = await userController.getUser(req.session.user._id)
+    newCard: async (req, res) => {
+        const user = await userController.getUserById(req.session.user._id)
         let access = false
 
         for (let i = 0; i < user.projectIDs.length; i++) {
-            if (user.projectIDs[i]._id.toString() === req.query.projectId) {
+            if (user.projectIDs[i] === req.params.id) {
                 access = true
             }
         }
 
         if (access) {
-            res.render('trello/newCard')
+            res.render('trello/newCard', {
+                projectId: req.params.id
+            })
         } else {
             res.send('You do not have access to this project.')
         }
-    }
+    },
 
     /**
      * @function createCard
@@ -276,8 +320,8 @@ class TrelloApi {
      * @param {*} req
      * @param {*} res
      */
-    async createCard (req, res) {
-        const user = await userController.getUser(req.session.user._id)
+    createCard: async (req, res) => {
+        const user = await userController.getUserById(req.session.user._id)
 
         const cardName = req.query.cardName
         const cardDescription = req.query.cardDescription
@@ -287,8 +331,18 @@ class TrelloApi {
         await fetch(url, {
             method: 'POST'
         })
-        res.redirect('/project?projectId=' + req.query.projectId) // ! Might change later don't know where to put the user.
-    }
+        res.redirect('/project/' + req.params.id) // ! Might change later don't know where to put the user.
+    },
+
+    createBoard: async (req, res) => {
+        const userId = req.session.user._id
+        const boardName = req.query.boardName
+        const projectId = req.params.id
+
+        await TrelloApi.newBoard(boardName, projectId, userId)
+
+        res.redirect('/project/' + projectId)
+    },
 
     /**
      *
@@ -296,10 +350,17 @@ class TrelloApi {
      * @param {String} projectId The id of the project that the organization is being created for.
      * @param {String} userId The id of the user who is creating the organization.
      */
-/*     async setupTrello (name, projectId, userId) {
-        await newOrganization(name, userId, projectId)
-        // const boardId = await newBoard('SCRUM', projectId, userId)
-    } */
+    setupTrello: async (req, res) => {
+        const userId = req.session.user._id
+        const projectId = req.params.id
+        const project = await ProjectController.getProjectById(projectId)
+        const name = project.name
+
+        await TrelloApi.newOrganization(name, userId, projectId)
+        await TrelloApi.newBoard('SCRUM', projectId, userId)
+
+        res.redirect('/project/' + projectId)
+    }
 }
 
-module.exports = new TrelloApi()
+module.exports = TrelloApi

@@ -1,3 +1,76 @@
-<div class="bg-white rounded-lg w-full drop-shadow-sm px-4 py-3 mb-3">
-    <h2 class="text-lg pb-3">Trello</h2>
-</div
+<section class="bg-white rounded-lg w-full drop-shadow-sm px-4 py-3 mb-3">
+    <h2 class="text-lg pb-1">Trello</h2>
+    <hr>
+    <h3 class="text-lg pb-1 pt-3">Setup</h3>
+    <% if (project.categories.planning.services === undefined) {%>
+    <section id="notActivated" class="flex flex-row pb-1">
+        <p>Activate Trello</p>
+        <button class="rounded-md text-white ml-auto px-4" style="background-color: var(--acc-color);">
+            <a href="/api/trello/activate/<%= project._id %>">Activate</a>
+        </button>
+    </section>
+    <% } else { %> 
+    <section id="activated" class="pb-5">
+        <section class="pb-1">
+            <p>Step 1:</p>
+            <section class="flex flex-row pb-2">
+                <p>Link your Trello account to the project</p>
+                <button class="ml-auto">
+                    <a href="/trello/<%= project._id %>" class="rounded-md text-white px-4 bg-blue-700 hover:bg-blue-500">Link</a>
+                </button>
+            </section>
+            <p>Step 2:</p>
+            <section class="flex flex-row pb-2">
+                <p>Setup Trello project + board</p>
+                <button class="ml-auto">
+                    <a href="/trello/setup/<%= project._id %>" class="rounded-md text-white px-4 bg-blue-700 hover:bg-blue-500">Setup</a>
+                </button>
+            </section>
+        </section>
+        <section>
+            <hr>
+            <h3 class="text-lg pb-2 pt-3">Functionality</h3>
+            <section class="flex flex-row pb-2">
+                <p>Create new trello board</p>
+                <button id="boardBtn" class="ml-auto rounded-md text-white px-4 bg-blue-700 hover:bg-blue-500 focus:bg-blue-500">Create Board</button>
+            </section>
+            <section class="flex flex-row pb-2">
+                <p>Create new trello card</p>
+                <button id="cardBtn" class="ml-auto rounded-md text-white px-4 bg-blue-700 hover:bg-blue-500 focus:bg-blue-500">Create Card</button>
+            </section>
+
+            <section id="boardModal">
+                <section class="pt-2">
+                    <%- include('../../../../../../trello/newBoard'); %>
+                </section>
+            </section>
+            <section id="cardModal">
+                <section class="pt-2">
+                    <%- include('../../../../../../trello/newCard'); %>
+                </section>
+            </section>
+        </section>
+        <hr>
+        <h3 class="text-lg pb-2 pt-3">Go to Trello board</h3>
+        <section id="boardSection" class="flex flex-wrap justify-center">
+
+        </section>
+        <hr>
+        <h3 class="text-lg pb-2 pt-3">Card list</h3>
+        <section id="cardSection" class="flex flex-wrap justify-center">
+            <select id="list-board-select" name="trelloBoard" class="form-control my-1 p-2 rounded-md" style="width: 100%;">
+                <option id="list-select-option" value="" class="rounded-md">Select a board</option>
+            </select>
+            <section id="listBtns" name="trelloList" class="form-control m-1 p-2 rounded-md flex flex-wrap w-full" style="width: 100%;">
+            </section>
+            <section id="card-list" class="pt-3 w-full flex flex-wrap"></section>
+            <p id="noCards" style="display: none;"></p>
+        </section>
+    </section>
+    <% } %>
+</section>
+
+<script src="/scripts/trelloMenuOpt.js"></script>
+
+<script src="/scripts/listBoards.js"></script>
+<script src="/scripts/listLists.js"></script>
