@@ -42,9 +42,9 @@ async function addUserToProject(userToken, project) {
     const url = github.url.split('com')[1] + '/collaborators/' + data.name
     try {
         await owner.request('PUT ' + url)
-        const invitations = await user.request('GET /user/repository_invitations', {})
-        console.log(invitations)
-        const invitationId = getInvitationId(invitations, github.id)
+        const { data } = await user.request('GET /user/repository_invitations', {})
+        console.log(data)
+        const invitationId = getInvitationId(data, github.id)
         console.log(invitationId)
         const accept = await user.request('PATCH /user/repository_invitations/{invitation_id}', {
             invitation_id: invitationId
@@ -86,5 +86,12 @@ async function createWebHook (hookUrl, octokit) {
             insecure_ssl: '0'
         }
     })
+}
+function getInvitationId(data, githubid) {
+    for (const invitation of data) {
+        if (invitation.repository.id === githubid)
+            return invitation.id
+    }
+    return null
 }
 module.exports = { auth, setupProject, addUserToProject }
