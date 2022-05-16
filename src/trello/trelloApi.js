@@ -130,7 +130,7 @@ const TrelloApi = {
         const projectId = req.params.id
         const userId = req.session.user._id
 
-        const project = await ProjectController.getOrganizationId(projectId)
+        const project = await ProjectController.getProjectById(projectId)
         const organizationId = project.categories.planning.services.trello.organizationId
 
         const user = await userController.getUserById(userId)
