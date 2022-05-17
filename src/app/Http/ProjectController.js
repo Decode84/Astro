@@ -3,6 +3,7 @@ const UserModel = require('../Models/User')
 const userCon = require('./UserController')
 const discordCon = require('./ServiceControllers/DiscordController')
 const githubCon = require('./ServiceControllers/GithubController')
+const mailCon = require('./MailController')
 
 const ProjectController = {
     /// GETS //////////////////////////////////
@@ -28,7 +29,7 @@ const ProjectController = {
             }
             const discordInfo = discordCon.discordWidget(req, res)
             const githubInfo = githubCon.widget(req, res)
-            
+
             res.render('project/project', {
                 project: project,
                 projectMembers: memberNames,
@@ -142,6 +143,11 @@ const ProjectController = {
             }
             for await (const userSupposed of usersSupposed) {
                 await ProjectController.addProjectToUser(project._id, userSupposed._id)
+
+                if (userSupposed._id.toString() !== req.session.user._id.toString()) {
+                    const path = req.headers.host + '/project/' + project._id
+                    mailCon.sendInviteEmail(userSupposed.email, project.name, path)
+                }
             }
 
             project.name = projectName
@@ -193,7 +199,14 @@ const ProjectController = {
         let users = await Promise.all(emails.map(async email => await userCon.getUserByEmail(email)))
         users = users.filter(member => member)
 
-        users.forEach(async user => await ProjectController.addProjectToUser(project._id, user._id))
+        users.forEach(async user => {
+            await ProjectController.addProjectToUser(project._id, user._id)
+
+            if (user._id.toString() !== req.session.user._id.toString()) {
+                const path = req.headers.host + '/project/' + project._id
+                mailCon.sendInviteEmail(user.email, project.name, path)
+            }
+        })
         project.members = users.map(user => user._id)
         project.duration = { ...duration }
 

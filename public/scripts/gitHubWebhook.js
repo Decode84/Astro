@@ -7,7 +7,6 @@ async function readMessages () {
         cache: 'no-cache'
     })
         .then(response => response.json())
-    console.log(messages)
 
     for (const message of messages) {
         const div = document.createElement('div')

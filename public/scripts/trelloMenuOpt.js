@@ -29,10 +29,10 @@ cardClose.addEventListener('click', () => {
 })
 
 // When the user clicks anywhere outside of the modal, close it
-window.onclick = function (event) {
-    if (event.target === boardModal) {
+window.onclick = event => {
+    if (!boardModal.contains(event.target) && event.target.id !== 'boardBtn') {
         boardModal.style.display = 'none'
-    } else if (event.target === cardModal) {
+    } if (!cardModal.contains(event.target) && event.target.id !== 'cardBtn') {
         cardModal.style.display = 'none'
     }
 }
@@ -57,6 +57,11 @@ async function trelloMenu () {
         const option = document.createElement('option')
         option.text = 'Loading...'
 
+        const cardsCol1 = document.getElementById('cards-col-1')
+        const cardsCol2 = document.getElementById('cards-col-2')
+        cardsCol1.innerHTML = ''
+        cardsCol2.innerHTML = ''
+
         // Get the lists in the selected board
         const url = document.location.origin + '/api/trello/lists/' + document.location.href.split('/').pop() + '?boardId=' + selectBoard.value
         const response = await fetch(url, {
@@ -68,7 +73,7 @@ async function trelloMenu () {
                 return null
             }
             const json = JSON.parse(text)
-            displayTrelloLists(json)
+            await displayTrelloLists(json)
         } else {
             return null
         }
@@ -185,7 +190,7 @@ async function displayTrelloLists (lists) {
         listSection.append(listBtn)
         listBtn.addEventListener('click', async function () {
             const cards = await getTrelloCards(lists[i].id)
-            displayTrelloListCards(cards)
+            await displayTrelloListCards(cards)
         })
     }
 }
@@ -217,7 +222,7 @@ async function displayTrelloListCards (cards) {
             cardElem.setAttribute('target', '_blank')
 
             cardName.innerHTML = card.name
-            cardName.setAttribute('class', 'text-xl truncate ...')
+            cardName.setAttribute('class', 'text-lg truncate ...')
             cardDesc.innerHTML = card.desc
             cardDesc.setAttribute('class', 'break-words ...')
             cardElem.append(cardName)
