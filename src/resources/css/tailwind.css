@@ -30,24 +30,17 @@
 
 /* width */
 ::-webkit-scrollbar {
-    width: 3px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    width: 14px;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    border-radius: 5px;
-    background: #bbb;
+    border: 5.5px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+    border-radius: 9999px;
+    background-color: rgb(230, 230, 230);
 }
 
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: #888;
-}
 
 /* Calendar overwrite css below *****************************************/
 

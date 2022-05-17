@@ -4,29 +4,35 @@
 <main class="px-6 py-4 text-sm bg-white rounded-lg mt-8 drop-shadow-md" style="min-width: var(--min-overview-w);">
     <div class="w-full flex justify-between">
         <h5 class="text-lg font-medium mb-2">Projects overview</h5>
-        <a href="/create-project" class="px-4 text-sm p-2 rounded-md shadow-sm text-white" style="background-color: var(--acc-color)">Create</a>
+        <a href="/create-project" class="mt-2 cursor-pointer font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">Create</a>
     </div>
     <table class="w-full text-left">
         <thead class="">
             <tr class="h-10">
                 <th class="pr-4 font-normal">Name</th>
-                <th class="pr-4 font-normal">Members</th>
-                <th class="pr-4 font-normal">Last modified</th>
-                <th class="pr-4 font-normal">Created</th>
+                <th class="pr-4 font-normal text-center">Members</th>
+                <th class="pr-4 font-normal text-center">Start date</th>
+                <th class="pr-4 font-normal text-center">End date</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
             <% projects.forEach((project, i)=> { %>
                 <tr class="h-12 border-t border-gray-100">
-                    <td class="pr-4"><a href=<%=`/project/${project.id}` %> style="color: var(--acc-color)">
+                    <td class="pr-4">
+                        <a href=<%=`/project/${project.id}` %> style="color: var(--acc-color)">
                             <%= project.name %>
-                        </a></td>
-                    <td class="pr-4  text-xs pl-6">
+                        </a>
+                    </td>
+                    <td class="pr-4  text-xs text-center">
                         <%= project.members.length %>
                     </td>
-                    <td class="pr-4  text-xs">2 hours ago</td>
-                    <td class="pr-4  text-xs">2 hours ago</td>
+                    <td class="pr-4  text-xs text-center">
+                        <%= new Date(project.duration.startTime).toISOString().split('T')[0] %>
+                    </td>
+                    <td class="pr-4  text-xs text-center">
+                        <%= new Date(project.duration.endTime).toISOString().split('T')[0] %>
+                    </td>
                     <td class="w-12">
                         <div class="flex items-center justify-end h-10">
                             <a href=<%=`/edit-project/${project.id}` %> class="mx-2">
