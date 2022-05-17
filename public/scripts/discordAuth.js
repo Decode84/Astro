@@ -1,7 +1,6 @@
 const discordUrl = new URL(window.location)
 const randomString = generateRandomString()
 
-localStorage.setItem('oauth-state', randomString)
 let href = document.getElementById('login').href
 href += `&state=${btoa(randomString)}::` + discordUrl.pathname.substring(discordUrl.pathname.lastIndexOf('/') + 1)
 document.getElementById('login').href = href
