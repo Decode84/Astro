@@ -12,16 +12,6 @@ if (!githubCode) {
     
     document.getElementById('githubLogin').style.display = 'block'
 }
-else {
-    // after auth
-    const state = githubUrl.searchParams.get('state')
-    if (localStorage.getItem('oauth-state') !== atob(decodeURIComponent(state))) {
-        // May have been clickjacked
-        document.getElementById('githubInfo').innerText = 'Failed to authenticate. Try again'
-    }
-    else
-        document.getElementById('githubInfo').innerText = 'Github account linked'
-}
 function generateRandomString () {
     let randomString = ''
     const randomNumber = Math.floor(Math.random() * 10)
