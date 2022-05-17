@@ -7,7 +7,6 @@ if (!githubCode) {
     const randomString = generateRandomString()
     localStorage.setItem('oauth-state', randomString)
     let githref = document.getElementById('githubLogin').href
-    githref = githref.replace('localhost%3A4000', encodeURIComponent(githubUrl.host))
     githref += `&state=${btoa(randomString)}::` + githubUrl.pathname.substring(githubUrl.pathname.lastIndexOf('/') + 1)
     document.getElementById('githubLogin').href = githref
     
