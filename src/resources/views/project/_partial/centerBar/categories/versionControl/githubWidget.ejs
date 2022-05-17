@@ -2,7 +2,7 @@
     <h2 class="text-lg pb-3">Github</h2>
     <hr class="py-1">
     <% if (githubInfo.AuthLink) { %>
-        <section class="bg-white rounded-lg w-full drop-shadow-sm px-4 py-3 mb-3">
+        <section class="bg-white rounded-lg w-full drop-shadow-sm">
             <h2 class="text-lg pb-3">Github</h2>
             <div class="flex flex-row pb-1 items-center">
                 <p class="inline pr-7">Login with Github to use the Github service</p>
@@ -12,7 +12,7 @@
         <p id="githubInfo"></p>
         <script type="text/javascript" src="/scripts/githubAuth.js"></script>
         <% } else { %>
-            <section class="bg-white rounded-lg w-full px-4 py-3 mb-3">
+            <section class="bg-white rounded-lg w-full">
                 <h3> Linked to <a style="color:blue;" target="_blank" href="<%- githubInfo.gitHubLink %>">
                         <%- githubInfo.githubName %>
                     </a> GitHub project</h3>
