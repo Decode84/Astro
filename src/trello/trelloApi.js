@@ -30,7 +30,8 @@ const TrelloApi = {
      * @param {*} res
      */
     trello: async (req, res) => {
-        const returnUrl = 'http://localhost:4000/trello/callback/' + req.params.id
+        const path = req.headers.host
+        const returnUrl = 'http://' + path + '/trello/callback/' + req.params.id
         res.redirect('https://trello.com/1/authorize?return_url=' + returnUrl + '&callback_method=fragment&?expiration=30days&name=Project_Hub&response_type=fragment&scope=read,write,account&key=' + trelloKey)
     },
 
