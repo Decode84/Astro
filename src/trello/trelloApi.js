@@ -89,6 +89,7 @@ const TrelloApi = {
      */
     newOrganization: async (name, userId, projectId) => {
         let organizationId
+        let organizationOwner
 
         // Check whether Trello is active for the project.
 
@@ -110,12 +111,14 @@ const TrelloApi = {
                 const json = JSON.parse(text)
 
                 organizationId = json.id
+                organizationOwner = user._id
 
                 // Save organization id to database for future use.
                 const service = {
                     ...project.categories.planning.services
                 }
                 service.trello.organizationId = organizationId
+                service.trello.organizationOwner = organizationOwner
                 project.markModified('categories.planning.services')
 
                 project.categories.planning.services = service
@@ -133,11 +136,13 @@ const TrelloApi = {
 
         const project = await ProjectController.getProjectById(projectId)
         const organizationId = project.categories.planning.services.trello.organizationId
+        const organizationOwner = project.categories.planning.services.trello.organizationOwner
 
         const user = await userController.getUserById(userId)
+        const ownerUser = await userController.getUserById(organizationOwner)
         const token = user.authentications.trello.token
 
-        const url = 'https://api.trello.com/1/organizations/' + organizationId + '/members/' + user.authentications.memberId + '?type=admin' + '?key=' + trelloKey + '&token=' + token
+        const url = 'https://api.trello.com/1/organizations/' + organizationId + '/members/' + user.authentications.memberId + '?type=normal' + '?key=' + trelloKey + '&token=' + ownerUser.authentications.trello.token
         await fetch(url, {
             method: 'PUT',
             headers: {
