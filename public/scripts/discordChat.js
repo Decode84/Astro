@@ -1,5 +1,5 @@
 try { // Primarily only for the first line in case WSS is not running
-    const socket = new WebSocket('ws://' + window.location.host + window.location.pathname)
+    const socket = new WebSocket('wss://' + window.location.host + window.location.pathname)
     const messageContainer = document.getElementById('message-container')
     const input = document.getElementById('input')
     input.focus() // move cursor
