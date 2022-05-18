@@ -3,7 +3,6 @@
     <hr class="py-1">
     <% if (githubInfo.AuthLink) { %>
         <section class="bg-white rounded-lg w-full drop-shadow-sm">
-            <h2 class="text-lg pb-3">Github</h2>
             <div class="flex flex-row pb-1 items-center">
                 <p class="inline pr-7">Login with Github to use the Github service</p>
                 <a id="githubLogin" class="rounded-md ml-auto text-center hidden w-20 shadow-sm bg-gray-100 hover:bg-gray-200" href="<%- githubInfo.AuthLink %>">Github Auth</a>
