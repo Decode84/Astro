@@ -83,8 +83,6 @@ async function CreateCollector (guild, sentMessage, textChannel) {
             content: `You have linked guild ${guild.id} to: ${project.name}`,
             components: []
         })
-        // TODO: handle the usecase where project is already linked or make already linked projects not display
-
         if (!textChannel) {
             textChannel = await guild.channels.cache.filter(c => c.type === 'GUILD_TEXT').first()
         }
