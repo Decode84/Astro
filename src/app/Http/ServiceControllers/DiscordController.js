@@ -14,7 +14,7 @@ const AuthLink = 'https://discord.com/api/oauth2/authorize?client_id=95900445720
 /**
  * @function Handling of the discord service
  */
-async function discordWidget (req, res) {
+async function discordWidget (req) {
     if (!secret)
         return null
     const project = await Project.findById(req.params.id)
@@ -60,7 +60,7 @@ async function handleAuth (req, code) {
         }
         putUserInDB(discordUser, req)
     } catch (error) {
-        console.error(error)
+        console.log(error)
         // TODO: add proper autherror to user
     }
 }

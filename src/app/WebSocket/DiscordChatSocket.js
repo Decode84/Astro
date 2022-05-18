@@ -25,17 +25,17 @@ exports.StartDiscordWebSocket = function (server, session, bot) {
                 return
             }
             const projectID = request.resource.substring(request.resource.lastIndexOf('/') + 1)
-            const connection = request.accept(null, request.origin)
             let currentProject = projects.find(project => project.projectID === projectID)
             if (!currentProject) {
                 currentProject = await OpenNewProject(bot, session, request, projectID)
                 if (!currentProject)
                 {
-                    connection.close()
+                    request.reject(403, 'Need to link project first')
                     return
                 }
                 projects.push(currentProject)
             }
+            const connection = request.accept(null, request.origin)
             // push user to project such that it is subscribed to others messages
             currentProject.connections.push(connection)
             // send latest discord messages to client

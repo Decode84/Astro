@@ -36,14 +36,13 @@ try { // Primarily only for the first line in case WSS is not running
     socket.onclose = (event) => {
         // TODO: remove chat if its not linked properly
         switch (event.code) {
-        case 401:
-            // No session
+        case 401: // No session
+        case 403: // Not linked yet
+            messageContainer.remove()
             break
-        case 1000:
-            // no problems
+        case 1000: // no problems
             break
-        default:
-            // other errors
+        default: // other errors
             break
         }
     }
