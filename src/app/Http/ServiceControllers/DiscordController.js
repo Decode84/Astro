@@ -39,10 +39,10 @@ async function discordWidget (req) {
 async function discordAuth (req, res) {
     try {
         const state = req.query.state.split('::')
-        const tokenResult = await getToken(req.query.code)
-        const token = await tokenResult.json()
-        const userResult = await getUserData(token)
-        const discordUser = await userResult.json()
+        const token = await getToken(req.query.code).then(res => res.json())
+        console.log(token)
+        const discordUser = await getUserData(token).then(res => res.json())
+        console.log(discordUser)
         if (!req.session.user) {
             console.log('User not logged in before Discord Auth')
             res.redirect('/project')
@@ -50,14 +50,14 @@ async function discordAuth (req, res) {
         }
         else if ((await discordUser).message === '401: Unauthorized') {
             console.log('failed to link user with discord because of invalid token')
-            res.redirect('/project')
+            res.redirect('/projects')
             return
         }
         putUserInDB(discordUser, req)
         res.redirect('/project/' + state[1])
     } catch (error) {
         console.log(error)
-        res.redirect('/project')
+        res.redirect('/projects')
     }
 }
 
