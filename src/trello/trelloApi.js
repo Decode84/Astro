@@ -149,7 +149,7 @@ const TrelloApi = {
                 Accept: 'application/json'
             }
         })
-        res.send(response.text())
+        res.send(organizationOwner.text())
         //res.redirect('/project/' + projectId)
     },
 
