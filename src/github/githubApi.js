@@ -77,7 +77,7 @@ async function createWebHook (hookUrl, octokit) {
             'pull_request'
         ],
         config: {
-            url: 'https:/www.theprojecthub.xyz/api/github/webhook',
+            url: 'https://www.theprojecthub.xyz/api/github/webhook',
             content_type: 'json',
             insecure_ssl: '0'
         }
