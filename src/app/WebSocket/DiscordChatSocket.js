@@ -89,10 +89,12 @@ async function OpenNewProject (session, request, projectID) {
     }
     // get previous messages in discord
     const messages = await ChatHandler.readLatestMessages(discord.serverID, discord.textChannel) // Guaranteed 10 messages
-    messages.forEach(m => {
-        const message = { username: m.author.username, message: m.content, discord: !(m.system || m.webhookId) }
-        currentProject.latestMessages.push(message)
-    })
+    if (messages) {
+        messages.forEach(m => {
+            const message = { username: m.author.username, message: m.content, discord: !(m.system || m.webhookId) }
+            currentProject.latestMessages.push(message)
+        })
+    }
     // Listen for new discord messages
     currentProject.collector.on('collect', m => {
         // There's already filter on the collector
