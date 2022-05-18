@@ -7,7 +7,7 @@ require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const clientID = process.env.DISCORD_CLIENT_ID
 const secret = process.env.DISCORD_APPLICATION_SECRET
 
-const AuthLink = 'https://discord.com/api/oauth2/authorize?client_id=959004457205637131&permissions=537119921&redirect_uri=https%3A%2F%2Ftheprojecthub.xyz%2Fdiscord&response_type=code&scope=identify%20applications.commands%20bot%20guilds'
+const AuthLink = 'https://discord.com/api/oauth2/authorize?client_id=959004457205637131&permissions=537119921&redirect_uri=https%3A%2F%2Ftheprojecthub.xyz%2Fdiscord&response_type=code&scope=identify%20bot%20applications.commands'
 
 /**
  * @function Handling of the discord service
@@ -45,11 +45,11 @@ async function discordAuth (req, code) {
         const discordUser = await userResult.json()
         if (!req.session.user) {
             console.log('User not logged in before Discord Auth')
-            return
+            res.redirect('/project')
         }
-        if ((await discordUser).message === '401: Unauthorized') {
+        else if ((await discordUser).message === '401: Unauthorized') {
             console.log('failed to link user with discord because of invalid token')
-            return
+            res.redirect('/project')
         }
         putUserInDB(discordUser, req)
         res.redirect('/project/' + state[1])
@@ -73,6 +73,7 @@ function getToken (code) {
             code: code,
             grant_type: 'authorization_code',
             redirect_uri: 'https://www.theprojecthub.xyz/discord',
+            scope: 'identify'
         }),
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
