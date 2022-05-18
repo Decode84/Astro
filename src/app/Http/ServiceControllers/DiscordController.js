@@ -22,9 +22,10 @@ async function discordWidget (req) {
     let ServerInviteLink = project?.categories?.messaging?.services?.discord?.inviteLink
     if (!ServerInviteLink)
     {
-        auth = ''
         ServerInviteLink = ''
     }
+    else
+        auth = ''
     return {
         AuthLink: auth,
         ServerInviteLink: ServerInviteLink

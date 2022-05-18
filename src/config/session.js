@@ -9,7 +9,7 @@ const sess = {
     // rolling: true, //Reset the cookie Max-Age on every request
     cookie: {
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
-        secure: false // true for https
+        secure: true // true for https
     },
     store: mongoStore.create({
         mongoUrl: db._connectionString,
