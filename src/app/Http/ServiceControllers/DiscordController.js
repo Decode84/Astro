@@ -7,7 +7,9 @@ require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const clientID = process.env.DISCORD_CLIENT_ID
 const secret = process.env.DISCORD_APPLICATION_SECRET
 
-const AuthLink = 'https://discord.com/api/oauth2/authorize?client_id=959004457205637131&permissions=537119921&redirect_uri=https%3A%2F%2Ftheprojecthub.xyz%2Fdiscord&response_type=code&scope=identify%20applications.commands%20bot%20guilds'
+const AuthLink = 'https://discord.com/api/oauth2/authorize?client_id=959004457205637131' +
+    '&permissions=536988673&redirect_uri=https%3A%2F%2F178.128.202.47%2Fdiscord' +
+    '&response_type=code&scope=identify%20bot%20applications.commands'
 
 /**
  * @function Handling of the discord service
@@ -29,14 +31,23 @@ async function discordWidget (req) {
         ServerInviteLink: ServerInviteLink
     }
 }
+async function discordAuth(req, res) {
+    const code = req.query.code
+    const state = req.query.state.split('::')
+    if (code) {
+        await handleAuth(req, code)
+    }
+    res.redirect('/project/' + state[1])
+}
 
 /**
  * @function Handling of the discord authentication linking the user in session to discord
+ * @param req
+ * @param code
+ * @returns {Promise<void>}
  */
-async function discordAuth (req, res) {
+async function handleAuth (req, code) {
     try {
-        const code = req.query.code
-        const state = req.query.state.split('::')
         const tokenResult = await getToken(code)
         const token = await tokenResult.json()
         const userResult = await getUserData(token)
@@ -50,10 +61,9 @@ async function discordAuth (req, res) {
             return
         }
         putUserInDB(discordUser, req)
-        res.redirect('/project/' + state[1])
     } catch (error) {
         console.log(error)
-        res.redirect('/project')
+        // TODO: add proper autherror to user
     }
 }
 
@@ -70,7 +80,7 @@ function getToken (code, req) {
             client_secret: secret,
             code: code,
             grant_type: 'authorization_code',
-            redirect_uri: 'https://theprojecthub.xyz/discord',
+            redirect_uri: 'https://www.theprojecthub.xyz/discord',
             scope: 'identify'
         }),
         headers: {
