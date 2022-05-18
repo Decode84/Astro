@@ -75,7 +75,6 @@ function getToken (code) {
             code: code,
             grant_type: 'authorization_code',
             redirect_uri: 'https://www.theprojecthub.xyz/discord',
-            scope: 'identify'
         }),
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
