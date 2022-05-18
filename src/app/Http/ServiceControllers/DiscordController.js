@@ -19,11 +19,12 @@ async function discordWidget (req) {
         return null
     const project = await Project.findById(req.params.id)
     let auth = AuthLink
-    if (req.session.user.services?.discord)
-        auth = ''
     let ServerInviteLink = project?.categories?.messaging?.services?.discord?.inviteLink
     if (!ServerInviteLink)
+    {
+        auth = ''
         ServerInviteLink = ''
+    }
     return {
         AuthLink: auth,
         ServerInviteLink: ServerInviteLink

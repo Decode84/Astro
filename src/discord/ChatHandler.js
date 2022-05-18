@@ -12,10 +12,12 @@ async function addChatCollector (client, guildID, channelID) {
     } catch(e) {return null}
 }
 async function readLatestMessages (client, guildID, channelID) {
-    const guild = await client.guilds.cache.get(guildID)
-    const channel = await guild.channels.cache.get(channelID)
-    const messages = await channel.messages.fetch({ limit: 100 })
-    return messages.reverse()
+    try {
+        const guild = await client.guilds.cache.get(guildID)
+        const channel = await guild.channels.cache.get(channelID)
+        const messages = await channel.messages.fetch({ limit: 100 })
+        return messages.reverse()
+    } catch (e) { return null }
 }
 
 module.exports = { readLatestMessages, addChatCollector }
