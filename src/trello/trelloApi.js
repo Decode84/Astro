@@ -142,15 +142,14 @@ const TrelloApi = {
         const ownerUser = await userController.getUserById(organizationOwner)
         const token = user.authentications.trello.token
 
-        const url = 'https://api.trello.com/1/organizations/' + organizationId + '/members/' + user.authentications.memberId + '?type=normal' + '?key=' + trelloKey + '&token=' + ownerUser.authentications.trello.token
+        const url = 'https://api.trello.com/1/organizations/' + organizationId + '/members/' + user.authentications.trello.memberId + '?type=normal' + '&key=' + trelloKey + '&token=' + ownerUser.authentications.trello.token
         let response = await fetch(url, {
             method: 'PUT',
             headers: {
                 Accept: 'application/json'
             }
         })
-        res.send(organizationOwner.text())
-        //res.redirect('/project/' + projectId)
+        res.redirect('/project/' + projectId)
     },
 
     /**
