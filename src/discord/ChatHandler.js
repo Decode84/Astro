@@ -7,7 +7,9 @@ async function addChatCollector (client, guildID, channelID) {
     const channel = await guild.channels.cache.get(channelID)
 
     const filter = m => !(m.system || m.webhookId) // no system messages or webhook messages
-    return channel.createMessageCollector({ filter, dispose: true, time: 150000 })
+    try {
+        return channel.createMessageCollector({ filter, dispose: true, time: 150000 })
+    } catch(e) {return null}
 }
 async function readLatestMessages (client, guildID, channelID) {
     const guild = await client.guilds.cache.get(guildID)
