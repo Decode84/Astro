@@ -79,7 +79,7 @@ function getToken (code, req) {
             client_secret: secret,
             code: code,
             grant_type: 'authorization_code',
-            redirect_uri: 'https://178.128.202.47/discord',
+            redirect_uri: 'https:/www.theprojecthub.xyz/discord',
             scope: 'identify'
         }),
         headers: {
