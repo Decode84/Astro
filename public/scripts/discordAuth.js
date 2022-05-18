@@ -6,7 +6,6 @@ if (!discordCode) {
     const randomString = generateRandomString()
     localStorage.setItem('oauth-state', randomString)
     let href = document.getElementById('login').href
-    href = href.replace('localhost%3A4000', encodeURIComponent(discordUrl.host))
     href += `&state=${btoa(randomString)}::` + discordUrl.pathname.substring(discordUrl.pathname.lastIndexOf('/') + 1)
     document.getElementById('login').href = href
     document.getElementById('login-container').classList.remove('hidden')

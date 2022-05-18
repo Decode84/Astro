@@ -8,7 +8,7 @@ const clientID = process.env.DISCORD_CLIENT_ID
 const secret = process.env.DISCORD_APPLICATION_SECRET
 
 const AuthLink = 'https://discord.com/api/oauth2/authorize?client_id=959004457205637131' +
-    '&permissions=536988673&redirect_uri=https%3A%2F%2F178.128.202.47%2Fdiscord' +
+    '&permissions=536988673&redirect_uri=https%3A%2F%2Ftheprojecthub.xyz%2Fdiscord' +
     '&response_type=code&scope=identify%20bot%20applications.commands'
 
 /**
@@ -80,7 +80,7 @@ function getToken (code, req) {
             client_secret: secret,
             code: code,
             grant_type: 'authorization_code',
-            redirect_uri: 'https://www.theprojecthub.xyz/discord',
+            redirect_uri: 'https://theprojecthub.xyz/discord',
             scope: 'identify'
         }),
         headers: {
