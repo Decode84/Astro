@@ -70,7 +70,7 @@ async function handleAuth (req, code) {
  * @param {int} code
  * @returns {*|Promise<Response>} Token
  */
-function getToken (code) {
+function getToken (code, req) {
     return fetch('https://discord.com/api/oauth2/token', {
         method: 'POST',
         body: new URLSearchParams({
@@ -78,6 +78,7 @@ function getToken (code) {
             client_secret: secret,
             code: code,
             grant_type: 'authorization_code',
+            redirect_uri: 'http://178.128.202.47/discord',
             scope: 'identify'
         }),
         headers: {
