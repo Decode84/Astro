@@ -23,7 +23,7 @@ async function LinkFromWeb(guildId) {
 }
 async function Link (guild, channel) {
     return {
-        serverID: `${guild}`,
+        serverID: `${guild.id}`,
         webhook: await CreateWebHook(channel),
         inviteLink: await CreateInvite(guild, channel),
         textChannel: `${channel.id}`

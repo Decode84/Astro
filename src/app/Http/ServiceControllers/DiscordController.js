@@ -2,7 +2,9 @@ const fetch = require('node-fetch')
 const path = require('path')
 const User = require('../../Models/User')
 const Project = require('../../Models/Project')
-const { Link } = require('../../../discord/DiscordLinker');
+const { Link,
+    LinkFromWeb
+} = require('../../../discord/DiscordLinker');
 
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const clientID = process.env.DISCORD_CLIENT_ID
@@ -33,7 +35,7 @@ async function discordAuth (req, res) {
         const permissions = req.query.permissions
         
     
-        const discord = await Link(guild)
+        const discord = await LinkFromWeb(guild)
         await ConnectDiscordWithProject(state[1], discord)
         res.redirect('/project/' + state[1])
     } catch (error) {
