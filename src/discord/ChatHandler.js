@@ -10,7 +10,7 @@ async function addChatCollector (guildID, channelID) {
         return channel.createMessageCollector({ filter, dispose: true, time: 150000 })
     } catch(e) {return null}
 }
-async function readLatestMessages (client, guildID, channelID) {
+async function readLatestMessages (guildID, channelID) {
     try {
         const guild = await client.guilds.cache.get(guildID)
         const channel = await guild.channels.cache.get(channelID)
