@@ -46,10 +46,12 @@ async function discordAuth (req, res) {
         if (!req.session.user) {
             console.log('User not logged in before Discord Auth')
             res.redirect('/project')
+            return
         }
         else if ((await discordUser).message === '401: Unauthorized') {
             console.log('failed to link user with discord because of invalid token')
             res.redirect('/project')
+            return
         }
         putUserInDB(discordUser, req)
         res.redirect('/project/' + state[1])
