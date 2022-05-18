@@ -1,4 +1,4 @@
-const { client } = require('DiscordBot')
+const { client } = require('./DiscordBot')
 
 async function addChatCollector (guildID, channelID) {
     // `m` is a message object that will be passed through the filter function

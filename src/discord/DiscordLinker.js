@@ -1,6 +1,6 @@
 const User = require('../app/Models/User')
 const Project = require('../app/Models/Project')
-const { client } = require('DiscordBot')
+const { client } = require('./DiscordBot')
 const { ChannelType } = require('discord-api-types/v10');
 // https://discord.js.org/#/docs/main/stable/class/ClientUser?scrollTo=send
 /**
