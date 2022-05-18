@@ -166,7 +166,7 @@ const TrelloApi = {
         // try to create the board if trello is active for the project for a given organization.
         try {
             const organizationId = project.categories.planning.services.trello.organizationId
-            response = await fetch('https://api.trello.com/1/boards?name=' + name + '&idOrganization=' + organizationId + '&key=' + trelloKey + '&token=' + user.authentications.trello.token, {
+            response = await fetch('https://api.trello.com/1/boards?name=' + name + '&idOrganization=' + organizationId + '&prefs_permissionLevel=org' + '&key=' + trelloKey + '&token=' + user.authentications.trello.token, {
                 method: 'POST'
             })
         } catch (e) {
