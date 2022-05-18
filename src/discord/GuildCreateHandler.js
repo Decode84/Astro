@@ -4,7 +4,7 @@ const { ChannelType } = require('discord-api-types/v10');
 // https://discord.js.org/#/docs/main/stable/class/ClientUser?scrollTo=send
 async function OnGuildCreate (guild) {
     const randomChannel = guild.channels.cache().filter(channel => channel.type === ChannelType.GUILD_TEXT).first()
-    if (!guild.me.permissions.has(new Permissions(536988865)))
+    if (!guild.me.permissions.has(new Permissions(536988801)))
     {
         randomChannel.send('Issuficient permissions. Please add the bot again')
         return
