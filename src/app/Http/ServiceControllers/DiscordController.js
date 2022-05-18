@@ -29,14 +29,6 @@ async function discordWidget (req) {
         ServerInviteLink: ServerInviteLink
     }
 }
-async function discordAuth(req, res) {
-    const code = req.query.code
-    const state = req.query.state.split('::')
-    if (code) {
-        await handleAuth(req, code)
-    }
-    res.redirect('/project/' + state[1])
-}
 
 /**
  * @function Handling of the discord authentication linking the user in session to discord
@@ -44,9 +36,10 @@ async function discordAuth(req, res) {
  * @param code
  * @returns {Promise<void>}
  */
-async function handleAuth (req, code) {
+async function discordAuth (req, code) {
     try {
-        const tokenResult = await getToken(code)
+        const state = req.query.state.split('::')
+        const tokenResult = await getToken(req.query.code)
         const token = await tokenResult.json()
         const userResult = await getUserData(token)
         const discordUser = await userResult.json()
@@ -59,9 +52,10 @@ async function handleAuth (req, code) {
             return
         }
         putUserInDB(discordUser, req)
+        res.redirect('/project/' + state[1])
     } catch (error) {
         console.log(error)
-        // TODO: add proper autherror to user
+        res.redirect('/project')
     }
 }
 
@@ -70,7 +64,7 @@ async function handleAuth (req, code) {
  * @param {int} code
  * @returns {*|Promise<Response>} Token
  */
-function getToken (code, req) {
+function getToken (code) {
     return fetch('https://discord.com/api/oauth2/token', {
         method: 'POST',
         body: new URLSearchParams({
@@ -79,7 +73,6 @@ function getToken (code, req) {
             code: code,
             grant_type: 'authorization_code',
             redirect_uri: 'https://www.theprojecthub.xyz/discord',
-            scope: 'identify'
         }),
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
