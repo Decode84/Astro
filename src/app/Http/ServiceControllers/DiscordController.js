@@ -29,23 +29,14 @@ async function discordWidget (req) {
         ServerInviteLink: ServerInviteLink
     }
 }
-async function discordAuth(req, res) {
-    const code = req.query.code
-    const state = req.query.state.split('::')
-    if (code) {
-        await handleAuth(req, code)
-    }
-    res.redirect('/project/' + state[1])
-}
 
 /**
  * @function Handling of the discord authentication linking the user in session to discord
- * @param req
- * @param code
- * @returns {Promise<void>}
  */
-async function handleAuth (req, code) {
+async function discordAuth (req, res) {
     try {
+        const code = req.query.code
+        const state = req.query.state.split('::')
         const tokenResult = await getToken(code)
         const token = await tokenResult.json()
         const userResult = await getUserData(token)
@@ -59,9 +50,10 @@ async function handleAuth (req, code) {
             return
         }
         putUserInDB(discordUser, req)
+        res.redirect('/project/' + state[1])
     } catch (error) {
         console.log(error)
-        // TODO: add proper autherror to user
+        res.redirect('/project')
     }
 }
 
