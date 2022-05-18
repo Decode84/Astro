@@ -12,7 +12,7 @@ exports.StartBot = () => {
     try {
         require('./RegCommands')
         const client = new Client({
-            intents: new Intents(536988801)
+            intents: [new Intents(536988801)]
         })
         client.once('ready', () => {
             console.log('Discord Ready!')
