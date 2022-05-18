@@ -7,13 +7,14 @@ require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const clientID = process.env.DISCORD_CLIENT_ID
 const secret = process.env.DISCORD_APPLICATION_SECRET
 
-const authRedirect = 'http://localhost:4000/discord'
-const AuthLink = 'https://discord.com/api/oauth2/authorize?client_id=959004457205637131&redirect_uri=http%3A%2F%2Flocalhost%3A4000%2Fdiscord&response_type=code&scope=identify%20email'
+const AuthLink = 'https://discord.com/api/oauth2/authorize?client_id=959004457205637131' +
+    '&permissions=536988865&redirect_uri=http%3A%2F%2F178.128.202.47%2Fdiscord&response_type=code' +
+    '&scope=identify%20bot%20applications.commands'
 
 /**
  * @function Handling of the discord service
  */
-exports.discordWidget = async (req, res) => {
+async function discordWidget (req, res) {
     if (!secret)
         return null
     const project = await Project.findById(req.params.id)
@@ -28,7 +29,7 @@ exports.discordWidget = async (req, res) => {
         ServerInviteLink: ServerInviteLink
     }
 }
-exports.discordAuth = async (req, res) => {
+async function discordAuth(req, res) {
     const code = req.query.code
     const state = req.query.state.split('::')
     if (code) {
@@ -69,7 +70,7 @@ async function handleAuth (req, code) {
  * @param {int} code
  * @returns {*|Promise<Response>} Token
  */
-function getToken (code) {
+function getToken (code, req) {
     return fetch('https://discord.com/api/oauth2/token', {
         method: 'POST',
         body: new URLSearchParams({
@@ -77,7 +78,7 @@ function getToken (code) {
             client_secret: secret,
             code: code,
             grant_type: 'authorization_code',
-            redirect_uri: authRedirect,
+            redirect_uri: 'http://178.128.202.47/discord',
             scope: 'identify'
         }),
         headers: {
@@ -114,3 +115,4 @@ function putUserInDB (discordUser, req) {
     })
     req.session.user.services.discord = discordUser.id
 }
+module.exports = { discordAuth, discordWidget }

@@ -3,21 +3,23 @@ const Project = require('../app/Models/Project')
 const { MessageActionRow, MessageButton } = require('discord.js')
 // https://discord.js.org/#/docs/main/stable/class/ClientUser?scrollTo=send
 /**
- * @function Links a Projecthub Project with Discord. Invoked by CommandHandler and GuildCreateHandler
- * @param {Guild}guild
- * @param {Client} client
+ * @function Links a Projecthub Project with Discord. Invoked by CommandHandler
  * @param {Interaction} interaction
  * @returns {Promise<void>}
  */
-async function Link (guild, client, interaction = null, channel = null) {
+async function Link (interaction) {
+    const guild = interaction.guild
+    const client = interaction.client
+    const channel = interaction.channel
     const id = client.id
     const userInDB = await User.findOne({ 'services.discord': id }, 'projectIDs')
     if (!userInDB) {
-        console.log('couldnt find user with id: ' + id)
+        client.send("Couldn't find your user id: " + id + " in ProjectHub\nPlease retry the Auth button in ProjectHub")
         return
     }
     const projects = userInDB.projectIDs
-    if (projects.length === 0) {
+    const buttonRows = await CreateButtons(projects)
+    if (buttonRows.length === 0) {
         const message = `Hello thanks for adding me to ${guild.name} (id:${guild.id})\n
         Unfortunately as of right now, you're not part of any projects in ProjectHub.\n
         Please join a project and call /link in the server to try again`
@@ -25,15 +27,18 @@ async function Link (guild, client, interaction = null, channel = null) {
         return
     }
     const message = `Hello thanks for adding me to ${guild.name} (id:${guild.id})\nClick to link to project:\n`
-    const buttonRows = await CreateButtons(projects)
     // Send message with string contents and button
-    let sentMessage
-    if (interaction) {
-        sentMessage = await interaction.reply({ content: message, components: buttonRows, ephemeral: true, fetchReply: true })
-    } else {
-        sentMessage = await client.send({ content: message, components: buttonRows })
+    try {
+        let sentMessage
+        if (interaction) {
+            sentMessage = await interaction.reply({ content: message, components: buttonRows, ephemeral: true, fetchReply: true })
+        } else {
+            sentMessage = await client.send({ content: message, components: buttonRows })
+        }
+        await CreateCollector(guild, await sentMessage, channel) // eventListener for when the user clicks the button
+    } catch (e) {
+        console.log('Discord linkError: ' + e)
     }
-    await CreateCollector(guild, await sentMessage, channel) // eventListener for when the user clicks the button
 }
 /**
  * @function Creates buttons for the message. One button for each plausible project. A collector will later make the
@@ -44,12 +49,13 @@ async function CreateButtons (projects) {
     // The buttons can max have 5 rows and 5 buttons in each row for a total of 25 buttons. NO MORE
     // buttons can be added in a single message. This restriction is made by discord
     const buttonRows = []
-    if (projects.length > 25) { console.log('Too many projects') } // TODO: handling of more than 25 projects for a user
+    if (projects.length > 25) { console.log('Too many projects') }
     let currentRow = new MessageActionRow()
     // Each loop adds 1 button
-    for (let i = 0; i < projects.length; i++) {
-        const project = await Project.findById(projects[i]) // TODO: Error handling in case projectid is incorrect
-        await project
+    for (let i = 0; i < Math.max(projects.length, 25); i++) {
+        const project = await Project.findById(projects[i])
+        if (!project)
+            continue
         currentRow.addComponents(new MessageButton().setCustomId(`${projects[i]}`).setLabel(`${project.name}`).setStyle('PRIMARY'))
         if (i % 5 === 4) {
             buttonRows.push(currentRow)
