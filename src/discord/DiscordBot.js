@@ -12,7 +12,7 @@ exports.StartBot = () => {
     try {
         require('./RegCommands')
         const client = new Client({
-            intents: [new Intents(536988801)]
+            intents: [Intents.FLAGS.GUILD_INVITES, Intents.FLAGS.GUILD_WEBHOOKS, Intents.FLAGS.GUILD_MESSAGES]
         })
         client.once('ready', () => {
             console.log('Discord Ready!')
