@@ -7,7 +7,7 @@ require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const clientID = process.env.DISCORD_CLIENT_ID
 const secret = process.env.DISCORD_APPLICATION_SECRET
 
-const AuthLink = 'https://discord.com/api/oauth2/authorize?client_id=959004457205637131&permissions=537119921&redirect_uri=https%3A%2F%2Ftheprojecthub.xyz%2Fdiscord&response_type=code&scope=identify%20applications.commands%20bot'
+const AuthLink = 'https://discord.com/api/oauth2/authorize?client_id=959004457205637131&permissions=537119921&redirect_uri=https%3A%2F%2Ftheprojecthub.xyz%2Fdiscord&response_type=code&scope=identify%20applications.commands%20bot%20guilds'
 
 /**
  * @function Handling of the discord service
