@@ -10,7 +10,7 @@ exports.StartDiscordWebSocket = function (server, session, bot) {
         autoAcceptConnections: false // Recommended by websocket to be false
     })
     const projects = []
-
+    
     wsServer.on('request', function (request) {
         if (!originIsAllowed(request.origin)) {
             request.reject()
@@ -20,16 +20,20 @@ exports.StartDiscordWebSocket = function (server, session, bot) {
         session(request.httpRequest, {}, async function (err) {
             if (err) { return }
             const session = request.httpRequest.session
-            if (!session.user) {
+            if (!session.user && session.user.discord) {
                 request.reject(401, 'No session') // 401 Unauthorized
                 return
             }
             const projectID = request.resource.substring(request.resource.lastIndexOf('/') + 1)
             const connection = request.accept(null, request.origin)
-            // TODO: Get current project from url instead
             let currentProject = projects.find(project => project.projectID === projectID)
             if (!currentProject) {
                 currentProject = await OpenNewProject(bot, session, request, projectID)
+                if (!currentProject)
+                {
+                    connection.close()
+                    return
+                }
                 projects.push(currentProject)
             }
             // push user to project such that it is subscribed to others messages
@@ -75,6 +79,8 @@ async function OpenNewProject (bot, session, request, projectID) {
         return
     }
     const discord = await dbProject.categories.messaging.services.discord
+    if (!discord)
+        return null
     const currentProject = {
         projectID: session.user.projectIDs[0],
         webhook: new WebhookClient({ url: discord.webhook }),
