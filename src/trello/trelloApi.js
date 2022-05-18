@@ -111,7 +111,7 @@ const TrelloApi = {
                 const json = JSON.parse(text)
 
                 organizationId = json.id
-                organizationOwner = user._id
+                organizationOwner = user._id.toString()
 
                 // Save organization id to database for future use.
                 const service = {
