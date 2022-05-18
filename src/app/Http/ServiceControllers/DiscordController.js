@@ -2,12 +2,11 @@ const fetch = require('node-fetch')
 const path = require('path')
 const User = require('../../Models/User')
 const Project = require('../../Models/Project')
+const { Link } = require('../../../discord/DiscordLinker');
 
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const clientID = process.env.DISCORD_CLIENT_ID
 const secret = process.env.DISCORD_APPLICATION_SECRET
-
-const AuthLink = 'https://discord.com/api/oauth2/authorize?client_id=959004457205637131&permissions=537119921&redirect_uri=https%3A%2F%2Ftheprojecthub.xyz%2Fdiscord&response_type=code&scope=identify%20bot%20applications.commands'
 
 /**
  * @function Handling of the discord service
@@ -16,18 +15,8 @@ async function discordWidget (req) {
     if (!secret)
         return null
     const project = await Project.findById(req.params.id)
-    let auth = AuthLink
     let ServerInviteLink = project?.categories?.messaging?.services?.discord?.inviteLink
-    if (!ServerInviteLink)
-    {
-        ServerInviteLink = ''
-    }
-    else
-        auth = ''
-    return {
-        AuthLink: auth,
-        ServerInviteLink: ServerInviteLink
-    }
+    return ServerInviteLink ? ServerInviteLink : ''
 }
 
 /**
@@ -39,21 +28,13 @@ async function discordWidget (req) {
 async function discordAuth (req, res) {
     try {
         const state = req.query.state.split('::')
-        const token = await getToken(req.query.code).then(res => res.json())
-        console.log(token)
-        const discordUser = await getUserData(token).then(res => res.json())
-        console.log(discordUser)
-        if (!req.session.user) {
-            console.log('User not logged in before Discord Auth')
-            res.redirect('/project')
-            return
-        }
-        else if ((await discordUser).message === '401: Unauthorized') {
-            console.log('failed to link user with discord because of invalid token')
-            res.redirect('/projects')
-            return
-        }
-        putUserInDB(discordUser, req)
+        const guild = req.query.guild_id
+        const code = req.query.code
+        const permissions = req.query.permissions
+        
+    
+        const discord = await Link(guild)
+        await ConnectDiscordWithProject(state[1], discord)
         res.redirect('/project/' + state[1])
     } catch (error) {
         console.log(error)
@@ -97,18 +78,14 @@ function getUserData (token) {
 }
 
 /**
- * @function Puts the discordUser's id in the database
- * @param discordUser
- * @param req
+ * @function
+ * @param projectID
+ * @param guild
  */
-function putUserInDB (discordUser, req) {
-    // TODO: handle the usecase where users discord is already linked to another account
-    const username = req.session.user.username
-    User.findOne({ username: username }).then(user => {
-        user.services = { ...user.services, discord: discordUser.id }
-        user.save()
-        console.log(`Sucessfully linked ${username} with discord account ${discordUser.username} (${discordUser.id})`)
-    })
-    req.session.user.services.discord = discordUser.id
+async function ConnectDiscordWithProject (projectID, discord) {
+    const project = await Project.findById(projectID)
+    project.categories.messaging.services = { ...project.categories.messaging.services, discord }
+    project.markModified('categories.messaging.services')
+    project.save()
 }
 module.exports = { discordAuth, discordWidget }

@@ -4,7 +4,7 @@ const ChatHandler = require('../../discord/ChatHandler')
 const { WebhookClient } = require('discord.js')
 const { addChatCollector } = require('../../discord/ChatHandler')
 
-exports.StartDiscordWebSocket = function (server, session, bot) {
+exports.StartDiscordWebSocket = function (server, session) {
     const wsServer = new WebSocketServer({
         httpServer: server,
         autoAcceptConnections: false // Recommended by websocket to be false
@@ -26,7 +26,7 @@ exports.StartDiscordWebSocket = function (server, session, bot) {
             const projectID = request.resource.substring(request.resource.lastIndexOf('/') + 1)
             let currentProject = projects.find(project => project.projectID === projectID)
             if (!currentProject) {
-                currentProject = await OpenNewProject(bot, session, request, projectID)
+                currentProject = await OpenNewProject(session, request, projectID)
                 if (!currentProject)
                 {
                     request.reject(403, 'Need to link project first')
@@ -71,7 +71,7 @@ function originIsAllowed (origin) {
     // TODO: put logic here to detect whether the specified origin is allowed. (DOS security etc)
     return true
 }
-async function OpenNewProject (bot, session, request, projectID) {
+async function OpenNewProject (session, request, projectID) {
     const dbProject = await Project.findById(projectID)
     if (!(await dbProject)) {
         console.log('Websocket: failed to get project ' + projectID)
@@ -83,12 +83,12 @@ async function OpenNewProject (bot, session, request, projectID) {
     const currentProject = {
         projectID: session.user.projectIDs[0],
         webhook: new WebhookClient({ url: discord.webhook }),
-        collector: await addChatCollector(bot, discord.serverID, discord.textChannel),
+        collector: await addChatCollector(discord.serverID, discord.textChannel),
         connections: [],
         latestMessages: []
     }
     // get previous messages in discord
-    const messages = await ChatHandler.readLatestMessages(bot, discord.serverID, discord.textChannel) // Guaranteed 10 messages
+    const messages = await ChatHandler.readLatestMessages(discord.serverID, discord.textChannel) // Guaranteed 10 messages
     messages.forEach(m => {
         const message = { username: m.author.username, message: m.content, discord: !(m.system || m.webhookId) }
         currentProject.latestMessages.push(message)

@@ -1,7 +1,6 @@
-// Note: if these functions are run before DiscordBot prints "Discord Ready!" this script might
-// have errors but only possible within first second
+const { client } = require('DiscordBot')
 
-async function addChatCollector (client, guildID, channelID) {
+async function addChatCollector (guildID, channelID) {
     // `m` is a message object that will be passed through the filter function
     const guild = await client.guilds.cache.get(guildID)
     const channel = await guild.channels.cache.get(channelID)
