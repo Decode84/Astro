@@ -10,7 +10,6 @@ exports.StartDiscordWebSocket = function (server, session, bot) {
         autoAcceptConnections: false // Recommended by websocket to be false
     })
     const projects = []
-    
     wsServer.on('request', function (request) {
         if (!originIsAllowed(request.origin)) {
             request.reject()
