@@ -33,10 +33,10 @@ async function discordWidget (req) {
 /**
  * @function Handling of the discord authentication linking the user in session to discord
  * @param req
- * @param code
+ * @param res
  * @returns {Promise<void>}
  */
-async function discordAuth (req, code) {
+async function discordAuth (req, res) {
     try {
         const state = req.query.state.split('::')
         const tokenResult = await getToken(req.query.code)
