@@ -30,7 +30,7 @@ function StartBot () {
         console.log('failed to start bot: ' + e)
     }
 }
-async function LinkFromWeb(guildId) {
+async function LinkFromWeb (guildId) {
     await client.guilds.fetch()
     const guild = client.guilds.cache.get(guildId)
     await guild.channels.fetch()

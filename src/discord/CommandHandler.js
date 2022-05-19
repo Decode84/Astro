@@ -18,6 +18,7 @@ async function HandleCommand (interaction) {
         }
         const newLink = await Link(interaction.guild, interaction.channel)
         project.categories.messaging.services.discord = newLink
+        project.markModified('categories.messaging.services')
         project.save()
         interaction.reply('Sucessfully relinked ProjectHub to this channel')
         break
