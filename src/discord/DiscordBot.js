@@ -35,6 +35,7 @@ async function LinkFromWeb (guildId) {
     const guild = client.guilds.cache.get(guildId)
     await guild.channels.fetch()
     let channel = guild.channels.cache.filter(channel => channel.name.includes('general')).first()
+    console.log(channel)
     if (!channel) {
         channel = guild.channels.cache.filter(channel => channel.type === ChannelType.GUILD_TEXT).first()
     }
