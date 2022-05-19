@@ -7,7 +7,7 @@ async function HandleCommand (interaction) {
     case 'ping':
         await interaction.reply('Pong!')
         break
-    case 'link':
+        case 'link':
         console.log('c')
         if (!interaction.inGuild()) {
             await interaction.reply('This command only works in Guild servers')
@@ -19,7 +19,7 @@ async function HandleCommand (interaction) {
             break
         }
         const newLink = await Link(interaction.guild, interaction.channel)
-        project.messaging.services.discord = newLink
+        project.categories.messaging.services.discord = newLink
         project.save()
         interaction.reply('Sucessfully relinked ProjectHub to this channel')
         break

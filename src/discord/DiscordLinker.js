@@ -18,7 +18,7 @@ async function CreateWebHook (channel) {
     const webhook = await channel.createWebhook('ProjectHub Webhook', {
         // Insert options like profilepic etc. here
     })
-    webhook.send('ProjectHub Integrated. to link to another channel type /link')
+    webhook.send('ProjectHub linked to another channel type /link')
     return webhook.url
 }
 async function CreateInvite (guild, channel) {
