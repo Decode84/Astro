@@ -19,7 +19,6 @@ const TrelloApi = {
      */
     activateTrello: async (req, res) => {
         await ProjectController.addServiceToProject(req.params.id, 'planning', 'trello')
-        console.log('Did this really get triggered?')
         res.redirect('/project/' + req.params.id)
     },
 
