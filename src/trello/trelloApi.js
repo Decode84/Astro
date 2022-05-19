@@ -127,6 +127,13 @@ const TrelloApi = {
         } catch (e) {
             console.log(e)
         }
+
+        if (user?.authentications?.trello?.organizations === undefined) {
+            user.authentications.trello.organizations = []
+        }
+        user.authentications.trello.organizations.push(organizationId)
+        user.markModified('authentications')
+        await user.save()
     },
 
     addMemberToOrganisation: async (req, res) => {
@@ -148,6 +155,13 @@ const TrelloApi = {
                 Accept: 'application/json'
             }
         })
+        if (user?.authentications?.trello?.organizations === undefined) {
+            user.authentications.trello.organizations = []
+        }
+        user.authentications.trello.organizations.push(organizationId)
+        user.markModified('authentications')
+        await user.save()
+
         res.redirect('/project/' + projectId)
     },
 

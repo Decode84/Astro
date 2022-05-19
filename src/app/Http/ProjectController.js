@@ -33,7 +33,7 @@ const ProjectController = {
             res.render('project/project', {
                 project: project,
                 projectMembers: memberNames,
-                user: req.session.user,
+                user: await UserModel.findById(req.session.user._id),
                 discordInviteLink: await discordInviteLink,
                 githubInfo: await githubInfo
             })

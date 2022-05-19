@@ -12,30 +12,46 @@
         <% } else { %>
             <section id="activated">
                 <section class="pb-1">
-                    <p>Step 1:</p>
+                    <% if (user?.authentications?.trello?.token) {%>
+                        <p>Already linked to Trello</p>
+
+                        <% if (!(project?.categories?.planning?.services?.trello?.organizationId)) {%>
+                            <section class="flex flex-row pb-2">
+                                <p>Setup Trello project + board</p>
+                                <button class="rounded-md ml-auto w-20 shadow-sm" style="background-color: var(--sec-color);">
+                                    <a href="/trello/setup/<%= project._id %>">Setup</a>
+                                </button>
+                            </section>
+                        <% } else {
+                            let orgId = user?.authentications?.trello?.organizations 
+                            let approved = false
+                            orgId.forEach(id => {
+                                if (id === project?.categories?.planning?.services?.trello?.organizationId) {
+                                    approved = true
+                                }
+                            }) 
+                            console.log(approved)
+                            if (!approved) {%>
+                                <section class="flex flex-row pb-2">
+                                    <p>Join trello project</p>
+                                    <button class="rounded-md ml-auto w-20 shadow-sm" style="background-color: var(--sec-color);">
+                                        <a href="/trello/addMemberToOrg/<%= project._id %>">Join</a>
+                                    </button>
+                                </section>
+                            <% } else {%>
+                                <p>Already a member of the organization</p>
+                            <% } 
+                            }
+                        } else {%>
                     <section class="flex flex-row pb-2">
                         <p>Link your Trello account to the project</p>
                         <button class="rounded-md ml-auto w-20 shadow-sm" style="background-color: var(--sec-color);">
                             <a href="/trello/<%= project._id %>">Link</a>
                         </button>
                     </section>
-                    <p>Step 2:</p>
-                    <% if (!(project?.categories?.planning?.services?.trello?.organizationId)) {%>
-                        <section class="flex flex-row pb-2">
-                            <p>Setup Trello project + board</p>
-                            <button class="rounded-md ml-auto w-20 shadow-sm" style="background-color: var(--sec-color);">
-                                <a href="/trello/setup/<%= project._id %>">Setup</a>
-                            </button>
-                        </section>
-                        <% } else {%>
-                            <section class="flex flex-row pb-2">
-                                <p>Join trello project</p>
-                                <button class="rounded-md ml-auto w-20 shadow-sm" style="background-color: var(--sec-color);">
-                                    <a href="/trello/addMemberToOrg/<%= project._id %>">Join</a>
-                                </button>
-                            </section>
-                            <% } %>
+                    <% } %>
                 </section>
+                <% if (project?.categories?.planning?.services?.trello?.organizationId) {%>
                 <section>
                     <hr>
                     <h3 class="text-md font-semibold pb-2 pt-3">Functionality</h3>
@@ -80,6 +96,7 @@
                 </section>
             </section>
             <script src="/scripts/trelloBoardCardModal.js"></script>
+            <% } %>
             <script src="/scripts/trelloMenuOpt.js"></script>
             <% } %>
 </section>
