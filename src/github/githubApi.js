@@ -48,7 +48,6 @@ async function addUserToProject (userToken, project) {
         }).catch(() => {}) // Nothing because it's supposedly working
         github.members.push(userToken)
         project.categories.development.services.github = github
-        project.save()
         await project.save()
         console.log('added ' + data.name + ' to github ' + project.name)
     } catch (e) {
