@@ -30,4 +30,4 @@ async function CreateInvite (guild, channel) {
     return invite.url
 }
 
-module.exports = { Link, LinkFromWeb }
+module.exports = { Link }
