@@ -52,6 +52,7 @@ async function addUserToProject (userToken, project) {
         await project.save()
         console.log('added ' + data.name + ' to github ' + project.name)
     } catch (e) {
+        console.error(e)
         console.log('failed to add github user. They might already be linked to the project')
     }
 }
