@@ -43,6 +43,9 @@ window.onclick = event => {
  */
 async function trelloMenu () {
     const boards = await getTrelloBoards()
+    if (boards === null) {
+        return null
+    }
     displayTrelloBoardsLink(boards)
     displayTrelloBoards(boards)
 
@@ -91,7 +94,7 @@ async function getTrelloBoards () {
     const response = await fetch(url)                  // Send the request and await for the response
     if (response.status === 200) {
         const text = await response.text()
-        if (text === 'null') {
+        if (text === '') {
             return null
         }
         const json = JSON.parse(text)
