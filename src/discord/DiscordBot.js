@@ -13,7 +13,6 @@ const client = new Client({
 })
 
 client.on('interactionCreate', async interaction => {
-    console.log('a')
     if (interaction.isCommand()) {
         await HandleCommand(interaction)
     }

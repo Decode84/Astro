@@ -35,6 +35,7 @@ async function authReq (req, res) {
     res.redirect('/project/' + state[1])
 }
 async function webHookReceiver (req) {
+    console.log('Webhook received')
     try {
         // TODO: implement security for github webhook
         // console.log(req.body)

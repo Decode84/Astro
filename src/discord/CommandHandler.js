@@ -2,13 +2,11 @@ const { Link } = require('./DiscordLinker')
 const Project = require('../app/Models/Project')
 
 async function HandleCommand (interaction) {
-    console.log('b')
     switch (interaction.commandName) {
     case 'ping':
         await interaction.reply('Pong!')
         break
         case 'link':
-        console.log('c')
         if (!interaction.inGuild()) {
             await interaction.reply('This command only works in Guild servers')
             break
