@@ -12,6 +12,9 @@
         <% } else { %>
             <section id="activated">
                 <section class="pb-1">
+                    <% if (user?.authentications?.trello?.token) {%>
+                        <p>Already linked to Trello</p>
+                    <% } else {%>
                     <p>Step 1:</p>
                     <section class="flex flex-row pb-2">
                         <p>Link your Trello account to the project</p>
@@ -19,6 +22,7 @@
                             <a href="/trello/<%= project._id %>">Link</a>
                         </button>
                     </section>
+                    <% } %>
                     <p>Step 2:</p>
                     <% if (!(project?.categories?.planning?.services?.trello?.organizationId)) {%>
                         <section class="flex flex-row pb-2">
@@ -36,6 +40,7 @@
                             </section>
                             <% } %>
                 </section>
+                <% if (project?.categories?.planning?.services?.trello?.organizationId) {%>
                 <section>
                     <hr>
                     <h3 class="text-md font-semibold pb-2 pt-3">Functionality</h3>
@@ -79,6 +84,7 @@
                     <p id="noCards" class="hidden">No cards</p>
                 </section>
             </section>
+            <% } %>
             <script src="/scripts/trelloBoardCardModal.js"></script>
             <script src="/scripts/trelloMenuOpt.js"></script>
             <% } %>
