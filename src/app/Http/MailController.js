@@ -17,7 +17,7 @@ class MailController {
             from: 'ProjectHub.AAU@gmail.com',
             to: email,
             subject: 'Reset Password Link - ProjectHub.com',
-            html: '<p>You requested for reset password, kindly use this <a href="http://' + path + '/reset?token=' + token + '">link</a> to reset your password</p>'
+            html: '<p>You requested for reset password, kindly use this <a href="https://' + path + '/reset?token=' + token + '">link</a> to reset your password</p>'
 
         }
 
@@ -39,7 +39,7 @@ class MailController {
             from: 'ProjectHub.AAU@gmail.com',
             to: email,
             subject: 'Project invitation link - ProjectHub.com',
-            html: '<p>You have been invited and granted access to <a href="http://' + path + '">' + name + '</a></p>'
+            html: '<p>You have been invited and granted access to <a href="https://' + path + '">' + name + '</a></p>'
 
         }
 
