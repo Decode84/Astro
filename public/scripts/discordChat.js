@@ -1,4 +1,4 @@
-const socket = new WebSocket('wss://awdawdaw' + window.location.host + window.location.pathname)
+const socket = new WebSocket('wss://' + window.location.host + window.location.pathname)
 const messageContainer = document.getElementById('message-container')
 const input = document.getElementById('input')
 input.focus() // move cursor
