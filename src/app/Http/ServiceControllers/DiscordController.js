@@ -2,9 +2,7 @@ const fetch = require('node-fetch')
 const path = require('path')
 const User = require('../../Models/User')
 const Project = require('../../Models/Project')
-const { Link,
-    LinkFromWeb
-} = require('../../../discord/DiscordLinker');
+const { LinkFromWeb } = require('../../../discord/DiscordBot');
 
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const clientID = process.env.DISCORD_CLIENT_ID
@@ -14,11 +12,11 @@ const secret = process.env.DISCORD_APPLICATION_SECRET
  * @function Handling of the discord service
  */
 async function discordWidget (req) {
-    if (!secret)
+    if (!secret) {
         return null
+    }
     const project = await Project.findById(req.params.id)
-    let ServerInviteLink = project?.categories?.messaging?.services?.discord?.inviteLink
-    return ServerInviteLink ? ServerInviteLink : ''
+    return project?.categories?.messaging?.services?.discord?.inviteLink || ''
 }
 
 /**
@@ -33,8 +31,7 @@ async function discordAuth (req, res) {
         const guild = req.query.guild_id
         const code = req.query.code
         const permissions = req.query.permissions
-        
-    
+
         const discord = await LinkFromWeb(guild)
         await ConnectDiscordWithProject(state[1], discord)
         res.redirect('/project/' + state[1])
@@ -82,7 +79,7 @@ function getUserData (token) {
 /**
  * @function
  * @param projectID
- * @param guild
+ * @param discord
  */
 async function ConnectDiscordWithProject (projectID, discord) {
     const project = await Project.findById(projectID)
