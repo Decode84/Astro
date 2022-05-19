@@ -26,14 +26,14 @@ async function setupProject (githubToken, project) {
     if (resp.status === 201) {
         await putGitHubInDB(project, resp.data, githubToken)
         await createWebHook(resp.data.hooks_url, octokit)
-    } else console.log("Error creating project for github")
+    } else console.log('Error creating project for github')
 }
-async function addUserToProject(userToken, project) {
+async function addUserToProject (userToken, project) {
     console.log('Trying to add user to project')
     const user = new Octokit({
         auth: userToken
     })
-    const { data } = await user.request("/user");
+    const { data } = await user.request('/user');
     const github = project.categories.development.services.github
     const owner = new Octokit({
         auth: github.ownerToken
@@ -46,9 +46,10 @@ async function addUserToProject(userToken, project) {
         await user.request('PATCH /user/repository_invitations/{invitation_id}', {
             invitation_id: invitationId
         })
-        project.categories.development.services.github.members.push(userToken)
+        console.log('dbTime')
+        github.members.push(userToken)
         await project.save()
-        console.log("added " + data.name + " to github " + project.name)
+        console.log('added ' + data.name + ' to github ' + project.name)
     } catch (e) {
         console.log('failed to add github user. They might already be linked to the project')
     }
@@ -62,7 +63,7 @@ async function putGitHubInDB (project, data, githubToken) {
         htmlUrl: data.html_url,
         webHook: data.hooks_url,
         hookMessages: [],
-        members: [ githubToken ]
+        members: [githubToken]
     }
     // Update DB
     project.categories.development.services = { ...project.categories.development.services, github }
@@ -77,7 +78,7 @@ async function createWebHook (hookUrl, octokit) {
             'pull_request'
         ],
         config: {
-            url: 'https://theprojecthub.xyz/api/github/webhook',
+            url: 'https://www.theprojecthub.xyz/api/github/webhook',
             content_type: 'json',
             insecure_ssl: '0'
         }
