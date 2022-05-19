@@ -1,5 +1,10 @@
 const { Link } = require('./DiscordLinker')
 const Project = require('../app/Models/Project')
+const { client } = require('./DiscordBot')
+client.on('interactionCreate', async interaction => {
+    if (interaction.isCommand()) { await commandHandler.Handlecommand(interaction) }
+    // else if(interaction.is) add other interaction than commands here
+})
 
 async function HandleCommand (interaction) {
     const { commandName } = interaction

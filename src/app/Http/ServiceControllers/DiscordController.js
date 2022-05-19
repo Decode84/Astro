@@ -2,9 +2,7 @@ const fetch = require('node-fetch')
 const path = require('path')
 const User = require('../../Models/User')
 const Project = require('../../Models/Project')
-const { Link,
-    LinkFromWeb
-} = require('../../../discord/DiscordLinker');
+const { LinkFromWeb } = require('../../../discord/DiscordLinker');
 
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const clientID = process.env.DISCORD_CLIENT_ID

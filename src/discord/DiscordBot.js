@@ -2,7 +2,6 @@
 const path = require('path')
 const { Client, Intents } = require('discord.js')
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
-const commandHandler = require('./CommandHandler');
 
 // token is the bots login credentials and needs to be kept confident
 const token = process.env.DISCORD_BOT_TOKEN
@@ -11,10 +10,6 @@ const client = new Client({
 })
 client.once('ready', () => {
     console.log('Discord Ready!')
-})
-client.on('interactionCreate', async interaction => {
-    if (interaction.isCommand()) { await commandHandler.Handlecommand(interaction) }
-    // else if(interaction.is) add other interaction than commands here
 })
 
 function StartBot() {
