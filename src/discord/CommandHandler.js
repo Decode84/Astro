@@ -2,17 +2,20 @@ const { Link } = require('./DiscordLinker')
 const Project = require('../app/Models/Project')
 const { client } = require('./DiscordBot')
 client.on('interactionCreate', async interaction => {
-    if (interaction.isCommand()) { await HandleCommand(interaction) }
-    // else if(interaction.is) add other interaction than commands here
+    console.log('a')
+    if (interaction.isCommand()) {
+        await HandleCommand(interaction)
+    }
 })
 
 async function HandleCommand (interaction) {
-    const { commandName } = interaction
-    switch (commandName) {
+    console.log('b')
+    switch (interaction.commandName) {
     case 'ping':
         await interaction.reply('Pong!')
         break
     case 'link':
+        console.log('c')
         if (!interaction.inGuild()) {
             await interaction.reply('This command only works in Guild servers')
             break

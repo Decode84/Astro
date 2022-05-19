@@ -12,7 +12,7 @@ client.once('ready', () => {
     console.log('Discord Ready!')
 })
 
-function StartBot() {
+function StartBot () {
     try {
         require('./RegCommands')
         client.login(token)
