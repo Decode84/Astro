@@ -1,12 +1,5 @@
 const { Link } = require('./DiscordLinker')
 const Project = require('../app/Models/Project')
-const { client } = require('./DiscordBot')
-client.on('interactionCreate', async interaction => {
-    console.log('a')
-    if (interaction.isCommand()) {
-        await HandleCommand(interaction)
-    }
-})
 
 async function HandleCommand (interaction) {
     console.log('b')
@@ -35,3 +28,4 @@ async function HandleCommand (interaction) {
         break
     }
 }
+module.exports = { HandleCommand }

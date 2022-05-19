@@ -1,22 +1,10 @@
-const User = require('../app/Models/User')
-const Project = require('../app/Models/Project')
-const { client } = require('./DiscordBot')
-const { ChannelType } = require('discord-api-types/v10');
 // https://discord.js.org/#/docs/main/stable/class/ClientUser?scrollTo=send
 /**
  * @function Links a Projecthub Project with Discord.
  * @returns {Promise<{webhook: *, inviteLink: string, serverID: string, textChannel: string}>}
- * @param guildId
+ * @param guild
+ * @param channel
  */
-async function LinkFromWeb(guildId) {
-    await client.guilds.fetch()
-    const guild = client.guilds.cache.get(guildId)
-    await guild.channels.fetch()
-    let channel = guild.channels.cache.filter(channel => channel.name.includes('general')).first()
-    if (!channel)
-        channel = guild.channels.cache.filter(channel => channel.type === ChannelType.GUILD_TEXT).first()
-    return await Link(guild, channel)
-}
 async function Link (guild, channel) {
     return {
         serverID: `${guild.id}`,
