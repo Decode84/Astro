@@ -30,24 +30,25 @@ async function setupProject (githubToken, project) {
 }
 async function addUserToProject (userToken, project) {
     console.log('Trying to add user to project')
-    const user = new Octokit({
-        auth: userToken
-    })
-    const { data } = await user.request('/user');
-    const github = project.categories.development.services.github
-    const owner = new Octokit({
-        auth: github.ownerToken
-    })
-    const url = github.url.split('com')[1] + '/collaborators/' + data.login
     try {
+        const user = new Octokit({
+            auth: userToken
+        })
+        const { data } = await user.request('/user')
+        const github = project.categories.development.services.github
+        const owner = new Octokit({
+            auth: github.ownerToken
+        })
+        const url = github.url.split('com')[1] + '/collaborators/' + data.login
         await owner.request('PUT ' + url)
         const invitations = await user.request('GET /user/repository_invitations', {})
         const invitationId = getInvitationId(invitations.data, github.id)
         await user.request('PATCH /user/repository_invitations/{invitation_id}', {
             invitation_id: invitationId
         })
-        console.log('dbTime')
         github.members.push(userToken)
+        project.categories.development.services.github = github
+        project.save()
         await project.save()
         console.log('added ' + data.name + ' to github ' + project.name)
     } catch (e) {
