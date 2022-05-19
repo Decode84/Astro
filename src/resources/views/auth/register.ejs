@@ -14,13 +14,13 @@
                         <h1 class="text-2xl text-center font-bold">Register your account</h1>
 
                         <label class="text text-left block mb-2 mt-4" for="name">Name</label>
-                        <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:border-blue-400 focus:outline-none focus:ring-blue-400" name="name" id="name" required />
+                        <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:border-blue-400 focus:outline-none focus:ring-blue-400" minlength="2" maxlength="128" name="name" id="name" required />
 
                         <label class="text text-left block mb-2 mt-4" for="username">Username</label>
-                        <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:border-blue-400 focus:outline-none focus:ring-blue-400" name="username" id="username" required />
+                        <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:border-blue-400 focus:outline-none focus:ring-blue-400" minlength="2" maxlength="32" name="username" id="username" required />
 
                         <label class="text text-left block mb-2 mt-4" for="emailaddress">Email</label>
-                        <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:border-blue-400 focus:outline-none focus:ring-blue-400" name="email" id="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,62}$" required />
+                        <input class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md focus:border-blue-400 focus:outline-none focus:ring-blue-400" minlength="5" maxlength="128" name="email" id="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,62}$" required />
 
                         <label class="text text-left block mb-2 mt-4" for="password">Password</label>
                         <input type="password" class="border-2 py-1 p-2 border-gray-200 bg-gray-50 w-full rounded-md" name="password" id="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="One uppercase, min 8 letters" minlength="8" maxlength="32" required />
