@@ -45,7 +45,7 @@ async function addUserToProject (userToken, project) {
         const invitationId = getInvitationId(invitations.data, github.id)
         await user.request('PATCH /user/repository_invitations/{invitation_id}', {
             invitation_id: invitationId
-        })
+        }).catch(() => {}) // Nothing because it's supposedly working
         github.members.push(userToken)
         project.categories.development.services.github = github
         project.save()
