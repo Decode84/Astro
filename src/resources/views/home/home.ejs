@@ -1,4 +1,4 @@
-<header class="flex flex-1 justify-between items-center" style="height: var(--header-h)">
+<header class="flex flex-1 justify-between items-center" style="height: var(--header-h); min-width: var(--min-window-w);">
     <div class="py-4 flex flex-row items-center" style="width: var(--left-col-w); background-color: var(--sec-color)">
         <div>
             <%- include('../project/_partial/header/_partial/logo'); %>
@@ -6,12 +6,53 @@
     </div>
 
     <div>
-        <button onclick="window.location.href='/login';" class="py-2 px-4 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" style="background-color: var(--acc-color)" id="loginBtn" type="submit">Login</button>
-        <button onclick="window.location.href='/register';" class="py-2 px-4 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" style="background-color: var(--acc-color)" id="RegisterBtn"
+        <button onclick="window.location.href='/login';" class="py-2 px-4 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" style="background-color: var(--acc-color)" id="loginBtn" type="submit">Login</button>
+        <button onclick="window.location.href='/register';" class="py-2 px-4 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" style="background-color: var(--acc-color)" id="RegisterBtn"
             type="submit">Register</button>
     </div>
 </header>
 
-<main class="w-full flex justify-center items-center" style="height: calc(100vh - var(--header-h))">
-    <img class="w-3/5" src="/illustrations/definition-image.jpg" alt="decorative">
+<main class="w-full flex justify-center items-center" style="height: calc(100vh - var(--header-h)); min-width: var(--min-window-w);">
+    <div id="definition" class="w-96" style="background-color: var(--sec-color);">
+        
+        <div class="flex flex-row items-center">
+
+            <div id="audio-btn" class="bg-white rounded-full w-10 h-10 flex items-center justify-center hover:cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clip-rule="evenodd" />
+                </svg>
+            </div>
+
+            <div class="ml-3">
+                <h3 class="text-lg font-semibold">Project Hub</h3>
+                <p class="text-sm">/ˈprɒdʒɛkt hʌb/</p>
+            </div>
+
+        </div>
+        <p class="mt-2 text-sm italic text-gray-400">awesome service</p>
+        <div class="mt-2 ml-3">
+            <p class="text-sm">
+                One place from where all online services needed for your software project
+                can be accessed and utilized
+            </p>
+            <p class="text-sm text-gray-400">"waow, Project Hub really saved my group some time"</p>
+        </div>
+    </div>
+
+
+    <audio id="project-audio">
+        <source src="http://ssl.gstatic.com/dictionary/static/sounds/20200429/project--_gb_1.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="hub-audio">
+        <source src="http://ssl.gstatic.com/dictionary/static/sounds/20200429/hub--_gb_1.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const audioBtn = document.getElementById('audio-btn')
+        const projectAudio = document.getElementById('project-audio')
+        const hubAudio = document.getElementById('hub-audio')
+
+        audioBtn.onclick = () => projectAudio.play()
+        projectAudio.onended = () => hubAudio.play()
+    </script>
 </main>
