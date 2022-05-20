@@ -1,5 +1,7 @@
+const startTab = 'Planning'
+const disabledTabs = ['File sharing']
+
 window.onload = () => {
-    const startTab = 'Planning'
     setActiveCategory(startTab)
 
     const children = document.getElementById('categories').children
@@ -9,15 +11,17 @@ window.onload = () => {
             child.classList.add('bg-gray-100')
         }
 
-        child.addEventListener('click', () => {
-            setActiveCategory(tabTitle)
-            colorActiveTabBtn(children)
-            child.classList.add('bg-gray-100')
-        })
+        if (!disabledTabs.includes(tabTitle)) {
+            child.addEventListener('click', () => {
+                setActiveCategory(tabTitle)
+                colorActiveTabBtn(children)
+                child.classList.add('bg-gray-100')
+            })
+        }
     }
 }
 
-function setActiveCategory(name) {
+function setActiveCategory (name) {
     if (name === 'Planning') {
         disableAllCategoryTabsBut('planning-widget')
     } else if (name === 'Communication') {
