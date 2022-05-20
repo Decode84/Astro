@@ -31,7 +31,7 @@ const TrelloApi = {
      */
     trello: async (req, res) => {
         const path = req.headers.host
-        const returnUrl = 'http://' + path + '/trello/callback/' + req.params.id
+        const returnUrl = 'https://' + path + '/trello/callback/' + req.params.id
         res.redirect('https://trello.com/1/authorize?return_url=' + returnUrl + '&callback_method=fragment&?expiration=30days&name=Project_Hub&response_type=fragment&scope=read,write,account&key=' + trelloKey)
     },
 
@@ -89,6 +89,7 @@ const TrelloApi = {
      */
     newOrganization: async (name, userId, projectId) => {
         let organizationId
+        let organizationOwner
 
         // Check whether Trello is active for the project.
 
@@ -110,12 +111,14 @@ const TrelloApi = {
                 const json = JSON.parse(text)
 
                 organizationId = json.id
+                organizationOwner = user._id.toString()
 
                 // Save organization id to database for future use.
                 const service = {
                     ...project.categories.planning.services
                 }
                 service.trello.organizationId = organizationId
+                service.trello.organizationOwner = organizationOwner
                 project.markModified('categories.planning.services')
 
                 project.categories.planning.services = service
@@ -133,11 +136,13 @@ const TrelloApi = {
 
         const project = await ProjectController.getProjectById(projectId)
         const organizationId = project.categories.planning.services.trello.organizationId
+        const organizationOwner = project.categories.planning.services.trello.organizationOwner
 
         const user = await userController.getUserById(userId)
+        const ownerUser = await userController.getUserById(organizationOwner)
         const token = user.authentications.trello.token
 
-        const url = 'https://api.trello.com/1/organizations/' + organizationId + '/members/' + user.authentications.memberId + '?type=admin' + '?key=' + trelloKey + '&token=' + token
+        const url = 'https://api.trello.com/1/organizations/' + organizationId + '/members/' + user.authentications.trello.memberId + '?type=normal' + '&key=' + trelloKey + '&token=' + ownerUser.authentications.trello.token
         await fetch(url, {
             method: 'PUT',
             headers: {
@@ -161,7 +166,7 @@ const TrelloApi = {
         // try to create the board if trello is active for the project for a given organization.
         try {
             const organizationId = project.categories.planning.services.trello.organizationId
-            response = await fetch('https://api.trello.com/1/boards?name=' + name + '&idOrganization=' + organizationId + '&key=' + trelloKey + '&token=' + user.authentications.trello.token, {
+            response = await fetch('https://api.trello.com/1/boards?name=' + name + '&idOrganization=' + organizationId + '&prefs_permissionLevel=org' + '&key=' + trelloKey + '&token=' + user.authentications.trello.token, {
                 method: 'POST'
             })
         } catch (e) {

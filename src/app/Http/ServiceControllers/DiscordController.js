@@ -2,65 +2,45 @@ const fetch = require('node-fetch')
 const path = require('path')
 const User = require('../../Models/User')
 const Project = require('../../Models/Project')
+const { Link,
+    LinkFromWeb
+} = require('../../../discord/DiscordLinker');
 
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 const clientID = process.env.DISCORD_CLIENT_ID
 const secret = process.env.DISCORD_APPLICATION_SECRET
 
-const authRedirect = 'http://localhost:4000/discord'
-const AuthLink = 'https://discord.com/api/oauth2/authorize?client_id=959004457205637131&redirect_uri=http%3A%2F%2Flocalhost%3A4000%2Fdiscord&response_type=code&scope=identify%20email'
-
 /**
  * @function Handling of the discord service
  */
-exports.discordWidget = async (req, res) => {
+async function discordWidget (req) {
     if (!secret)
         return null
     const project = await Project.findById(req.params.id)
-    let auth = AuthLink
-    if (req.session.user.services?.discord)
-        auth = ''
     let ServerInviteLink = project?.categories?.messaging?.services?.discord?.inviteLink
-    if (!ServerInviteLink)
-        ServerInviteLink = ''
-    return {
-        AuthLink: auth,
-        ServerInviteLink: ServerInviteLink
-    }
-}
-exports.discordAuth = async (req, res) => {
-    const code = req.query.code
-    const state = req.query.state.split('::')
-    if (code) {
-        await handleAuth(req, code)
-    }
-    res.redirect('/project/' + state[1])
+    return ServerInviteLink ? ServerInviteLink : ''
 }
 
 /**
  * @function Handling of the discord authentication linking the user in session to discord
  * @param req
- * @param code
+ * @param res
  * @returns {Promise<void>}
  */
-async function handleAuth (req, code) {
+async function discordAuth (req, res) {
     try {
-        const tokenResult = await getToken(code)
-        const token = await tokenResult.json()
-        const userResult = await getUserData(token)
-        const discordUser = await userResult.json()
-        if (!req.session.user) {
-            console.log('User not logged in before Discord Auth')
-            return
-        }
-        if ((await discordUser).message === '401: Unauthorized') {
-            console.log('failed to link user with discord because of invalid token')
-            return
-        }
-        putUserInDB(discordUser, req)
+        const state = req.query.state.split('::')
+        const guild = req.query.guild_id
+        const code = req.query.code
+        const permissions = req.query.permissions
+        
+    
+        const discord = await LinkFromWeb(guild)
+        await ConnectDiscordWithProject(state[1], discord)
+        res.redirect('/project/' + state[1])
     } catch (error) {
-        console.error(error)
-        // TODO: add proper autherror to user
+        console.log(error)
+        res.redirect('/projects')
     }
 }
 
@@ -77,8 +57,8 @@ function getToken (code) {
             client_secret: secret,
             code: code,
             grant_type: 'authorization_code',
-            redirect_uri: authRedirect,
-            scope: 'identify'
+            redirect_uri: 'https://www.theprojecthub.xyz/discord',
+            scope: 'identify bot applications.commands'
         }),
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -100,17 +80,14 @@ function getUserData (token) {
 }
 
 /**
- * @function Puts the discordUser's id in the database
- * @param discordUser
- * @param req
+ * @function
+ * @param projectID
+ * @param guild
  */
-function putUserInDB (discordUser, req) {
-    // TODO: handle the usecase where users discord is already linked to another account
-    const username = req.session.user.username
-    User.findOne({ username: username }).then(user => {
-        user.services = { ...user.services, discord: discordUser.id }
-        user.save()
-        console.log(`Sucessfully linked ${username} with discord account ${discordUser.username} (${discordUser.id})`)
-    })
-    req.session.user.services.discord = discordUser.id
+async function ConnectDiscordWithProject (projectID, discord) {
+    const project = await Project.findById(projectID)
+    project.categories.messaging.services = { ...project.categories.messaging.services, discord }
+    project.markModified('categories.messaging.services')
+    project.save()
 }
+module.exports = { discordAuth, discordWidget }
