@@ -37,7 +37,7 @@ function setActiveCategory (name) {
     }
 }
 
-function disableAllCategoryTabsBut(id) {
+function disableAllCategoryTabsBut (id) {
     const widgetContainers = document.getElementById('dynamic').children
     for (const widgetContainer of widgetContainers) {
         if (widgetContainer.id === id) {
@@ -48,7 +48,7 @@ function disableAllCategoryTabsBut(id) {
     }
 }
 
-function colorActiveTabBtn(btns) {
+function colorActiveTabBtn (btns) {
     for (const btn of btns) {
         btn.classList.remove('bg-gray-100')
     }

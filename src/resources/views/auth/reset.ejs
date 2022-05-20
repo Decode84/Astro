@@ -5,7 +5,7 @@
         </div>
     </div>
 </header>
-<main class="pb-8 content-evenly flex items-center justify-center" style="min-height: calc(100vh - var(--header-h))">
+<main class="pb-8 content-evenly flex items-center justify-center" style="min-height: calc(100vh - var(--header-h)); min-width: var(--min-window-w);">
     <div style="width: var(--form-w)">
         <% if (message.toString() !=="" ) { %>
             <%- include('./_partial/infoBox', { message: message}); %>
