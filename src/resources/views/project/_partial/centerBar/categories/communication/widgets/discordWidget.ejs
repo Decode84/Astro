@@ -1,5 +1,10 @@
 <div class="bg-white rounded-lg w-full drop-shadow-sm px-4 py-3 mb-3">
-    <h2 class="text-lg pb-3">Discord</h2>
+    <a class="flex flex-row items-center w-min" href="https://Discord.com/" target="blank_">
+        <h2 class="text-lg mr-2">Discord</h2>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+        </svg>
+    </a>
     <hr class="py-1">
     <% if (!discordInviteLink) { %>
         <div class="flex flex-row pb-1">
@@ -17,17 +22,17 @@
             <script type="text/javascript" src="/scripts/discordAuth.js"></script>
         </div>
         <%- include('../../_partial/infoMsg', { message: "Type '/link' in the Discord channel(with the bot) to link with this Project" }); %>
-<% } else { %>
-        <div class="flex flex-row pb-1">
-            <p class="inline">Open your discord server</p>
-            <button class="rounded-md ml-auto w-20 shadow-sm" style="background-color: var(--sec-color);">
-                <a href="<%- discordInviteLink %>" target="_blank">Open</a>
-            </button>
-        </div>
-        <div id="chat">
-            <div id="message-container" class="max-h-60 overflow-y-auto"></div>
-            <input id="input" type="text" placeholder="Type message" class="border-2 py-1 p-2 mt-2 border-gray-200 bg-gray-50 w-full rounded-md" />
-            <script type="text/javascript" src="/scripts/discordChat.js"></script>
-        </div>
-    <% } %>
+            <% } else { %>
+                <div class="flex flex-row pb-1">
+                    <p class="inline">Open your discord server</p>
+                    <button class="rounded-md ml-auto w-20 shadow-sm" style="background-color: var(--sec-color);">
+                        <a href="<%- discordInviteLink %>" target="_blank">Open</a>
+                    </button>
+                </div>
+                <div id="chat">
+                    <div id="message-container" class="max-h-60 overflow-y-auto"></div>
+                    <input id="input" type="text" placeholder="Type message" class="border-2 py-1 p-2 mt-2 border-gray-200 bg-gray-50 w-full rounded-md" />
+                    <script type="text/javascript" src="/scripts/discordChat.js"></script>
+                </div>
+                <% } %>
 </div>
