@@ -34,7 +34,7 @@ async function authReq (req, res) {
     }
     res.redirect('/project/' + state[1])
 }
-async function webHookReceiver (req) {
+async function webHookReceiver (req, res) {
     try {
         // TODO: implement security for github webhook
         // console.log(req.body)
@@ -44,7 +44,7 @@ async function webHookReceiver (req) {
             let message = {
                 user: { login: body.sender.login, id: body.sender.id, url: body.sender.html_url },
                 repository: body.repository.name,
-                timestamp: body.repository.updated_at
+                timestamp: body.repository.pushed_at
             }
             if (body.pull_request) {
                 const pull = body.pull_request
@@ -72,9 +72,11 @@ async function webHookReceiver (req) {
             if (project.categories.development.services.github.hookMessages.length > 10) { project.categories.development.services.github.hookMessages.shift() }
             project.markModified('categories.development.services')
             project.save()
+            res.sendStatus(202)
         } else console.log("Webhook couldn't find a project with: " + req.body.repository.id)
     } catch (e) {
-        console.log('Webhook error: ' + e + "\n req.body:")
+        console.log('Webhook error: ' + e + '\n req.body:')
+        res.sendStatus(500)
         // console.log(req.body)
     }
 }

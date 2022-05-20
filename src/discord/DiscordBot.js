@@ -2,22 +2,26 @@
 const path = require('path')
 const { Client, Intents } = require('discord.js')
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
-const commandHandler = require('./CommandHandler');
+const { HandleCommand } = require('./CommandHandler')
+const { ChannelType } = require('discord-api-types/v10')
+const { Link } = require('./DiscordLinker')
 
 // token is the bots login credentials and needs to be kept confident
 const token = process.env.DISCORD_BOT_TOKEN
 const client = new Client({
     intents: [Intents.FLAGS.GUILD_INVITES, Intents.FLAGS.GUILD_WEBHOOKS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILDS]
 })
+
+client.on('interactionCreate', async interaction => {
+    if (interaction.isCommand()) {
+        await HandleCommand(interaction)
+    }
+})
 client.once('ready', () => {
     console.log('Discord Ready!')
 })
-client.on('interactionCreate', async interaction => {
-    if (interaction.isCommand()) { await commandHandler.Handlecommand(interaction) }
-    // else if(interaction.is) add other interaction than commands here
-})
 
-function StartBot() {
+function StartBot () {
     try {
         require('./RegCommands')
         client.login(token)
@@ -26,7 +30,18 @@ function StartBot() {
         console.log('failed to start bot: ' + e)
     }
 }
-module.exports = { StartBot, client }
+async function LinkFromWeb (guildId) {
+    await client.guilds.fetch()
+    const guild = client.guilds.cache.get(guildId)
+    await guild.channels.fetch()
+    let channel = guild.channels.cache.filter(channel => channel.name.includes('general')).first()
+    if (!channel) {
+        channel = guild.channels.cache.filter(channel => channel.type === 'GUILD_TEXT').first()
+    }
+    return await Link(guild, channel)
+}
+
+module.exports = { StartBot, LinkFromWeb, client }
 
 // Create a new client instance (log into discord)
 // Intents(intentions/what do we wanna do): //https://discord.com/developers/docs/topics/gateway#list-of-intents

@@ -18,7 +18,11 @@ async function addEventToDb (req, res) {
 async function getEventsFromDb (req, res) {
     const { projectId } = req.body
     const project = await Project.findById(projectId)
-    res.json(project.events)
+    if (!project) {
+        res.json(null)
+    } else {
+        res.json(project.events)
+    }
 }
 
 async function delEventFromDb (req, res) {

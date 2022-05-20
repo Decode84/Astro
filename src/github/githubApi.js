@@ -26,30 +26,33 @@ async function setupProject (githubToken, project) {
     if (resp.status === 201) {
         await putGitHubInDB(project, resp.data, githubToken)
         await createWebHook(resp.data.hooks_url, octokit)
-    } else console.log("Error creating project for github")
+    } else console.log('Error creating project for github')
 }
-async function addUserToProject(userToken, project) {
+async function addUserToProject (userToken, project) {
     console.log('Trying to add user to project')
-    const user = new Octokit({
-        auth: userToken
-    })
-    const { data } = await user.request("/user");
-    const github = project.categories.development.services.github
-    const owner = new Octokit({
-        auth: github.ownerToken
-    })
-    const url = github.url.split('com')[1] + '/collaborators/' + data.login
     try {
+        const user = new Octokit({
+            auth: userToken
+        })
+        const { data } = await user.request('/user')
+        const github = project.categories.development.services.github
+        const owner = new Octokit({
+            auth: github.ownerToken
+        })
+        const url = github.url.split('com')[1] + '/collaborators/' + data.login
         await owner.request('PUT ' + url)
         const invitations = await user.request('GET /user/repository_invitations', {})
         const invitationId = getInvitationId(invitations.data, github.id)
         await user.request('PATCH /user/repository_invitations/{invitation_id}', {
             invitation_id: invitationId
-        })
-        project.categories.development.services.github.members.push(userToken)
+        }).catch(() => {}) // Nothing because it's supposedly working
+        github.members.push(userToken)
+        project.categories.development.services.github = github
+        project.markModified('categories.development.services')
         await project.save()
-        console.log("added " + data.name + " to github " + project.name)
+        console.log('added ' + data.name + ' to github ' + project.name)
     } catch (e) {
+        console.error(e)
         console.log('failed to add github user. They might already be linked to the project')
     }
 }
@@ -62,7 +65,7 @@ async function putGitHubInDB (project, data, githubToken) {
         htmlUrl: data.html_url,
         webHook: data.hooks_url,
         hookMessages: [],
-        members: [ githubToken ]
+        members: [githubToken]
     }
     // Update DB
     project.categories.development.services = { ...project.categories.development.services, github }
@@ -77,7 +80,7 @@ async function createWebHook (hookUrl, octokit) {
             'pull_request'
         ],
         config: {
-            url: 'https://theprojecthub.xyz/api/github/webhook',
+            url: 'https://www.theprojecthub.xyz/api/github/webhook',
             content_type: 'json',
             insecure_ssl: '0'
         }
